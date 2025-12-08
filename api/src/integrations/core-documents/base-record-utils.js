@@ -62,11 +62,10 @@ class BaseRecordUtils {
    */
   async findExistingRecord(nrptiRecord) {
     const masterRecordModel = mongoose.model(this.recordType._schemaName);
-    return await masterRecordModel
-      .findOne({
-        _schemaName: this.recordType._schemaName,
-        _sourceRefId: nrptiRecord._sourceRefId
-      });
+    return await masterRecordModel.findOne({
+      _schemaName: this.recordType._schemaName,
+      _sourceRefId: nrptiRecord._sourceRefId
+    });
   }
 
   /**
@@ -88,10 +87,10 @@ class BaseRecordUtils {
     try {
       // build update Obj, which needs to include the flavour record ids
       const updateObj = { ...nrptiRecord, _id: existingRecord._id };
-      
+
       updateObj.updatedBy = (this.auth_payload && this.auth_payload.displayName) || '';
       updateObj.dateUpdated = new Date();
-      
+
       existingRecord._flavourRecords.forEach(flavourRecord => {
         updateObj[flavourRecord._schemaName] = { _id: flavourRecord._id };
       });

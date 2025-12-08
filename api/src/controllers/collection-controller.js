@@ -20,7 +20,7 @@ exports.protectedOptions = function (args, res, next) {
 exports.protectedGet = async function (args, res, next) {
   let collectionId = null;
   if (args.swagger.params.collectionId && args.swagger.params.collectionId.value) {
-    collectionId = args.swagger.params.collectionId.value
+    collectionId = args.swagger.params.collectionId.value;
   } else {
     defaultLog.info(`protectedGet - you must provide an id to get`);
     queryActions.sendResponse(res, 400, {});
@@ -37,12 +37,16 @@ exports.protectedGet = async function (args, res, next) {
 
   queryActions.sendResponse(res, 200, {});
   next();
-}
-
+};
 
 exports.protectedPut = async function (args, res, next) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.client_roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI],
+      args.swagger.params.auth_payload.client_roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 
@@ -74,9 +78,9 @@ exports.protectedPut = async function (args, res, next) {
 
   queryActions.sendResponse(res, 200, obj.value);
   next();
-}
+};
 
-const updateCollection = async function(incomingObj, collectionId, displayName) {
+const updateCollection = async function (incomingObj, collectionId, displayName) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const collectionDB = db.collection('nrpti');
 
@@ -90,9 +94,11 @@ const updateCollection = async function(incomingObj, collectionId, displayName) 
     let recordIds = [];
     try {
       const records = await collectionDB.find({ collectionId: new ObjectId(collectionId) }).toArray();
-      recordIds = records.map(({ _id }) => _id.toString())
+      recordIds = records.map(({ _id }) => _id.toString());
     } catch (error) {
-      defaultLog.info(`protectedPut - collection controller - error finding record with collection id: ${collectionId}`);
+      defaultLog.info(
+        `protectedPut - collection controller - error finding record with collection id: ${collectionId}`
+      );
       defaultLog.debug(error);
       throw error;
     }
@@ -101,8 +107,8 @@ const updateCollection = async function(incomingObj, collectionId, displayName) 
     let recordsToAdd = [];
     let arrayOfObjIds = [];
 
-    for(const record of incomingObj.records){
-      if(!recordIds.includes(record)){
+    for (const record of incomingObj.records) {
+      if (!recordIds.includes(record)) {
         recordsToAdd.push(record);
         arrayOfObjIds.push(new ObjectId(record));
       }
@@ -114,7 +120,7 @@ const updateCollection = async function(incomingObj, collectionId, displayName) 
       const collection = await collectionDB.findOne({ _id: new ObjectId(collectionId) });
       if (!collection || !collection.read) {
         defaultLog.info(`protectedPut - error locating collection`);
-        throw new Error(`protectedPut - error locating collection`)
+        throw new Error(`protectedPut - error locating collection`);
       }
 
       await checkRecordExistsInCollection(recordsToAdd, collectionId, collection.read, true);
@@ -123,16 +129,18 @@ const updateCollection = async function(incomingObj, collectionId, displayName) 
     // Remove records
     let recordsToRemove = recordIds.filter(x => incomingObj.records.indexOf(x) === -1);
     for (const record of recordsToRemove) {
-      promises.push(collectionDB.findOneAndUpdate(
-        { _id: new ObjectId(record) },
-        {
-          $set: {
-            collectionId: null,
-            isBcmiPublished: false
-          },
-          $pull: { read: 'public' }
-        }
-      ));
+      promises.push(
+        collectionDB.findOneAndUpdate(
+          { _id: new ObjectId(record) },
+          {
+            $set: {
+              collectionId: null,
+              isBcmiPublished: false
+            },
+            $pull: { read: 'public' }
+          }
+        )
+      );
     }
 
     try {
@@ -145,7 +153,6 @@ const updateCollection = async function(incomingObj, collectionId, displayName) 
 
     incomingObj.records = arrayOfObjIds;
   }
-
 
   // Reject any changes to permissions
   // Publishing must be done via addRole or removeRole
@@ -164,7 +171,7 @@ const updateCollection = async function(incomingObj, collectionId, displayName) 
   // make sure date type is not a string
   // TODO: move this logic to transition layer
   if (sanitizedObj.date && typeof sanitizedObj.date !== Date) {
-    sanitizedObj.date = new Date(sanitizedObj.date)
+    sanitizedObj.date = new Date(sanitizedObj.date);
   }
 
   // Set auditing meta
@@ -182,24 +189,29 @@ const updateCollection = async function(incomingObj, collectionId, displayName) 
     defaultLog.debug(error);
     throw new Error('Error updating collection');
   }
-}
+};
 
 exports.updateCollection = updateCollection;
 
 // This wrapper allows this controller to work with the record controller.
 exports.createItem = async function (args, res, next, collection) {
   return await createCollection(collection, args.swagger.params.auth_payload.displayName);
-}
+};
 
 exports.protectedPost = async function (args, res, next) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI], args.swagger.params.auth_payload.client_roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI],
+      args.swagger.params.auth_payload.client_roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 
   let incomingObj = {};
   if (args.swagger.params.collection && args.swagger.params.collection.value) {
-    incomingObj = args.swagger.params.collection.value
+    incomingObj = args.swagger.params.collection.value;
   } else {
     defaultLog.info(`protectedPost - you must provide an id to post`);
     queryActions.sendResponse(res, 400, {});
@@ -223,12 +235,12 @@ exports.protectedPost = async function (args, res, next) {
 
   queryActions.sendResponse(res, 200, obj.ops[0]);
   next();
-}
+};
 
 exports.protectedDelete = async function (args, res, next) {
   let collectionId = null;
   if (args.swagger.params.collectionId && args.swagger.params.collectionId.value) {
-    collectionId = args.swagger.params.collectionId.value
+    collectionId = args.swagger.params.collectionId.value;
   } else {
     defaultLog.info(`protectedDelete - you must provide an id to delete`);
     queryActions.sendResponse(res, 400, {});
@@ -245,7 +257,7 @@ exports.protectedDelete = async function (args, res, next) {
 
   queryActions.sendResponse(res, 200, {});
   next();
-}
+};
 
 /**
  * Unpublishes all collections, their records and their documents for a mine.
@@ -258,7 +270,13 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const nrpti = db.collection('nrpti');
 
-  const collections = await nrpti.find({ _schemaName: RECORD_TYPE.CollectionBCMI._schemaName, project: mineId, write: { $in: auth_payload.client_roles } }).toArray();
+  const collections = await nrpti
+    .find({
+      _schemaName: RECORD_TYPE.CollectionBCMI._schemaName,
+      project: mineId,
+      write: { $in: auth_payload.client_roles }
+    })
+    .toArray();
 
   try {
     for (const collection of collections) {
@@ -278,9 +296,9 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
           {
             $lookup: {
               from: 'nrpti',
-              localField: "documents",
-              foreignField: "_id",
-              as: "documents",
+              localField: 'documents',
+              foreignField: '_id',
+              as: 'documents'
             }
           }
         ];
@@ -291,68 +309,79 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
         // runs each function, last arg is callback, others are results from previous step
         // any error in a step should cause the rest of the steps to be skipped and log that error
         for (const record of records) {
-          defaultLog.debug('publishing record docs, recordId: ', JSON.stringify(record._id) );
+          defaultLog.debug('publishing record docs, recordId: ', JSON.stringify(record._id));
           if (record.documents && record.documents.length) {
-
             for (const document of record.documents) {
               if (document.key) {
                 try {
                   await unpublishS3Document(document.key);
                 } catch (err) {
-                  error = `failed to unpublish record document in S3, recordId: ${record.recordName}`
+                  error = `failed to unpublish record document in S3, recordId: ${record.recordName}`;
                   // log s3 sdk error
-                  defaultLog.error(err.message)
-                  throw new Error(error)
+                  defaultLog.error(err.message);
+                  throw new Error(error);
                 }
               }
             }
 
-            defaultLog.debug('unpulishing record doc objs, recordId: ', JSON.stringify(record._id))
+            defaultLog.debug('unpulishing record doc objs, recordId: ', JSON.stringify(record._id));
             try {
-              await nrpti.updateMany({ _id: { $in: record.documents.map(doc => doc._id) }, write: { $in: auth_payload.client_roles } }, { $pull: { read: 'public' } })
+              await nrpti.updateMany(
+                { _id: { $in: record.documents.map(doc => doc._id) }, write: { $in: auth_payload.client_roles } },
+                { $pull: { read: 'public' } }
+              );
             } catch (err) {
               error = `Could not unpublish record document obj: ${record.recordName},  err: ${err}`;
-              defaultLog.error(error)
-              throw new Error(error)
+              defaultLog.error(error);
+              throw new Error(error);
             }
           }
 
-          defaultLog.debug('unpublishing record master, recordId: ', JSON.stringify(record._id))
+          defaultLog.debug('unpublishing record master, recordId: ', JSON.stringify(record._id));
           try {
-            await nrpti.updateOne({ _id: record._id, write: { $in: auth_payload.client_roles } }, { $pull: { read: 'public' } })
+            await nrpti.updateOne(
+              { _id: record._id, write: { $in: auth_payload.client_roles } },
+              { $pull: { read: 'public' } }
+            );
           } catch (err) {
             error = `Could not unpublish master record: ${record.recordName},  err: ${err}`;
-            defaultLog.error(error)
-            throw new Error(error)
+            defaultLog.error(error);
+            throw new Error(error);
           }
 
-          defaultLog.debug('unpublishing record flavour, recordId: ', JSON.stringify(record._id))
+          defaultLog.debug('unpublishing record flavour, recordId: ', JSON.stringify(record._id));
           try {
-            await nrpti.updateOne({ _flavourRecords: record._id, write: { $in: auth_payload.client_roles } }, { $set: { isBcmiPublished: false } })
+            await nrpti.updateOne(
+              { _flavourRecords: record._id, write: { $in: auth_payload.client_roles } },
+              { $set: { isBcmiPublished: false } }
+            );
           } catch (err) {
             error = `Could not unpublish flavour record: ${record.recordName},  err: ${err}`;
-            defaultLog.error(error)
-            throw new Error(error)
+            defaultLog.error(error);
+            throw new Error(error);
           }
         }
 
         // unpublish collection
         try {
-          await nrpti.updateOne({ _id: collection._id, write: { $in: auth_payload.client_roles } }, { $pull: { read: 'public' } });
+          await nrpti.updateOne(
+            { _id: collection._id, write: { $in: auth_payload.client_roles } },
+            { $pull: { read: 'public' } }
+          );
         } catch (err) {
-          error = `Could not unpublish collection:  ${collection.name}, ${err}`
+          error = `Could not unpublish collection:  ${collection.name}, ${err}`;
           defaultLog.info(error);
-          throw new Error(error)
+          throw new Error(error);
         }
       }
     }
   } catch (error) {
     defaultLog.info(`unpublishCollections - error unpublishing mine collections: ${mineId}`);
     defaultLog.debug(error);
-    const msg = `Error unpublishing mine collections: ${error.message}`
+    const msg = `Error unpublishing mine collections: ${error.message}`;
     throw new Error(msg);
   }
-}
+};
 
 /**
  * Publishes all collections, their records and their documents for a mine.
@@ -365,7 +394,13 @@ exports.publishCollections = async function (mineId, auth_payload) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
   const nrpti = db.collection('nrpti');
 
-  const collections = await nrpti.find({ _schemaName: RECORD_TYPE.CollectionBCMI._schemaName, project: mineId, write: { $in: auth_payload.client_roles } }).toArray();
+  const collections = await nrpti
+    .find({
+      _schemaName: RECORD_TYPE.CollectionBCMI._schemaName,
+      project: mineId,
+      write: { $in: auth_payload.client_roles }
+    })
+    .toArray();
 
   // Publish every collection, their records, and their documents.
   try {
@@ -386,9 +421,9 @@ exports.publishCollections = async function (mineId, auth_payload) {
           {
             $lookup: {
               from: 'nrpti',
-              localField: "documents",
-              foreignField: "_id",
-              as: "documents",
+              localField: 'documents',
+              foreignField: '_id',
+              as: 'documents'
             }
           }
         ];
@@ -398,55 +433,67 @@ exports.publishCollections = async function (mineId, auth_payload) {
         let error = null;
         // Publish all documents of all records.
         for (const record of records) {
-        // Update the S3 object properties for each document.
+          // Update the S3 object properties for each document.
           if (record.documents && record.documents.length) {
-            defaultLog.debug('publishing record s3 docs, recordId: ', JSON.stringify(record._id))
+            defaultLog.debug('publishing record s3 docs, recordId: ', JSON.stringify(record._id));
             for (const document of record.documents) {
               if (document.key) {
                 try {
                   await publishS3Document(document.key);
                 } catch (err) {
-                  error = `failed to unpublish record document in S3, recordId: ${record.recordName}`
-                  defaultLog.error(err.message)
-                  throw new Error(error)
+                  error = `failed to unpublish record document in S3, recordId: ${record.recordName}`;
+                  defaultLog.error(err.message);
+                  throw new Error(error);
                 }
               }
             }
 
             // Publish all record documents
-            defaultLog.debug('pulishing record doc objs, recordId: ', JSON.stringify(record._id))
+            defaultLog.debug('pulishing record doc objs, recordId: ', JSON.stringify(record._id));
             try {
-              await nrpti.updateMany({ _id: { $in: record.documents.map(doc => doc._id) }, write: { $in: auth_payload.client_roles } }, { $addToSet: { read: 'public' } })
+              await nrpti.updateMany(
+                { _id: { $in: record.documents.map(doc => doc._id) }, write: { $in: auth_payload.client_roles } },
+                { $addToSet: { read: 'public' } }
+              );
             } catch (err) {
               error = `Could not publish record document obj: ${record.recordName},  err: ${err}`;
-              defaultLog.error(error)
+              defaultLog.error(error);
             }
           }
 
           // Set the flag on the master record.
-          defaultLog.debug('publishing record master, recordId: ', JSON.stringify(record._id))
+          defaultLog.debug('publishing record master, recordId: ', JSON.stringify(record._id));
           try {
-            await nrpti.updateOne({ _flavourRecords: record._id, write: { $in: auth_payload.client_roles } }, { $set: { isBcmiPublished: true } })
+            await nrpti.updateOne(
+              { _flavourRecords: record._id, write: { $in: auth_payload.client_roles } },
+              { $set: { isBcmiPublished: true } }
+            );
           } catch (err) {
             error = `Could not publish master record: ${record.recordName},  err: ${err}`;
-            defaultLog.error(error)
+            defaultLog.error(error);
           }
 
-        // Publish the flavour record
-          defaultLog.debug('publishing record flavour, recordId: ', JSON.stringify(record._id))
+          // Publish the flavour record
+          defaultLog.debug('publishing record flavour, recordId: ', JSON.stringify(record._id));
           try {
-            await nrpti.updateOne({ _id: record._id, write: { $in: auth_payload.client_roles } }, { $addToSet: { read: 'public' } })
+            await nrpti.updateOne(
+              { _id: record._id, write: { $in: auth_payload.client_roles } },
+              { $addToSet: { read: 'public' } }
+            );
           } catch (err) {
             error = `Could not publish flavour record: ${record.recordName},  err: ${err}`;
-            defaultLog.error(error)
+            defaultLog.error(error);
           }
         }
 
         // Publish the collection
         try {
-          await nrpti.updateOne({ _id: collection._id, write: { $in: auth_payload.client_roles } }, { $addToSet: { read: 'public' } });
+          await nrpti.updateOne(
+            { _id: collection._id, write: { $in: auth_payload.client_roles } },
+            { $addToSet: { read: 'public' } }
+          );
         } catch (err) {
-          const msg = `Could not publish mine collections: ${JSON.stringify(err.message)}`
+          const msg = `Could not publish mine collections: ${JSON.stringify(err.message)}`;
           defaultLog.info(msg);
         }
       }
@@ -454,10 +501,10 @@ exports.publishCollections = async function (mineId, auth_payload) {
   } catch (error) {
     defaultLog.info(`publishCollections - error unpublishing mine collections: ${mineId}`);
     defaultLog.debug(error.message);
-    const msg = `Error unpublishing mine collections: ${error.message}`
+    const msg = `Error unpublishing mine collections: ${error.message}`;
     throw new Error(msg);
   }
-}
+};
 
 const checkRecordExistsInCollection = async function (records, collectionId, collectionRead, editing = false) {
   const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
@@ -467,12 +514,12 @@ const checkRecordExistsInCollection = async function (records, collectionId, col
     // does this record exit in any other collection?
     // TODO: once we upgrade to mongo 4 we should replace this with a .countDocuments()
     // There seems to be an issue with .count() and mongodb 3.6
-    const collectionCount = await collectionDB.find(
-      {
+    const collectionCount = await collectionDB
+      .find({
         _schemaName: RECORD_TYPE.CollectionBCMI._schemaName,
         records: { $elemMatch: { $eq: new ObjectId(record) } }
-      }
-    ).toArray().length;
+      })
+      .toArray().length;
 
     if (collectionCount && collectionCount > 0 && !editing) {
       throw new Error('Collection contains records that are already associated with another collection');
@@ -493,22 +540,24 @@ const checkRecordExistsInCollection = async function (records, collectionId, col
     }
     // Ensure the record has the collectionId set
     // Also, if we are associating a record
-    promises.push(collectionDB.findOneAndUpdate(
-      { _id: new ObjectId(record) },
-      {
-        $set: {
-          collectionId: new ObjectId(collectionId),
-        },
-        ...permissionAction
-      }
-    ));
+    promises.push(
+      collectionDB.findOneAndUpdate(
+        { _id: new ObjectId(record) },
+        {
+          $set: {
+            collectionId: new ObjectId(collectionId)
+          },
+          ...permissionAction
+        }
+      )
+    );
   }
   try {
     return await Promise.all(promises);
   } catch (error) {
-    throw new Error('Error updating records with collection.')
+    throw new Error('Error updating records with collection.');
   }
-}
+};
 
 const createCollection = async function (collectionObj, user) {
   let CollectionBCMI = mongoose.model(RECORD_TYPE.CollectionBCMI._schemaName);
@@ -532,7 +581,7 @@ const createCollection = async function (collectionObj, user) {
   collectionObj.type && (collection.type = collectionObj.type);
   collectionObj.agency && (collection.agency = collectionObj.agency);
   collectionObj.records && collectionObj.records.length && (collection.records = collectionObj.records);
-  collectionObj.permitNumber && (collection.permitNumber = collectionObj.permitNumber)
+  collectionObj.permitNumber && (collection.permitNumber = collectionObj.permitNumber);
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
   if (collectionObj.addRole && collectionObj.addRole === 'public') {
@@ -547,7 +596,6 @@ const createCollection = async function (collectionObj, user) {
       // Use the collection status to determine published status of the record.
       await checkRecordExistsInCollection(collection.records, collection._id, collection.read);
     } catch (error) {
-
       defaultLog.info(`createCollection - error inserting collection: ${collection}`);
       defaultLog.debug(error);
       throw error;
@@ -566,7 +614,7 @@ const createCollection = async function (collectionObj, user) {
     defaultLog.debug(error);
     throw new Error('Error creating collection');
   }
-}
+};
 
 exports.createCollection = createCollection;
 

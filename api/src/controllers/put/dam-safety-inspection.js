@@ -31,10 +31,19 @@ exports.editRecord = async function (args, res, next, incomingObj, overridePutPa
   const flavourFunctions = {
     DamSafetyInspectionBCMI: this.editBCMI,
     DamSafetyInspectionNRCED: this.editNRCED
-  }
-  return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, DamSafetyInspectionPost, 'DamSafetyInspection', flavourFunctions, overridePutParams);
+  };
+  return await PutUtils.editRecordWithFlavours(
+    args,
+    res,
+    next,
+    incomingObj,
+    this.editMaster,
+    DamSafetyInspectionPost,
+    'DamSafetyInspection',
+    flavourFunctions,
+    overridePutParams
+  );
 };
-
 
 /**
  * Performs all operations necessary to edit a master DamSafetyInspection record.
@@ -84,7 +93,7 @@ exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
   const updateObj = { $set: dotNotatedObj };
 
   if (flavourIds && flavourIds.length) {
-    updateObj.$set = {...updateObj.$set };
+    updateObj.$set = { ...updateObj.$set };
     updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
   }
 
@@ -171,7 +180,7 @@ exports.editBCMI = function (args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns edited nrced DamSafetyInspection record
  */
- exports.editNRCED = function (args, res, next, incomingObj) {
+exports.editNRCED = function (args, res, next, incomingObj) {
   delete incomingObj._id;
 
   // Reject any changes to permissions

@@ -127,23 +127,23 @@ class NrisDataSource {
       let records = null;
       const delaySeconds = 10;
 
-      for (let i = 1 ;; i++) {
+      for (let i = 1; ; i++) {
         try {
           defaultLog.info(`Getting NRIS records: attempt ${i}`);
           records = await integrationUtils.getRecords(url, { headers: { Authorization: 'Bearer ' + this.token } });
           break;
         } catch (error) {
-          if( i < RETRY_LIMIT){
-          defaultLog.info(`Failed to retrieve data from NRIS. error: ${error}`);
-          defaultLog.info(`Waiting ${delaySeconds} seconds before retry`);
-          await new Promise(resolve => setTimeout(resolve, delaySeconds*1000));
+          if (i < RETRY_LIMIT) {
+            defaultLog.info(`Failed to retrieve data from NRIS. error: ${error}`);
+            defaultLog.info(`Waiting ${delaySeconds} seconds before retry`);
+            await new Promise(resolve => setTimeout(resolve, delaySeconds * 1000));
           } else {
             //re-throw the last error to handle at the higher level
             throw error;
           }
         }
       }
-   
+
       defaultLog.info('NRIS Call complete:', records.length);
       if (!records || records.length === 0) {
         return {
@@ -298,19 +298,18 @@ class NrisDataSource {
 
     if (newRecord.issuedTo.type === 'Company' && newRecord.issuedTo.companyName !== '') {
       const MineBCMIModel = mongoose.model(RECORD_TYPE.MineBCMI._schemaName);
-      let parentMines = await MineBCMIModel
-        .find({
-          _schemaName: RECORD_TYPE.MineBCMI._schemaName,
-          permittee: {'$regex': newRecord.issuedTo.companyName, $options: 'i'}
-        })
+      let parentMines = await MineBCMIModel.find({
+        _schemaName: RECORD_TYPE.MineBCMI._schemaName,
+        permittee: { $regex: newRecord.issuedTo.companyName, $options: 'i' }
+      });
 
       if (parentMines.length > 0) {
-        let mine = parentMines.find( parent => newRecord.location.toLowerCase().includes(parent.name.toLowerCase()));
+        let mine = parentMines.find(parent => newRecord.location.toLowerCase().includes(parent.name.toLowerCase()));
         if (mine != null) {
           newRecord.projectName = mine.name;
         }
       }
-    } 
+    }
 
     if (record.complianceStatus) {
       newRecord.outcomeDescription = record.complianceStatus;
@@ -338,13 +337,13 @@ class NrisDataSource {
         descriptions.push(`Waste Discharge Type: ${record.wasteType.join(', ')}`);
       }
     }
-    
+
     newRecord.description = descriptions.join('; ');
-    
+
     // Catch any other issuing agencies that haven't been transformed.
     // Update the issuing agency based on the mapping.
     const agencyMapping = {
-      'FLNRO': 'AGENCY_FLNRO',
+      FLNRO: 'AGENCY_FLNRO',
       'Environmental Assessment Office': 'AGENCY_EAO'
     };
 
@@ -353,7 +352,7 @@ class NrisDataSource {
     } else if (record.issuingAgency in agencyMapping) {
       newRecord.issuingAgency = agencyMapping[record.issuingAgency];
     }
-    
+
     defaultLog.info('Processed:', record.assessmentId);
     return newRecord;
   }

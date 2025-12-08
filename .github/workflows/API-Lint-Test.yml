@@ -28,40 +28,47 @@ jobs:
           --health-timeout 5s
           --health-retries 10
     steps:
-    - uses: actions/checkout@v3
-    - uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50
-      id: filter
-      with:
-        filters: |
-          api:
-            - 'api/**'
-    - name: Use Node.js ${{ matrix.node-version }}
-      if: steps.filter.outputs.api == 'true'
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: npm install
-      if: steps.filter.outputs.api == 'true'
-      run: |
-        cd api
-        npm install
-      env:
-        CI: true
-    - name: Install MongoDB driver
-      if: steps.filter.outputs.api == 'true'
-      run: npm install mongodb@3.6
-    - name: Setup Mongo DB
-      if: steps.filter.outputs.api == 'true'
-      run: node ./mongoSeed/mongo-seed-CI.js
-      env:
-        MONGO_URI: mongodb://localhost:27017/nrpti-dev
-        MONGO_USER: ${{ secrets.MONGO_USER }}
-        MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
-    - name: test
-      if: steps.filter.outputs.api == 'true'
-      run: |
-        cd api
-        npm run test
-      env:
-        MONGO_URI: mongodb://${{ secrets.MONGO_USER }}:${{ secrets.MONGO_PASSWORD}}@localhost:27017/nrpti-dev
-        CI: true
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50
+        id: filter
+        with:
+          filters: |
+            api:
+              - 'api/**'
+      - name: Use Node.js ${{ matrix.node-version }}
+        if: steps.filter.outputs.api == 'true'
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm install
+        if: steps.filter.outputs.api == 'true'
+        run: |
+          cd api
+          npm install
+        env:
+          CI: true
+      - name: lint
+        if: steps.filter.outputs.api == 'true'
+        run: |
+          cd api
+          npx eslint .
+          npx prettier './**/*.js' --check
+
+      - name: Install MongoDB driver
+        if: steps.filter.outputs.api == 'true'
+        run: npm install mongodb@3.6
+      - name: Setup Mongo DB
+        if: steps.filter.outputs.api == 'true'
+        run: node ./mongoSeed/mongo-seed-CI.js
+        env:
+          MONGO_URI: mongodb://localhost:27017/nrpti-dev
+          MONGO_USER: ${{ secrets.MONGO_USER }}
+          MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+      - name: test
+        if: steps.filter.outputs.api == 'true'
+        run: |
+          cd api
+          npm run test
+        env:
+          MONGO_URI: mongodb://${{ secrets.MONGO_USER }}:${{ secrets.MONGO_PASSWORD}}@localhost:27017/nrpti-dev
+          CI: true

@@ -12,7 +12,7 @@ jest.mock('../../controllers/document-controller');
 jest.mock('axios');
 jest.mock('./permit-utils', () => ({
   transformRecord: jest.fn(),
-  updateRecord: jest.fn(),
+  updateRecord: jest.fn()
 }));
 
 describe('CoreDocumentsDataSource', () => {
@@ -41,9 +41,9 @@ describe('CoreDocumentsDataSource', () => {
     it('executes run method successfully', async () => {
       const mockedTaskAuditRecord = { updateTaskRecord: jest.fn().mockResolvedValueOnce({ status: 'Running' }) };
       const dataSource = new DataSource(mockedTaskAuditRecord);
-  
+
       await dataSource.run();
-  
+
       expect(mockedTaskAuditRecord.updateTaskRecord).toHaveBeenCalledWith({ status: 'Running' });
     });
   });
@@ -51,13 +51,13 @@ describe('CoreDocumentsDataSource', () => {
   describe('processRecord', () => {
     it('throws error if no permit', () => {
       const dataSource = new DataSource();
-      expect(dataSource.processRecord(null, {})).resolves.toEqual(false)
+      expect(dataSource.processRecord(null, {})).resolves.toEqual(false);
     });
   });
 
   describe('getPermits', () => {
     it('should call getPermits with mocked data', async () => {
-      const existingRecord = { 
+      const existingRecord = {
         _id: 123,
         _sourceDocumentRefId: 'permit_amendment_guid',
         documents: []
@@ -104,7 +104,7 @@ describe('CoreDocumentsDataSource', () => {
   });
 
   describe('getTemporaryDocument', () => {
-    global.CORE_DOC_MANAGER_HOST = 'http://localhost:3000'
+    global.CORE_DOC_MANAGER_HOST = 'http://localhost:3000';
 
     it('should throw an error if documentId or documentName is missing', async () => {
       const dataSource = new DataSource();
@@ -141,7 +141,7 @@ describe('CoreDocumentsDataSource', () => {
         `https://minesdigitalservices.gov.bc.ca/document-manager/documents?token=${mockDownloadToken}`,
         expect.objectContaining({
           responseType: 'stream',
-          headers: expect.any(Object),
+          headers: expect.any(Object)
         })
       );
     });
@@ -149,10 +149,10 @@ describe('CoreDocumentsDataSource', () => {
 
   describe('putFileS3', () => {
     it('should store a document in S3 and return Document ID', async () => {
-      const fileContent = 'file content'; 
-      const fileName = 'example.docx'; 
+      const fileContent = 'file content';
+      const fileName = 'example.docx';
 
-      const mockDocumentResponse = { docResponse: { _id: 'documentId' } }; 
+      const mockDocumentResponse = { docResponse: { _id: 'documentId' } };
 
       DocumentController.createS3Document.mockResolvedValue(mockDocumentResponse);
 
@@ -160,13 +160,9 @@ describe('CoreDocumentsDataSource', () => {
 
       const result = await dataSource.putFileS3(fileContent, fileName);
 
-      expect(DocumentController.createS3Document).toHaveBeenCalledWith(
-        fileName,
-        fileContent,
-        expect.any(String) 
-      );
+      expect(DocumentController.createS3Document).toHaveBeenCalledWith(fileName, fileContent, expect.any(String));
 
-      expect(result).toBe('documentId'); 
+      expect(result).toBe('documentId');
     });
   });
 
@@ -193,7 +189,7 @@ describe('CoreDocumentsDataSource', () => {
       const permit = { documents: [] };
       const documentId = 'documentId';
 
-      permitUtils.transformRecord.mockImplementation((permit) => permit);
+      permitUtils.transformRecord.mockImplementation(permit => permit);
       permitUtils.updateRecord.mockResolvedValue([{ status: 'success' }]);
 
       const dataSource = new DataSource();

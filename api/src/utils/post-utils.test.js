@@ -143,73 +143,77 @@ describe('PostUtils', () => {
   test('populateLegislation returns empty object', async () => {
     const legislation = [{}];
 
-    const sanitizedLegislation =  PostUtils.populateLegislation(
-      legislation,
-    );
+    const sanitizedLegislation = PostUtils.populateLegislation(legislation);
 
     expect(sanitizedLegislation).toEqual([{}]);
   });
 
   test('populateLegislation rejects invalid fields', async () => {
-    const legislation = [{
-        "act": "some act",
-        "regulation": "some regulation",
-        "section": "some section",
-        "subSection": "some sub-section",
-        "paragraph": "some paragraph",
-        "offence": "some offence",
-        "invalid": "don't add me"
-    }];
+    const legislation = [
+      {
+        act: 'some act',
+        regulation: 'some regulation',
+        section: 'some section',
+        subSection: 'some sub-section',
+        paragraph: 'some paragraph',
+        offence: 'some offence',
+        invalid: "don't add me"
+      }
+    ];
 
-    const sanitizedLegislation =  PostUtils.populateLegislation(
-      legislation,
-    );
+    const sanitizedLegislation = PostUtils.populateLegislation(legislation);
 
-    expect(sanitizedLegislation).toEqual([{
-        "act": "some act",
-        "regulation": "some regulation",
-        "section": "some section",
-        "subSection": "some sub-section",
-        "paragraph": "some paragraph",
-        "offence": "some offence"
-    }]);
+    expect(sanitizedLegislation).toEqual([
+      {
+        act: 'some act',
+        regulation: 'some regulation',
+        section: 'some section',
+        subSection: 'some sub-section',
+        paragraph: 'some paragraph',
+        offence: 'some offence'
+      }
+    ]);
   });
 
   test('populateLegislation handles multiple legislation objects in array', async () => {
-    const legislation = [{
-      "act": "act1",
-      "regulation": "regulation1",
-      "section": "section1",
-      "subSection": "sub-section1",
-      "paragraph": "paragraph1",
-      "offence": "offence1"
-    },{
-      "act": "act2",
-      "regulation": "regulation2",
-      "section": "section2",
-      "subSection": "sub-section2",
-      "paragraph": "paragraph2",
-      "legislationDescription": "description2"
-    }];
+    const legislation = [
+      {
+        act: 'act1',
+        regulation: 'regulation1',
+        section: 'section1',
+        subSection: 'sub-section1',
+        paragraph: 'paragraph1',
+        offence: 'offence1'
+      },
+      {
+        act: 'act2',
+        regulation: 'regulation2',
+        section: 'section2',
+        subSection: 'sub-section2',
+        paragraph: 'paragraph2',
+        legislationDescription: 'description2'
+      }
+    ];
 
-    const sanitizedLegislation =  PostUtils.populateLegislation(
-      legislation,
-    );
+    const sanitizedLegislation = PostUtils.populateLegislation(legislation);
 
-    expect(sanitizedLegislation).toEqual([{
-      "act": "act1",
-      "regulation": "regulation1",
-      "section": "section1",
-      "subSection": "sub-section1",
-      "paragraph": "paragraph1",
-      "offence": "offence1"
-    },{
-      "act": "act2",
-      "regulation": "regulation2",
-      "section": "section2",
-      "subSection": "sub-section2",
-      "paragraph": "paragraph2",
-      "legislationDescription": "description2"
-    }]);
+    expect(sanitizedLegislation).toEqual([
+      {
+        act: 'act1',
+        regulation: 'regulation1',
+        section: 'section1',
+        subSection: 'sub-section1',
+        paragraph: 'paragraph1',
+        offence: 'offence1'
+      },
+      {
+        act: 'act2',
+        regulation: 'regulation2',
+        section: 'section2',
+        subSection: 'sub-section2',
+        paragraph: 'paragraph2',
+        legislationDescription: 'description2'
+      }
+    ]);
   });
 });

@@ -18,10 +18,8 @@ async function update(defaultLog) {
     aggregate.push({ $out: 'outcome_description_subset' });
 
     await mainCollection.aggregate(aggregate).next();
-    
   } catch (error) {
     console.log('Failed to update outcome_description_subset, error: ', error);
-    
   }
 }
 

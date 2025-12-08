@@ -6,7 +6,7 @@ const MiscConstants = require('../../../utils/constants/misc');
  * @param {*} csvRow
  * @returns {string} the entity type.
  */
-exports.getEntityType = function(csvRow) {
+exports.getEntityType = function (csvRow) {
   if (!csvRow) {
     return null;
   }
@@ -24,7 +24,7 @@ exports.getEntityType = function(csvRow) {
  * @param {*} csvRow
  * @returns {string} issuing agency.
  */
-exports.getIssuingAgency = function(csvRow) {
+exports.getIssuingAgency = function (csvRow) {
   if (!csvRow) {
     return null;
   }
@@ -42,7 +42,7 @@ exports.getIssuingAgency = function(csvRow) {
   if (caseNum.toLowerCase().startsWith('p-')) {
     return MiscConstants.CoorsCsvIssuingAgencies.BC_Parks;
   }
-  
+
   let act = '';
   if (csvRow['act']) {
     act = csvRow['act'];
@@ -57,29 +57,28 @@ exports.getIssuingAgency = function(csvRow) {
   return MiscConstants.CoorsCsvIssuingAgencies.Conservation_Officer_Service;
 };
 
-
 /**
  * Derive the penalty type
  *
  * @param {string} elem
  * @returns {string} penalty type
  */
-exports.getPenalty = function(elem) {
+exports.getPenalty = function (elem) {
   if (!elem) {
     return null;
   }
 
   let penaltyType = '';
-  MiscConstants.COURT_CONVICTION_PENALTY_TYPES.forEach( item => {
+  MiscConstants.COURT_CONVICTION_PENALTY_TYPES.forEach(item => {
     if (elem.toLowerCase() === item.toLowerCase()) {
       penaltyType = item;
-    } else if (elem.toLowerCase().startsWith('other'))  {
+    } else if (elem.toLowerCase().startsWith('other')) {
       penaltyType = 'Other';
     }
-  })
+  });
 
   return penaltyType;
-}
+};
 
 /**
  * Derive the unit type of penalty value (eg. Dollars)
@@ -87,17 +86,17 @@ exports.getPenalty = function(elem) {
  * @param {string} elem
  * @returns {string} unit of penalty
  */
-exports.getPenaltyUnits = function(elem) {
+exports.getPenaltyUnits = function (elem) {
   if (!elem) {
     return null;
   }
 
   let units = '';
-  MiscConstants.PENALTY_VALUE_TYPES.forEach( item => {
+  MiscConstants.PENALTY_VALUE_TYPES.forEach(item => {
     if (elem.toLowerCase() === item.toLowerCase()) {
       units = item;
     }
-  })
+  });
 
   return units;
-}
+};

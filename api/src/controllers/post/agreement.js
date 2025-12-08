@@ -31,7 +31,7 @@ const utils = require('../../utils/constants/misc');
 exports.createItem = async function (args, res, next, incomingObj) {
   const flavourFunctions = {
     AgreementLNG: this.createLNG
-  }
+  };
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
 
@@ -139,7 +139,12 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
  */
 exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
-  if (!userHasValidRoles([utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG], args.swagger.params.auth_payload.client_roles)) {
+  if (
+    !userHasValidRoles(
+      [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG],
+      args.swagger.params.auth_payload.client_roles
+    )
+  ) {
     throw new Error('Missing valid user role.');
   }
 

@@ -1,7 +1,7 @@
 const AdministrativePenalty = require('./administrative-penalties-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const { createURLDocument } = require('../../controllers/document-controller');
-const { getActTitleFromDB } = require('../../controllers/acts-regulations-controller')
+const { getActTitleFromDB } = require('../../controllers/acts-regulations-controller');
 const { energyActCode } = require('../../utils/constants/legislation-code-map.js');
 
 const actName = getActTitleFromDB(energyActCode);
@@ -17,43 +17,43 @@ describe('AdministrativePenalty', () => {
   beforeEach(() => {
     authPayload = 'authPayload';
     baseCsvRow = {
-      'Title': '123',
-      'author': 'AGENCY_OGC',
-      'issuingAgency': 'AGENCY_OGC',
-      'recordName': 'record name',
+      Title: '123',
+      author: 'AGENCY_OGC',
+      issuingAgency: 'AGENCY_OGC',
+      recordName: 'record name',
       'Date Issued': '11-07-2023',
-      'Proponent': 'Proponent',
-      'Filename': 'Filename',
-      'File URL': 'File URL',
+      Proponent: 'Proponent',
+      Filename: 'Filename',
+      'File URL': 'File URL'
     };
-  
+
     // eslint-disable-next-line no-undef
-    generateExpectedResult = (penalties) => {
+    generateExpectedResult = penalties => {
       return {
-        'recordType': 'Administrative Penalty',
-        '_sourceRefOgcPenaltyId': baseCsvRow['Title'],
-        'author': 'AGENCY_OGC',
-        'issuingAgency': 'AGENCY_OGC',
-        'recordName': baseCsvRow['Title'],
-        'dateIssued': new Date(baseCsvRow['Date Issued']),
-        'location': 'British Columbia',
-        'penalties': [penalties],
-        'legislation': [
+        recordType: 'Administrative Penalty',
+        _sourceRefOgcPenaltyId: baseCsvRow['Title'],
+        author: 'AGENCY_OGC',
+        issuingAgency: 'AGENCY_OGC',
+        recordName: baseCsvRow['Title'],
+        dateIssued: new Date(baseCsvRow['Date Issued']),
+        location: 'British Columbia',
+        penalties: [penalties],
+        legislation: [
           {
-            'act': actName,
-            'section': 63,
-            'offence': 'Penalty for failure to comply with the Act or associated regulations'
+            act: actName,
+            section: 63,
+            offence: 'Penalty for failure to comply with the Act or associated regulations'
           }
         ],
-        'issuedTo': {
-          'type': 'Company',
-          'companyName': baseCsvRow['Proponent']
+        issuedTo: {
+          type: 'Company',
+          companyName: baseCsvRow['Proponent']
         },
-        'document': {
-          'fileName': 'Filename',
-          'url': 'File URL',
+        document: {
+          fileName: 'Filename',
+          url: 'File URL'
         },
-        'sourceSystemRef': 'bcogc'
+        sourceSystemRef: 'bcogc'
       };
     };
   });
@@ -79,13 +79,19 @@ describe('AdministrativePenalty', () => {
     let administrativePenalty;
 
     beforeEach(() => {
-      administrativePenalty = createAdminPenaltyInstance(authPayload, RECORD_TYPE.AdministrativePenalty._schemaName, baseCsvRow);
+      administrativePenalty = createAdminPenaltyInstance(
+        authPayload,
+        RECORD_TYPE.AdministrativePenalty._schemaName,
+        baseCsvRow
+      );
     });
 
     it('throws error if no csvRow provided', () => {
-      expect(() => { administrativePenalty.transformRecord(null) }).toThrow('transformRecord - required csvRow must be non-null.');
+      expect(() => {
+        administrativePenalty.transformRecord(null);
+      }).toThrow('transformRecord - required csvRow must be non-null.');
     });
-  
+
     it('returns transformed csvRow record with the penalties in dollars', () => {
       baseCsvRow['Penalty Amount (CAD)'] = '$123';
       // eslint-disable-next-line no-undef
@@ -97,59 +103,64 @@ describe('AdministrativePenalty', () => {
         },
         description: ''
       });
-  
+
       const result = administrativePenalty.transformRecord(baseCsvRow, actName);
-  
+
       expect(result).toEqual(expectedResult);
     });
-  
+
     it('returns transformed csvRow record with contravention but no penalty assessed', () => {
       baseCsvRow['Penalty Amount (CAD)'] = '$0';
       // eslint-disable-next-line no-undef
       const expectedResult = generateExpectedResult({
         type: '',
         penalty: null,
-        description: 'Although a contravention occurred, a penalty was not assessed. See the attached document for additional details.'
+        description:
+          'Although a contravention occurred, a penalty was not assessed. See the attached document for additional details.'
       });
 
       const result = administrativePenalty.transformRecord(baseCsvRow, actName);
-  
+
       expect(result).toEqual(expectedResult);
     });
-  
+
     it('returns transformed csvRow record with no contravention and no penalty assessed', () => {
       baseCsvRow['Penalty Amount (CAD)'] = '';
       // eslint-disable-next-line no-undef
       const expectedResult = generateExpectedResult({
         type: '',
         penalty: null,
-        description: 'No contravention was found to have occurred, and no penalty was assessed. See the attached document for additional details.'
+        description:
+          'No contravention was found to have occurred, and no penalty was assessed. See the attached document for additional details.'
       });
 
       const result = administrativePenalty.transformRecord(baseCsvRow, actName);
-  
+
       expect(result).toEqual(expectedResult);
     });
   });
 
-  
   describe('it creates an item', () => {
     let administrativePenalty;
 
     beforeEach(() => {
-      administrativePenalty = createAdminPenaltyInstance(authPayload, RECORD_TYPE.AdministrativePenalty._schemaName, baseCsvRow);
+      administrativePenalty = createAdminPenaltyInstance(
+        authPayload,
+        RECORD_TYPE.AdministrativePenalty._schemaName,
+        baseCsvRow
+      );
     });
 
     const mongoose = require('mongoose');
-    const Document = require ('../../models/document');
+    const Document = require('../../models/document');
     const utils = require('../../utils/constants/misc');
-    const mongo = 'mongodb://127.0.0.1/nrpti-testing'
+    const mongo = 'mongodb://127.0.0.1/nrpti-testing';
 
     beforeAll(async () => {
       await mongoose.connect(mongo);
       await Document.remove({});
     });
-    
+
     beforeEach(async () => {
       await Document.remove({});
     });
@@ -168,7 +179,7 @@ describe('AdministrativePenalty', () => {
         document.addedBy = addedBy;
         document.url = url;
         document.read = [utils.ApplicationRoles.ADMIN, ...readRoles];
-        document.write = [utils.ApplicationRoles.ADMIN, ...writeRoles];;
+        document.write = [utils.ApplicationRoles.ADMIN, ...writeRoles];
 
         return document.save();
       })
@@ -184,15 +195,17 @@ describe('AdministrativePenalty', () => {
       baseCsvRow['Penalty Amount (CAD)'] = '$123';
       const nrptiRecord = await administrativePenalty.transformRecord(baseCsvRow);
 
-      const result = await createURLDocument(nrptiRecord.document.fileName, 'BCOGC Import', nrptiRecord.document.url, ['public'])
+      const result = await createURLDocument(nrptiRecord.document.fileName, 'BCOGC Import', nrptiRecord.document.url, [
+        'public'
+      ]);
       const resultRead = [...result.read];
       const resultWrite = [...result.write];
 
-      expect(result.fileName).toEqual('Filename')
-      expect(result.url).toEqual('File URL')
-      expect(result.addedBy).toEqual('BCOGC Import')
-      expect(resultRead).toEqual(['sysadmin', 'public'])
-      expect(resultWrite).toEqual(['sysadmin'])
+      expect(result.fileName).toEqual('Filename');
+      expect(result.url).toEqual('File URL');
+      expect(result.addedBy).toEqual('BCOGC Import');
+      expect(resultRead).toEqual(['sysadmin', 'public']);
+      expect(resultWrite).toEqual(['sysadmin']);
     });
   });
 
@@ -200,19 +213,23 @@ describe('AdministrativePenalty', () => {
     let administrativePenalty;
 
     beforeEach(() => {
-      administrativePenalty = createAdminPenaltyInstance(authPayload, RECORD_TYPE.AdministrativePenalty._schemaName, baseCsvRow);
+      administrativePenalty = createAdminPenaltyInstance(
+        authPayload,
+        RECORD_TYPE.AdministrativePenalty._schemaName,
+        baseCsvRow
+      );
     });
 
     const mongoose = require('mongoose');
-    const AdminPenalty = require ('../../models/master/administrativePenalty');
+    const AdminPenalty = require('../../models/master/administrativePenalty');
     const utils = require('../../utils/constants/misc');
-    const mongo = 'mongodb://127.0.0.1/nrpti-testing'
+    const mongo = 'mongodb://127.0.0.1/nrpti-testing';
 
     beforeAll(async () => {
       await mongoose.connect(mongo);
       await AdminPenalty.remove({});
     });
-    
+
     beforeEach(async () => {
       await AdminPenalty.remove({});
     });
@@ -231,34 +248,37 @@ describe('AdministrativePenalty', () => {
         document.addedBy = addedBy;
         document.url = url;
         document.read = [utils.ApplicationRoles.ADMIN, ...readRoles];
-        document.write = [utils.ApplicationRoles.ADMIN, ...writeRoles];;
+        document.write = [utils.ApplicationRoles.ADMIN, ...writeRoles];
 
         return document.save();
       })
     }));
 
     it('finds any existing records', async () => {
-        baseCsvRow['Penalty Amount (CAD)'] = '$123';
-    
-        const nrptiRecord = await administrativePenalty.transformRecord(baseCsvRow);
-    
-        const mockRecord = { _schemaName: 'AdministrativePenalty', _sourceRefOgcPenaltyId: nrptiRecord._sourceRefOgcPenaltyId };
-    
-        const masterRecordModel = mongoose.model(RECORD_TYPE.AdministrativePenalty._schemaName);
-    
-        const findOneMock = jest.spyOn(masterRecordModel, 'findOne').mockResolvedValue(mockRecord);
-    
-        const result = await masterRecordModel.findOne({
-          _schemaName: RECORD_TYPE.AdministrativePenalty._schemaName,
-          _sourceRefOgcPenaltyId: nrptiRecord._sourceRefOgcPenaltyId,
-        });
-    
-        expect(findOneMock).toHaveBeenCalledWith({
-          _schemaName: RECORD_TYPE.AdministrativePenalty._schemaName,
-          _sourceRefOgcPenaltyId: nrptiRecord._sourceRefOgcPenaltyId,
-        });
-        expect(result).toMatchObject(mockRecord);
-        expect(result._schemaName).toEqual('AdministrativePenalty');
+      baseCsvRow['Penalty Amount (CAD)'] = '$123';
+
+      const nrptiRecord = await administrativePenalty.transformRecord(baseCsvRow);
+
+      const mockRecord = {
+        _schemaName: 'AdministrativePenalty',
+        _sourceRefOgcPenaltyId: nrptiRecord._sourceRefOgcPenaltyId
+      };
+
+      const masterRecordModel = mongoose.model(RECORD_TYPE.AdministrativePenalty._schemaName);
+
+      const findOneMock = jest.spyOn(masterRecordModel, 'findOne').mockResolvedValue(mockRecord);
+
+      const result = await masterRecordModel.findOne({
+        _schemaName: RECORD_TYPE.AdministrativePenalty._schemaName,
+        _sourceRefOgcPenaltyId: nrptiRecord._sourceRefOgcPenaltyId
+      });
+
+      expect(findOneMock).toHaveBeenCalledWith({
+        _schemaName: RECORD_TYPE.AdministrativePenalty._schemaName,
+        _sourceRefOgcPenaltyId: nrptiRecord._sourceRefOgcPenaltyId
+      });
+      expect(result).toMatchObject(mockRecord);
+      expect(result._schemaName).toEqual('AdministrativePenalty');
     });
   });
 });

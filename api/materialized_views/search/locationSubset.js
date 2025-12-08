@@ -4,7 +4,7 @@ async function update(defaultLog) {
   const aggregate = [
     {
       $match: {
-        '_schemaName': {
+        _schemaName: {
           $in: [
             'AdministrativePenalty',
             'AdministrativeSanction',

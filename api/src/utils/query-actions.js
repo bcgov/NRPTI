@@ -6,9 +6,9 @@
  * @param {*} obj
  * @returns
  */
-exports.publish = async function(obj, auth_payload) {
+exports.publish = async function (obj, auth_payload) {
   let self = this;
-  return new Promise(async function(resolve, reject) {
+  return new Promise(async function (resolve, reject) {
     // Object was already published?
     if (self.isPublished(obj)) {
       resolve({
@@ -57,7 +57,7 @@ exports.publish = async function(obj, auth_payload) {
  * @param {*} obj
  * @returns obj
  */
-exports.addPublicReadRole = function(obj) {
+exports.addPublicReadRole = function (obj) {
   if (!obj || !obj.read || !Array.isArray(obj.read)) {
     return obj;
   }
@@ -75,9 +75,9 @@ exports.addPublicReadRole = function(obj) {
  * @param {*} obj
  * @returns
  */
-exports.unPublish = async function(obj, auth_payload) {
+exports.unPublish = async function (obj, auth_payload) {
   let self = this;
-  return new Promise(async function(resolve, reject) {
+  return new Promise(async function (resolve, reject) {
     // Object wasn't already published?
     if (!self.isPublished(obj)) {
       resolve({
@@ -122,7 +122,7 @@ exports.unPublish = async function(obj, auth_payload) {
  * @param {*} obj
  * @returns obj
  */
-exports.removePublicReadRole = function(obj) {
+exports.removePublicReadRole = function (obj) {
   if (!obj || !obj.read || !Array.isArray(obj.read)) {
     return obj;
   }
@@ -138,7 +138,7 @@ exports.removePublicReadRole = function(obj) {
  * @param {*} obj
  * @returns
  */
-exports.isPublished = function(obj) {
+exports.isPublished = function (obj) {
   if (!obj || !obj.read || !Array.isArray(obj.read)) {
     return null;
   }
@@ -154,7 +154,7 @@ exports.isPublished = function(obj) {
  * @param {*} object the response data.
  * @returns {*} res an http response
  */
-exports.sendResponse = function(res, code, object) {
+exports.sendResponse = function (res, code, object) {
   res.writeHead(code, { 'Content-Type': 'application/json' });
   return res.end(JSON.stringify(object));
 };

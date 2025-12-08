@@ -16,7 +16,7 @@ describe('readAndParseCsvFile', () => {
     expect(result).toBeDefined();
     expect(result).toHaveLength(1);
     expect(result[0]['section']).toBe('Mowing without a license');
-    expect(result[0]['date'] === (moment.tz('2021-02-24', "America/Vancouver")));
+    expect(result[0]['date'] === moment.tz('2021-02-24', 'America/Vancouver'));
     expect(result[0]['record id']).toBe('999999');
   });
-})
+});

@@ -36,7 +36,7 @@ const winston = require('winston');
  * @param {*} logLabel label for the logger.
  * @returns
  */
-const getLogger = function(logLabel) {
+const getLogger = function (logLabel) {
   return winston.loggers.get(logLabel || 'default', {
     transports: [
       new winston.transports.Console({

@@ -32,13 +32,13 @@ describe('getOutcomeDescription', () => {
     const result = await CsvUtils.getOutcomeDescription(null);
 
     expect(result).toBe(null);
-  });  
+  });
 
   it('returns expected contraventions if csvRow "compliance status" is "Alleged Non-Compliance" and section not empty', async () => {
     const result = await CsvUtils.getOutcomeDescription({
       'compliance status': 'Alleged Non-Compliance',
       'c&e actions': 'Notice of Contravention',
-      'section': '20 (1) Non-farm use of land without authority'
+      section: '20 (1) Non-farm use of land without authority'
     });
 
     expect(result).toEqual(

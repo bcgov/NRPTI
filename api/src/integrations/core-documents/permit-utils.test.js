@@ -6,15 +6,13 @@ describe('Permits', () => {
     it('throws an error if no recordType provided', () => {
       expect(() => {
         new PermitUtils({}, null);
-      })
-      .toThrow('PermitAmendmentUtils - required recordType must be non-null.');
+      }).toThrow('PermitAmendmentUtils - required recordType must be non-null.');
     });
 
     it('throws an error if no auth_payload provided', () => {
       expect(() => {
         new PermitUtils(null, {});
-      })
-      .toThrow('PermitAmendmentUtils - required auth_payload must be non-null.');
+      }).toThrow('PermitAmendmentUtils - required auth_payload must be non-null.');
     });
   });
 
@@ -53,6 +51,6 @@ describe('Permits', () => {
       const result = permitUtils.transformRecord(permit);
 
       expect(result).toEqual(expectedResult);
-    })
+    });
   });
 });

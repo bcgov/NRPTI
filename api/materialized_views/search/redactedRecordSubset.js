@@ -2,7 +2,6 @@ const mongodb = require('../../src/utils/mongodb');
 const defaultLog = require('../../src/utils/logger')('redacted-record-subset');
 const BusinessLogicManager = require('../../src/utils/business-logic-manager');
 
-
 /**
  * Updates or adds the record passed in, in hte redacted record subset
  *
@@ -13,7 +12,7 @@ function redactRecord(record) {
   const issuedTo = record.issuedTo;
   const issuingAgency = record.issuingAgency;
 
-  if ( BusinessLogicManager.isIssuedToConsideredAnonymous(issuedTo, issuingAgency) ) {
+  if (BusinessLogicManager.isIssuedToConsideredAnonymous(issuedTo, issuingAgency)) {
     // Remove the issuedTo completely so that it shows up as "Unpublished" on NRCED public.
     delete redactedRecord.issuedTo;
 
@@ -24,15 +23,12 @@ function redactRecord(record) {
   return redactedRecord;
 }
 
-
-
 /**
  * adds the record passed in to the redacted record subset
  *
  * @param {*} record
  */
 async function saveOneRecord(record) {
-
   const redactedRecord = redactRecord(record);
 
   try {
@@ -50,15 +46,12 @@ async function saveOneRecord(record) {
 
 exports.saveOneRecord = saveOneRecord;
 
-
-
 /**
  * Updates the record passed in, in the redacted record subset
  *
  * @param {*} record
  */
 async function updateOneRecord(record) {
-
   const redactedRecord = redactRecord(record);
 
   try {
@@ -66,10 +59,7 @@ async function updateOneRecord(record) {
 
     const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
     const redactedCollection = db.collection('redacted_record_subset');
-    await redactedCollection.findOneAndUpdate(
-      { _id: redactedRecord._id },
-      { $set: redactedRecord }
-    );
+    await redactedCollection.findOneAndUpdate({ _id: redactedRecord._id }, { $set: redactedRecord });
 
     defaultLog.info('Done Updating redacted_record_subset');
   } catch (error) {
@@ -78,8 +68,6 @@ async function updateOneRecord(record) {
 }
 
 exports.updateOneRecord = updateOneRecord;
-
-
 
 /**
  * Updates the record passed in, in the redacted record subset

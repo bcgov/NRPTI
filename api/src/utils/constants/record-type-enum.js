@@ -15,7 +15,7 @@ const RECORD_TYPE = Object.freeze({
     flavours: {
       lng: { _schemaName: 'AdministrativePenaltyLNG' },
       nrced: { _schemaName: 'AdministrativePenaltyNRCED' },
-      bcmi: { _schemaName: 'AdministrativePenaltyBCMI'}
+      bcmi: { _schemaName: 'AdministrativePenaltyBCMI' }
     }
   },
   AdministrativeSanction: {
@@ -87,7 +87,11 @@ const RECORD_TYPE = Object.freeze({
     _schemaName: 'Inspection',
     displayName: 'Inspection',
     recordControllerName: 'inspections',
-    flavours: { lng: { _schemaName: 'InspectionLNG' }, nrced: { _schemaName: 'InspectionNRCED' }, bcmi: { _schemaName: 'InspectionBCMI' } }
+    flavours: {
+      lng: { _schemaName: 'InspectionLNG' },
+      nrced: { _schemaName: 'InspectionNRCED' },
+      bcmi: { _schemaName: 'InspectionBCMI' }
+    }
   },
   ManagementPlan: {
     _schemaName: 'ManagementPlan',
@@ -105,7 +109,11 @@ const RECORD_TYPE = Object.freeze({
     _schemaName: 'Order',
     displayName: 'Order',
     recordControllerName: 'orders',
-    flavours: { lng: { _schemaName: 'OrderLNG' }, nrced: { _schemaName: 'OrderNRCED' }, bcmi: { _schemaName: 'OrderBCMI' } }
+    flavours: {
+      lng: { _schemaName: 'OrderLNG' },
+      nrced: { _schemaName: 'OrderNRCED' },
+      bcmi: { _schemaName: 'OrderBCMI' }
+    }
   },
   Permit: {
     _schemaName: 'Permit',

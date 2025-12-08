@@ -30,7 +30,7 @@ exports.createFuzzySearchString = function (keywords, nGramSize, caseSensitive) 
   // Cycle through each word, creating n-grams for each one
   // once we have the set of n-grams back, join them together
   // and append to the results string
-  cleanKeywordArray.forEach((word) => {
+  cleanKeywordArray.forEach(word => {
     // if the word is null or empty, or the same size as the min n-gram, we don't have to do anything
     if (word.length + 1 <= nGramSize) {
       // Our word is the size of the min n-gram, so just add it as is, and add a space
@@ -48,7 +48,7 @@ exports.createFuzzySearchString = function (keywords, nGramSize, caseSensitive) 
 
 /*
  * What is an n-gram? https://en.wikipedia.org/wiki/N-gram
-*/
+ */
 function createNGrams(word, nGramSize) {
   // our list of resulting n-grams
   let nGrams = [];

@@ -58,9 +58,7 @@ describe('generateExpArray', () => {
     it('returns `and in contains` expression for field with multiple comma separated values', async () => {
       const result = await searchController.generateExpArray({ item: ['value1', 'value2', 'value3'] }, '$and', '$in');
 
-      expect(result).toEqual([
-        { $and: [{ item: { $in: ['value1', 'value2', 'value3'] } }] }
-      ]);
+      expect(result).toEqual([{ $and: [{ item: { $in: ['value1', 'value2', 'value3'] } }] }]);
     });
   });
 

@@ -48,7 +48,7 @@ exports.ADDITIONAL_ROLES = ADDITIONAL_ROLES;
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createItem = async function(args, res, next, incomingObj) {
+exports.createItem = async function (args, res, next, incomingObj) {
   const flavourFunctions = {
     OrderLNG: this.createLNG,
     OrderNRCED: this.createNRCED,
@@ -87,7 +87,7 @@ exports.createItem = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master order record
  */
-exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   let Order = mongoose.model('Order');
   let order = new Order();
 
@@ -205,7 +205,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns created lng order record
  */
-exports.createLNG = function(args, res, next, incomingObj) {
+exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (
     !userHasValidRoles(
@@ -286,11 +286,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
 
   // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
   if (args) {
-    postUtils.setAdditionalRoleOnRecord(
-      orderLNG,
-      args.swagger.params.auth_payload.client_roles,
-      ADDITIONAL_ROLES
-    );
+    postUtils.setAdditionalRoleOnRecord(orderLNG, args.swagger.params.auth_payload.client_roles, ADDITIONAL_ROLES);
   }
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
@@ -334,7 +330,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced order record
  */
-exports.createNRCED = function(args, res, next, incomingObj) {
+exports.createNRCED = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of role.
   if (
     !userHasValidRoles(
@@ -417,11 +413,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
 
   // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
   if (args) {
-    postUtils.setAdditionalRoleOnRecord(
-      orderNRCED,
-      args.swagger.params.auth_payload.client_roles,
-      ADDITIONAL_ROLES
-    );
+    postUtils.setAdditionalRoleOnRecord(orderNRCED, args.swagger.params.auth_payload.client_roles, ADDITIONAL_ROLES);
   }
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
@@ -465,7 +457,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced order record
  */
-exports.createBCMI = function(args, res, next, incomingObj) {
+exports.createBCMI = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of role.
   if (
     !userHasValidRoles(
@@ -554,11 +546,7 @@ exports.createBCMI = function(args, res, next, incomingObj) {
 
   // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
   if (args) {
-    postUtils.setAdditionalRoleOnRecord(
-      orderBCMI,
-      args.swagger.params.auth_payload.client_roles,
-      ADDITIONAL_ROLES
-    );
+    postUtils.setAdditionalRoleOnRecord(orderBCMI, args.swagger.params.auth_payload.client_roles, ADDITIONAL_ROLES);
   }
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']

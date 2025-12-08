@@ -9,19 +9,19 @@ describe('getEntityType', () => {
   });
 
   it('returns "Company" if csvRow "client_type_code" is "C"', async () => {
-    const result = await CsvUtils.getEntityType({ 'client_type_code': 'C' });
+    const result = await CsvUtils.getEntityType({ client_type_code: 'C' });
 
     expect(result).toEqual(MiscConstants.IssuedToEntityTypes.Company);
   });
 
   it('returns "Individual" if csvRow "client_type_code" is empty', async () => {
-    const result = await CsvUtils.getEntityType({ 'client_type_code': '' });
+    const result = await CsvUtils.getEntityType({ client_type_code: '' });
 
     expect(result).toEqual(MiscConstants.IssuedToEntityTypes.Individual);
   });
 
   it('returns "Individual" if csvRow "client_type_code"', async () => {
-    const result = await CsvUtils.getEntityType({ 'client_type_code': null });
+    const result = await CsvUtils.getEntityType({ client_type_code: null });
 
     expect(result).toEqual(MiscConstants.IssuedToEntityTypes.Individual);
   });

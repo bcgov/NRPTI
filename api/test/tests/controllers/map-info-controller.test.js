@@ -49,12 +49,9 @@ describe('Map-Info Controller Testing', () => {
       return mapInfo.protectedPost(paramsWithValues, res, next);
     });
 
-    const res = await request(app)
-      .post(endpoint)
-      .send({})
-      .expect(400);
+    const res = await request(app).post(endpoint).send({}).expect(400);
 
-      expect(res.body).toMatch('protectedPost - error: invalid post body');
+    expect(res.body).toMatch('protectedPost - error: invalid post body');
   });
 
   test('Protectd post returns 200 with invalid post body', async () => {
@@ -75,23 +72,20 @@ describe('Map-Info Controller Testing', () => {
       return mapInfo.protectedPost(paramsWithValues, res, next);
     });
 
-    const res = await request(app)
-      .post(endpoint)
-      .send(postObj)
-      .expect(200);
- 
-        expect(res.body._schemaName).toMatch('MapLayerInfo');
-        expect(res.body.location).toMatch(postObj.data.location);
-        expect(res.body.length).toMatch(postObj.data.length);
-        expect(res.body.description).toMatch(postObj.data.description);
-        expect(res.body.segment).toMatch(postObj.data.segment);
-        expect(res.body.read).toContain(ApplicationRoles.ADMIN);
-        expect(res.body.read).toContain(ApplicationRoles.ADMIN_LNG);
-        expect(res.body.read).toContain(ApplicationRoles.PUBLIC);
+    const res = await request(app).post(endpoint).send(postObj).expect(200);
+
+    expect(res.body._schemaName).toMatch('MapLayerInfo');
+    expect(res.body.location).toMatch(postObj.data.location);
+    expect(res.body.length).toMatch(postObj.data.length);
+    expect(res.body.description).toMatch(postObj.data.description);
+    expect(res.body.segment).toMatch(postObj.data.segment);
+    expect(res.body.read).toContain(ApplicationRoles.ADMIN);
+    expect(res.body.read).toContain(ApplicationRoles.ADMIN_LNG);
+    expect(res.body.read).toContain(ApplicationRoles.PUBLIC);
   });
 
-  // Manually running this test through swagger works, this test does not. 
-  
+  // Manually running this test through swagger works, this test does not.
+
   // test('Protectd put returns 200 and updates record values', async done => {
   //   const roles = ['sysadmin'];
   //   const updateObj = {
@@ -138,11 +132,8 @@ describe('Map-Info Controller Testing', () => {
       return mapInfo.protectedDelete(paramsWithValues, res, next);
     });
 
-    const res = await request(app)
-      .delete(endpoint)
-      .query({ mapInfoId: testObjectId.toString() })
-      .expect(200);
+    const res = await request(app).delete(endpoint).query({ mapInfoId: testObjectId.toString() }).expect(200);
 
-      expect(res.body).toEqual({ n: 1, ok: 1 });
+    expect(res.body).toEqual({ n: 1, ok: 1 });
   });
 });

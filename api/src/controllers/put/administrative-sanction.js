@@ -38,8 +38,18 @@ exports.editRecord = async function (args, res, next, incomingObj, overridePutPa
   const flavourFunctions = {
     AdministrativeSanctionLNG: this.editLNG,
     AdministrativeSanctionNRCED: this.editNRCED
-  }
-  return await PutUtils.editRecordWithFlavours(args, res, next, incomingObj, this.editMaster, AdministrativeSanctionPost, 'AdministrativeSanction', flavourFunctions, overridePutParams);
+  };
+  return await PutUtils.editRecordWithFlavours(
+    args,
+    res,
+    next,
+    incomingObj,
+    this.editMaster,
+    AdministrativeSanctionPost,
+    'AdministrativeSanction',
+    flavourFunctions,
+    overridePutParams
+  );
 };
 
 /**
@@ -97,7 +107,7 @@ exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
   const updateObj = { $set: dotNotatedObj };
 
   if (flavourIds && flavourIds.length) {
-    updateObj.$set = {...updateObj.$set };
+    updateObj.$set = { ...updateObj.$set };
     updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
   }
 

@@ -47,7 +47,7 @@ exports.ADDITIONAL_ROLES = ADDITIONAL_ROLES;
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createItem = async function(args, res, next, incomingObj) {
+exports.createItem = async function (args, res, next, incomingObj) {
   const flavourFunctions = {
     CourtConvictionLNG: this.createLNG,
     CourtConvictionNRCED: this.createNRCED,
@@ -91,7 +91,7 @@ exports.createItem = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master courtConviction record
  */
-exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   let CourtConviction = mongoose.model('CourtConviction');
   let courtConviction = new CourtConviction();
 
@@ -113,7 +113,6 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
   incomingObj.mineGuid && (courtConviction.mineGuid = incomingObj.mineGuid);
   incomingObj.unlistedMine && (courtConviction.unlistedMine = incomingObj.unlistedMine);
   incomingObj.unlistedMineType && (courtConviction.unlistedMineType = incomingObj.unlistedMineType);
-
 
   // set permissions
   courtConviction.read = utils.ApplicationAdminRoles;
@@ -224,7 +223,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns created lng courtConviction record
  */
-exports.createLNG = function(args, res, next, incomingObj) {
+exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (
     !userHasValidRoles(
@@ -358,7 +357,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced courtConviction record
  */
-exports.createNRCED = function(args, res, next, incomingObj) {
+exports.createNRCED = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (
     !userHasValidRoles(
@@ -494,7 +493,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced courtConviction record
  */
-exports.createBCMI = function(args, res, next, incomingObj) {
+exports.createBCMI = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (
     !userHasValidRoles(

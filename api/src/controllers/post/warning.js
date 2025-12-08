@@ -47,7 +47,7 @@ exports.ADDITIONAL_ROLES = ADDITIONAL_ROLES;
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createItem = async function(args, res, next, incomingObj) {
+exports.createItem = async function (args, res, next, incomingObj) {
   const flavourFunctions = {
     WarningLNG: this.createLNG,
     WarningNRCED: this.createNRCED
@@ -85,7 +85,7 @@ exports.createItem = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master warning record
  */
-exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   let Warning = mongoose.model('Warning');
   let warning = new Warning();
 
@@ -204,7 +204,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns created lng warning record
  */
-exports.createLNG = function(args, res, next, incomingObj) {
+exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (
     !userHasValidRoles(
@@ -287,11 +287,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
 
   // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
   if (args) {
-    postUtils.setAdditionalRoleOnRecord(
-      warningLNG,
-      args.swagger.params.auth_payload.client_roles,
-      ADDITIONAL_ROLES
-    );
+    postUtils.setAdditionalRoleOnRecord(warningLNG, args.swagger.params.auth_payload.client_roles, ADDITIONAL_ROLES);
   }
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
@@ -335,7 +331,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced warning record
  */
-exports.createNRCED = function(args, res, next, incomingObj) {
+exports.createNRCED = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (
     !userHasValidRoles(
@@ -418,11 +414,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
 
   // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
   if (args) {
-    postUtils.setAdditionalRoleOnRecord(
-      warningNRCED,
-      args.swagger.params.auth_payload.client_roles,
-      ADDITIONAL_ROLES
-    );
+    postUtils.setAdditionalRoleOnRecord(warningNRCED, args.swagger.params.auth_payload.client_roles, ADDITIONAL_ROLES);
   }
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']

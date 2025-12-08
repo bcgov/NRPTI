@@ -47,7 +47,7 @@ exports.ADDITIONAL_ROLES = ADDITIONAL_ROLES;
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createItem = async function(args, res, next, incomingObj) {
+exports.createItem = async function (args, res, next, incomingObj) {
   const flavourFunctions = {
     InspectionLNG: this.createLNG,
     InspectionNRCED: this.createNRCED,
@@ -86,7 +86,7 @@ exports.createItem = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master inspection record
  */
-exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   let Inspection = mongoose.model('Inspection');
   let inspection = new Inspection();
 
@@ -183,11 +183,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
 
   // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
   if (args) {
-    postUtils.setAdditionalRoleOnRecord(
-      inspection,
-      args.swagger.params.auth_payload.client_roles,
-      ADDITIONAL_ROLES
-    );
+    postUtils.setAdditionalRoleOnRecord(inspection, args.swagger.params.auth_payload.client_roles, ADDITIONAL_ROLES);
   }
 
   return inspection;
@@ -222,7 +218,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns created lng inspection record
  */
-exports.createLNG = function(args, res, next, incomingObj) {
+exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (
     !userHasValidRoles(
@@ -271,20 +267,25 @@ exports.createLNG = function(args, res, next, incomingObj) {
   inspectionLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (inspectionLNG.issuedTo.type = incomingObj.issuedTo.type);
 
-  incomingObj.issuedTo && incomingObj.issuedTo.companyName &&
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.companyName &&
     (inspectionLNG.issuedTo.companyName = incomingObj.issuedTo.companyName);
 
-    incomingObj.issuedTo && incomingObj.issuedTo.firstName &&
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.firstName &&
     (inspectionLNG.issuedTo.firstName = incomingObj.issuedTo.firstName);
 
-    incomingObj.issuedTo && incomingObj.issuedTo.middleName &&
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.middleName &&
     (inspectionLNG.issuedTo.middleName = incomingObj.issuedTo.middleName);
 
-    incomingObj.issuedTo && incomingObj.issuedTo.lastName &&
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.lastName &&
     (inspectionLNG.issuedTo.lastName = incomingObj.issuedTo.lastName);
   incomingObj.issuedTo && (inspectionLNG.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
 
-    incomingObj.issuedTo && incomingObj.issuedTo.dateOfBirth &&
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.dateOfBirth &&
     (inspectionLNG.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
 
   incomingObj.projectName && (inspectionLNG.projectName = incomingObj.projectName);
@@ -304,11 +305,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
 
   // Add limited-admin(such as admin:wf) read/write roles if user is a limited-admin user
   if (args) {
-    postUtils.setAdditionalRoleOnRecord(
-      inspectionLNG,
-      args.swagger.params.auth_payload.client_roles,
-      ADDITIONAL_ROLES
-    );
+    postUtils.setAdditionalRoleOnRecord(inspectionLNG, args.swagger.params.auth_payload.client_roles, ADDITIONAL_ROLES);
   }
 
   // If incoming object has addRole: 'public' then read will look like ['sysadmin', 'public']
@@ -352,7 +349,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced inspection record
  */
-exports.createNRCED = function(args, res, next, incomingObj) {
+exports.createNRCED = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (
     !userHasValidRoles(
@@ -386,7 +383,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   // set permissions and meta
   inspectionNRCED.read = utils.ApplicationAdminRoles;
   inspectionNRCED.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
-  
+
   if (incomingObj.sourceSystemRef === 'nris-epd') {
     // Add admin:env-epd to the read and write permissions
     inspectionNRCED.read.push(utils.ApplicationRoles.ADMIN_ENV_EPD);
@@ -409,23 +406,28 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   inspectionNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
 
   incomingObj.issuedTo && incomingObj.issuedTo.type && (inspectionNRCED.issuedTo.type = incomingObj.issuedTo.type);
-  
-  incomingObj.issuedTo && incomingObj.issuedTo.companyName &&
+
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.companyName &&
     (inspectionNRCED.issuedTo.companyName = incomingObj.issuedTo.companyName);
-  
-    incomingObj.issuedTo && incomingObj.issuedTo.firstName &&
+
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.firstName &&
     (inspectionNRCED.issuedTo.firstName = incomingObj.issuedTo.firstName);
-  
-    incomingObj.issuedTo && incomingObj.issuedTo.middleName &&
+
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.middleName &&
     (inspectionNRCED.issuedTo.middleName = incomingObj.issuedTo.middleName);
 
-    incomingObj.issuedTo && incomingObj.issuedTo.lastName &&
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.lastName &&
     (inspectionNRCED.issuedTo.lastName = incomingObj.issuedTo.lastName);
-  
-    incomingObj.issuedTo &&
+
+  incomingObj.issuedTo &&
     (inspectionNRCED.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
-  
-    incomingObj.issuedTo && incomingObj.issuedTo.dateOfBirth &&
+
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.dateOfBirth &&
     (inspectionNRCED.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
 
   incomingObj.projectName && (inspectionNRCED.projectName = incomingObj.projectName);
@@ -493,7 +495,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created bcmi inspection record
  */
-exports.createBCMI = function(args, res, next, incomingObj) {
+exports.createBCMI = function (args, res, next, incomingObj) {
   // Confirm user has correct role for this type of record.
   if (
     !userHasValidRoles(
@@ -548,20 +550,25 @@ exports.createBCMI = function(args, res, next, incomingObj) {
   inspectionBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
   incomingObj.issuedTo && incomingObj.issuedTo.type && (inspectionBCMI.issuedTo.type = incomingObj.issuedTo.type);
 
-  incomingObj.issuedTo && incomingObj.issuedTo.companyName &&
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.companyName &&
     (inspectionBCMI.issuedTo.companyName = incomingObj.issuedTo.companyName);
 
-    incomingObj.issuedTo && incomingObj.issuedTo.firstName &&
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.firstName &&
     (inspectionBCMI.issuedTo.firstName = incomingObj.issuedTo.firstName);
 
-    incomingObj.issuedTo && incomingObj.issuedTo.middleName &&
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.middleName &&
     (inspectionBCMI.issuedTo.middleName = incomingObj.issuedTo.middleName);
 
-    incomingObj.issuedTo && incomingObj.issuedTo.lastName &&
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.lastName &&
     (inspectionBCMI.issuedTo.lastName = incomingObj.issuedTo.lastName);
   incomingObj.issuedTo && (inspectionBCMI.issuedTo.fullName = postUtils.getIssuedToFullNameValue(incomingObj.issuedTo));
 
-  incomingObj.issuedTo && incomingObj.issuedTo.dateOfBirth &&
+  incomingObj.issuedTo &&
+    incomingObj.issuedTo.dateOfBirth &&
     (inspectionBCMI.issuedTo.dateOfBirth = incomingObj.issuedTo.dateOfBirth);
 
   incomingObj.projectName && (inspectionBCMI.projectName = incomingObj.projectName);

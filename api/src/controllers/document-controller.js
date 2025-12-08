@@ -20,11 +20,12 @@ const s3 = new AWS.S3({
   s3ForcePathStyle: true
 });
 
-exports.protectedOptions = function(args, res, next) {
+exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
 };
 
-exports.protectedPost = async function(args, res, next) { // Confirm user has correct role.
+exports.protectedPost = async function (args, res, next) {
+  // Confirm user has correct role.
   if (
     args.swagger.params.fileName &&
     args.swagger.params.fileName.value &&
@@ -40,7 +41,9 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
     // a post to "/api/record/thisWillBreakTheServer/document" will cause the server to die.
     // This will still let any 12 char value through (it passes isValid)
     if (!args.swagger.params.recordId.value || !ObjectID.isValid(args.swagger.params.recordId.value)) {
-      defaultLog.info(`Error creating document: ${args.swagger.params.fileName.value}, Error: Invalid Master Record ID supplied`)
+      defaultLog.info(
+        `Error creating document: ${args.swagger.params.fileName.value}, Error: Invalid Master Record ID supplied`
+      );
       return queryActions.sendResponse(
         res,
         400,
@@ -48,12 +51,23 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
       );
     }
 
-    const masterRecord = await collection.findOne({ _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.client_roles } });
+    const masterRecord = await collection.findOne({
+      _id: new ObjectID(args.swagger.params.recordId.value),
+      write: { $in: args.swagger.params.auth_payload.client_roles }
+    });
     const masterModel = mongoose.model(masterRecord._schemaName);
 
     // Set mongo document and s3 document roles
-    const readRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_BCMI];
-    const writeRoles = [utils.ApplicationRoles.ADMIN_LNG, utils.ApplicationRoles.ADMIN_NRCED, utils.ApplicationRoles.ADMIN_BCMI];
+    const readRoles = [
+      utils.ApplicationRoles.ADMIN_LNG,
+      utils.ApplicationRoles.ADMIN_NRCED,
+      utils.ApplicationRoles.ADMIN_BCMI
+    ];
+    const writeRoles = [
+      utils.ApplicationRoles.ADMIN_LNG,
+      utils.ApplicationRoles.ADMIN_NRCED,
+      utils.ApplicationRoles.ADMIN_BCMI
+    ];
     let s3ACLRole = null;
 
     // Add limited admin roles to read/write if user is a limited admin(e.g., admin:wf or admin:flnro)
@@ -123,12 +137,21 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
     try {
       // add to master record
       recordResponse = await masterModel.findOneAndUpdate(
-        { _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.client_roles } },
+        {
+          _id: new ObjectID(args.swagger.params.recordId.value),
+          write: { $in: args.swagger.params.auth_payload.client_roles }
+        },
         { $addToSet: { documents: new ObjectID(docResponse._id) } },
         { new: true }
       );
 
-      queryUtils.audit(args, 'Doc Record Update', JSON.stringify(recordResponse), args.swagger.params.auth_payload, recordResponse.key);
+      queryUtils.audit(
+        args,
+        'Doc Record Update',
+        JSON.stringify(recordResponse),
+        args.swagger.params.auth_payload,
+        recordResponse.key
+      );
     } catch (e) {
       defaultLog.info(
         `Error adding ${args.swagger.params.fileName.value} to record ${args.swagger.params.recordId.value}: ${e}`
@@ -177,7 +200,7 @@ exports.protectedPost = async function(args, res, next) { // Confirm user has co
   next();
 };
 
-exports.protectedDelete = async function(args, res, next) {
+exports.protectedDelete = async function (args, res, next) {
   if (
     args.swagger.params.docId &&
     args.swagger.params.docId.value &&
@@ -189,7 +212,10 @@ exports.protectedDelete = async function(args, res, next) {
     let docResponse = null;
     let s3Response = null;
     try {
-      docResponse = await Document.findOneAndRemove({ _id: new ObjectID(args.swagger.params.docId.value), write: { $in: args.swagger.params.auth_payload.client_roles } });
+      docResponse = await Document.findOneAndRemove({
+        _id: new ObjectID(args.swagger.params.docId.value),
+        write: { $in: args.swagger.params.auth_payload.client_roles }
+      });
       queryUtils.audit(args, 'DELETE', JSON.stringify(docResponse), args.swagger.params.auth_payload, docResponse._id);
     } catch (e) {
       defaultLog.info(`Error removing document meta ${args.swagger.params.docId.value} from the database: ${e}`);
@@ -205,7 +231,13 @@ exports.protectedDelete = async function(args, res, next) {
     if (docResponse.key) {
       try {
         const s3DeleteResult = await deleteS3Document(docResponse.key);
-        queryUtils.audit(args, 'DELETE', JSON.stringify(s3DeleteResult), args.swagger.params.auth_payload, docResponse.key);
+        queryUtils.audit(
+          args,
+          'DELETE',
+          JSON.stringify(s3DeleteResult),
+          args.swagger.params.auth_payload,
+          docResponse.key
+        );
 
         s3Response = s3DeleteResult;
       } catch (e) {
@@ -221,7 +253,10 @@ exports.protectedDelete = async function(args, res, next) {
     const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
     const collection = db.collection('nrpti');
 
-    const masterRecord = await collection.findOne({ _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.client_roles } });
+    const masterRecord = await collection.findOne({
+      _id: new ObjectID(args.swagger.params.recordId.value),
+      write: { $in: args.swagger.params.auth_payload.client_roles }
+    });
     const masterModel = mongoose.model(masterRecord._schemaName);
 
     // Then we want to remove the document's id from the record it's attached to.
@@ -229,11 +264,20 @@ exports.protectedDelete = async function(args, res, next) {
     try {
       // remove from master record
       recordResponse = await masterModel.findOneAndUpdate(
-        { _id: new ObjectID(args.swagger.params.recordId.value), write: { $in: args.swagger.params.auth_payload.client_roles } },
+        {
+          _id: new ObjectID(args.swagger.params.recordId.value),
+          write: { $in: args.swagger.params.auth_payload.client_roles }
+        },
         { $pull: { documents: new ObjectID(docResponse._id) } },
         { new: true }
       );
-      queryUtils.audit(args, 'Doc Record Update', JSON.stringify(recordResponse), args.swagger.params.auth_payload, recordResponse.key);
+      queryUtils.audit(
+        args,
+        'Doc Record Update',
+        JSON.stringify(recordResponse),
+        args.swagger.params.auth_payload,
+        recordResponse.key
+      );
     } catch (e) {
       defaultLog.info(
         `Error removing ${args.swagger.params.docId.value} from record ${args.swagger.params.recordId.value}: ${e}`
@@ -297,7 +341,7 @@ async function createURLDocument(fileName, addedBy, url, readRoles = [], writeRo
   document.addedBy = addedBy;
   document.url = url;
   document.read = [utils.ApplicationRoles.ADMIN, ...readRoles];
-  document.write = [utils.ApplicationRoles.ADMIN, ...writeRoles];;
+  document.write = [utils.ApplicationRoles.ADMIN, ...writeRoles];
 
   return document.save();
 }
@@ -397,18 +441,21 @@ exports.uploadS3Document = uploadS3Document;
  * @returns
  */
 async function publishS3Document(s3Key) {
-  return new Promise(function(resolve, reject) {
-    s3.putObjectAcl({
-      Bucket: process.env.OBJECT_STORE_bucket_name,
-      Key: s3Key,
-      ACL: 'public-read'
-    }, function(err, data) {
-      if (err) {
+  return new Promise(function (resolve, reject) {
+    s3.putObjectAcl(
+      {
+        Bucket: process.env.OBJECT_STORE_bucket_name,
+        Key: s3Key,
+        ACL: 'public-read'
+      },
+      function (err, data) {
+        if (err) {
           reject(err);
-      } else {
+        } else {
           resolve(data);
+        }
       }
-    });
+    );
   });
 }
 
@@ -421,18 +468,21 @@ exports.publishS3Document = publishS3Document;
  * @returns
  */
 async function unpublishS3Document(s3Key) {
-    return new Promise(function(resolve, reject) {
-      s3.putObjectAcl({
+  return new Promise(function (resolve, reject) {
+    s3.putObjectAcl(
+      {
         Bucket: process.env.OBJECT_STORE_bucket_name,
         Key: s3Key,
         ACL: 'authenticated-read'
-      }, function(err, data) {
+      },
+      function (err, data) {
         if (err) {
-            reject(err);
+          reject(err);
         } else {
-            resolve(data);
+          resolve(data);
         }
-      });
+      }
+    );
   });
 }
 
@@ -506,14 +556,17 @@ exports.unpublishDocument = unpublishDocument;
  * @param {*} next
  * @returns
  */
-exports.protectedGetS3SignedURL = async function(args, res, next) {
+exports.protectedGetS3SignedURL = async function (args, res, next) {
   if (!args.swagger.params.docId || !args.swagger.params.docId.value) {
     defaultLog.warn('protectedGet - missing required docId param');
     return queryActions.sendResponse(res, 400, 'Missing required docId param');
   }
 
   const Document = mongoose.model('Document');
-  const document = await Document.findOne({ _id: new ObjectID(args.swagger.params.docId.value), write: { $in: args.swagger.params.auth_payload.client_roles } });
+  const document = await Document.findOne({
+    _id: new ObjectID(args.swagger.params.docId.value),
+    write: { $in: args.swagger.params.auth_payload.client_roles }
+  });
 
   if (!document) {
     defaultLog.info(`protectedGetS3SignedURL - couldn't find document for docId: ${args.swagger.params.docId.value}`);

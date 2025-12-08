@@ -16,8 +16,8 @@ const DEFAULT_PAGESIZE = 100;
  * @param {*} fields array of fields that will have all non-allowed fields removed.
  * @returns array of fields that is a subset of allowedFields.
  */
-exports.getSanitizedFields = function(allowedFields, fields) {
-  return fields.filter(function(field) {
+exports.getSanitizedFields = function (allowedFields, fields) {
+  return fields.filter(function (field) {
     return allowedFields.indexOf(allowedFields, field) !== -1;
   });
 };
@@ -29,7 +29,7 @@ exports.getSanitizedFields = function(allowedFields, fields) {
  * @param {*} pageNum
  * @returns
  */
-exports.getSkipLimitParameters = function(pageSize, pageNum) {
+exports.getSkipLimitParameters = function (pageSize, pageNum) {
   const params = {};
 
   let ps = DEFAULT_PAGESIZE; // Default
@@ -47,27 +47,26 @@ exports.getSkipLimitParameters = function(pageSize, pageNum) {
   return params;
 };
 
-exports.audit = function(req, action, meta, authPayload, objId = null) {
+exports.audit = function (req, action, meta, authPayload, objId = null) {
   try {
     if (!req.audits) {
       req.audits = [];
     }
 
     req.audits.push(this.recordAction(action, meta, authPayload, objId));
-  } catch(err) {
+  } catch (err) {
     defaultLog.error('Failed to add Audit log request. ' + err);
   }
-}
-exports.recordAction = async function(action, meta, authPayload, objId = null) {
+};
+exports.recordAction = async function (action, meta, authPayload, objId = null) {
   try {
-
     let performedBy = authPayload
-                      ? JSON.stringify({
-                          idir_userid: authPayload.idir_userid || null,
-                          displayName: authPayload.displayName || null,
-                          preferred_username: authPayload.preferred_username || null
-                        })
-                      : null;
+      ? JSON.stringify({
+          idir_userid: authPayload.idir_userid || null,
+          displayName: authPayload.displayName || null,
+          preferred_username: authPayload.preferred_username || null
+        })
+      : null;
 
     const Audit = mongoose.model('Audit');
     const audit = new Audit({
@@ -78,7 +77,7 @@ exports.recordAction = async function(action, meta, authPayload, objId = null) {
       performedBy: performedBy
     });
     return await audit.save();
-  } catch(err) {
+  } catch (err) {
     defaultLog.error('Failed to create Audit log. ' + err);
     return;
   }

@@ -21,14 +21,14 @@ function MongoDriver(options) {
   }
 
   if (process.env.NODE_ENV === 'test') {
-    DB_CONNECTION = process.env.MONGO_URI
+    DB_CONNECTION = process.env.MONGO_URI;
   } else {
     DB_CONNECTION += '/' + (process.env.MONGODB_DATABASE || 'nrpti-dev');
   }
 
   console.log('db conn:', DB_CONNECTION);
 
-  MongoClient.connect(DB_CONNECTION, function(err, db) {
+  MongoClient.connect(DB_CONNECTION, function (err, db) {
     if (err) {
       console.log('db err:', err);
     }
@@ -40,7 +40,7 @@ function MongoDriver(options) {
 
 MongoDriver.prototype.connections;
 
-MongoDriver.prototype.__defineGetter__('connection', function() {
+MongoDriver.prototype.__defineGetter__('connection', function () {
   return this.connections[0];
 });
 

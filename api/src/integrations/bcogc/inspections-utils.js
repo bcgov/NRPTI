@@ -44,7 +44,9 @@ class Inspections extends BaseRecordUtils {
 
     inspection['recordType'] = RECORD_TYPE.Inspection.displayName;
     try {
-      inspection['dateIssued'] = csvRow['inspection date'] ? moment.tz(csvRow['inspection date'], "DD-MMM-YYYY", "America/Vancouver").toDate() : null;
+      inspection['dateIssued'] = csvRow['inspection date']
+        ? moment.tz(csvRow['inspection date'], 'DD-MMM-YYYY', 'America/Vancouver').toDate()
+        : null;
     } catch (error) {
       defaultLog.debug(csvRow['inspection date'] + ' is not in the expected format DD-MMM-YYYY');
       defaultLog.debug(error);

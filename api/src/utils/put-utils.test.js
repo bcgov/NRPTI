@@ -105,6 +105,5 @@
 describe('PutUtils', () => {
   it('creates', async () => {
     return true;
-  })
-}
-);
+  });
+});

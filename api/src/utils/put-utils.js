@@ -78,8 +78,7 @@ exports.fetchMasterForCreateFlavour = async function (schema, id, auth_payload) 
 exports.fetchMasterForReference = async function (schema, id) {
   const Model = mongoose.model(schema);
 
-  const masterRecord = await Model.findOne({ _schemaName: schema, _id: id })
-                                  .populate('_flavourRecords');;
+  const masterRecord = await Model.findOne({ _schemaName: schema, _id: id }).populate('_flavourRecords');
 
   if (!masterRecord) {
     return {};
@@ -127,7 +126,17 @@ exports.getDotNotation = function (obj, target, prefix) {
   return target;
 };
 
-exports.editRecordWithFlavours = async function (args, res, next, incomingObj, editMaster, PostFunctions, masterSchemaName, flavourFunctions = {}, overridePutParams = null) {
+exports.editRecordWithFlavours = async function (
+  args,
+  res,
+  next,
+  incomingObj,
+  editMaster,
+  PostFunctions,
+  masterSchemaName,
+  flavourFunctions = {},
+  overridePutParams = null
+) {
   let flavours = [];
   let flavourIds = [];
   let promises = [];
@@ -177,20 +186,23 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
         // they don't exist in the flavourIncomingObj
         const flavourRecordModel = mongoose.model(entry[0]);
 
-        const flavourExistingObject = await flavourRecordModel
-          .findOne({
-            _id: new ObjectId(flavourId)
-          });
+        const flavourExistingObject = await flavourRecordModel.findOne({
+          _id: new ObjectId(flavourId)
+        });
 
         const flavourExistingJSONObject = flavourExistingObject.toObject();
 
         // check if this object has issuingAgency and issuedTo to avoid adding null values to objects that don't have these fields
         if (flavourExistingJSONObject.issuingAgency || flavourIncomingObj.issuingAgency) {
-          flavourIncomingObj.issuingAgency = flavourIncomingObj.issuingAgency ? flavourIncomingObj.issuingAgency : flavourExistingJSONObject.issuingAgency;
+          flavourIncomingObj.issuingAgency = flavourIncomingObj.issuingAgency
+            ? flavourIncomingObj.issuingAgency
+            : flavourExistingJSONObject.issuingAgency;
         }
 
         if (flavourExistingJSONObject.issuedTo || flavourIncomingObj.issuedTo) {
-          flavourIncomingObj.issuedTo = flavourIncomingObj.issuedTo ? flavourIncomingObj.issuedTo : flavourExistingJSONObject.issuedTo;
+          flavourIncomingObj.issuedTo = flavourIncomingObj.issuedTo
+            ? flavourIncomingObj.issuedTo
+            : flavourExistingJSONObject.issuedTo;
 
           // Reject any changes to permissions
           // Must be decided through the business logic manager
@@ -215,7 +227,11 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
       } else {
         // We are adding a flavour instead of editing.
         // We need to get the existing master record.
-        masterRecord = await this.fetchMasterForCreateFlavour(masterSchemaName, masterId, args.swagger.params.auth_payload);
+        masterRecord = await this.fetchMasterForCreateFlavour(
+          masterSchemaName,
+          masterId,
+          args.swagger.params.auth_payload
+        );
         let newFlavour = null;
         if (entry[0].includes('LNG')) {
           newFlavour = PostFunctions.createLNG(args, res, next, {
@@ -247,9 +263,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
     }
     // Get flavour ids for master
     if (flavours.length > 0) {
-      flavourIds = flavours.map(
-        flavour => flavour._id
-      );
+      flavourIds = flavours.map(flavour => flavour._id);
     }
   }
 
@@ -267,9 +281,7 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
     // We might have the master record from creating flavours earlier.
     if (!masterRecord) {
       try {
-        masterRecord = await MasterModel.findOne(
-          { _id: new ObjectId(masterId) }
-        );
+        masterRecord = await MasterModel.findOne({ _id: new ObjectId(masterId) });
       } catch (e) {
         return {
           status: 'failure',
@@ -288,11 +300,9 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
       const MineBCMI = mongoose.model('MineBCMI');
       let mineBCMI = null;
       try {
-        mineBCMI = await MineBCMI.findOne(
-          {
-            _epicProjectIds: { $in: [new ObjectId(incomingObj._epicProjectId)] },
-          }
-        );
+        mineBCMI = await MineBCMI.findOne({
+          _epicProjectIds: { $in: [new ObjectId(incomingObj._epicProjectId)] }
+        });
       } catch (e) {
         return {
           status: 'failure',
@@ -310,10 +320,11 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
   }
 
   promises.push(
-    MasterModel.findOneAndUpdate({
-      _id: masterId,
-      write: { $in: args.swagger.params.auth_payload.client_roles }
-    },
+    MasterModel.findOneAndUpdate(
+      {
+        _id: masterId,
+        write: { $in: args.swagger.params.auth_payload.client_roles }
+      },
       updateMasterObj,
       { new: true }
     )
@@ -378,9 +389,10 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
     { _id: masterId },
     {
       $set: {
-        'read': masterRec.read
+        read: masterRec.read
       }
-    });
+    }
+  );
 
   // Not all records have an issuedTo
   if (masterRec.issuedTo) {
@@ -388,9 +400,10 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
       { _id: masterId },
       {
         $set: {
-          "issuedTo.read": masterRec.issuedTo.read
+          'issuedTo.read': masterRec.issuedTo.read
         }
-      });
+      }
+    );
   }
 
   let savedDocuments = null;
@@ -411,4 +424,4 @@ exports.editRecordWithFlavours = async function (args, res, next, incomingObj, e
     status: 'success',
     object: result
   };
-}
+};

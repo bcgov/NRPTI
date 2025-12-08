@@ -70,11 +70,10 @@ class BaseRecordUtils {
    */
   async findExistingRecord(nrptiRecord) {
     const masterRecordModel = mongoose.model(this.recordType._schemaName);
-    return await masterRecordModel
-      .findOne({
-        _schemaName: this.recordType._schemaName,
-        _sourceRefId: nrptiRecord._sourceRefId
-      });
+    return await masterRecordModel.findOne({
+      _schemaName: this.recordType._schemaName,
+      _sourceRefId: nrptiRecord._sourceRefId
+    });
   }
 
   /**

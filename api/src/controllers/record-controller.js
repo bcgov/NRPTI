@@ -61,18 +61,43 @@ const ACCEPTED_DATA_TYPES = [
   { type: 'permits', add: AddPermit, edit: EditPermit, schemaName: 'Permit' },
   { type: 'agreements', add: AddAgreement, edit: EditAgreement, schemaName: 'Agreement' },
   { type: 'selfReports', add: AddSelfReport, edit: EditSelfReport, schemaName: 'SelfReport' },
-  { type: 'restorativeJustices', add: AddRestorativeJustice, edit: EditRestorativeJustice, schemaName: 'RestorativeJustice' },
+  {
+    type: 'restorativeJustices',
+    add: AddRestorativeJustice,
+    edit: EditRestorativeJustice,
+    schemaName: 'RestorativeJustice'
+  },
   { type: 'tickets', add: AddTicket, edit: EditTicket, schemaName: 'Ticket' },
-  { type: 'administrativePenalties', add: AddAdministrativePenalty, edit: EditAdministrativePenalty, schemaName: 'AdministrativePenaltie' },
-  { type: 'administrativeSanctions', add: AddAdministrativeSanction, edit: EditAdministrativeSanction, schemaName: 'AdministrativeSanction' },
+  {
+    type: 'administrativePenalties',
+    add: AddAdministrativePenalty,
+    edit: EditAdministrativePenalty,
+    schemaName: 'AdministrativePenaltie'
+  },
+  {
+    type: 'administrativeSanctions',
+    add: AddAdministrativeSanction,
+    edit: EditAdministrativeSanction,
+    schemaName: 'AdministrativeSanction'
+  },
   { type: 'warnings', add: AddWarning, edit: EditWarning, schemaName: 'Warning' },
   { type: 'constructionPlans', add: AddConstructionPlan, edit: EditConstructionPlan, schemaName: 'ConstructionPlan' },
   { type: 'managementPlans', add: AddManagementPlan, edit: EditManagementPlan, schemaName: 'ManagementPlan' },
   { type: 'courtConvictions', add: AddCourtConviction, edit: EditCourtConviction, schemaName: 'CourtConviction' },
   { type: 'annualReports', add: AddAnnualReport, edit: EditAnnualReport, schemaName: 'AnnualReport' },
-  { type: 'certificateAmendments', add: AddCertificateAmendment, edit: EditCertificateAmendment, schemaName: 'CertificateAmendment' },
+  {
+    type: 'certificateAmendments',
+    add: AddCertificateAmendment,
+    edit: EditCertificateAmendment,
+    schemaName: 'CertificateAmendment'
+  },
   { type: 'correspondences', add: AddCorrespondence, edit: EditCorrespondence, schemaName: 'Correspondence' },
-  { type: 'damSafetyInspections', add: AddDamSafetyInspection, edit: EditDamSafetyInspection, schemaName: 'DamSafetyInspection' },
+  {
+    type: 'damSafetyInspections',
+    add: AddDamSafetyInspection,
+    edit: EditDamSafetyInspection,
+    schemaName: 'DamSafetyInspection'
+  },
   { type: 'reports', add: AddReport, edit: EditReport, schemaName: 'Report' }
 ];
 
@@ -222,7 +247,7 @@ exports.protectedDelete = async function (args, res, next) {
 
   let recordId = null;
   if (args.swagger.params.recordId && args.swagger.params.recordId.value) {
-    recordId = args.swagger.params.recordId.value
+    recordId = args.swagger.params.recordId.value;
   } else {
     defaultLog.info(`protectedDelete - you must provide an id to delete`);
     queryActions.sendResponse(res, 400, {});
@@ -260,7 +285,7 @@ exports.protectedDelete = async function (args, res, next) {
 
   queryActions.sendResponse(res, 200, {});
   next();
-}
+};
 
 /**
  * Publish a record.  Adds the `public` role to the records root read array.
@@ -276,23 +301,36 @@ exports.protectedPublish = async function (args, res, next) {
 
     const model = require('mongoose').model(recordData._schemaName);
 
-    const record = await model.findOne({ _id: recordData._id, write: { $in: args.swagger.params.auth_payload.client_roles } });
+    const record = await model.findOne({
+      _id: recordData._id,
+      write: { $in: args.swagger.params.auth_payload.client_roles }
+    });
 
     // If we are updating a flavour, we have to make sure we update master as well
     if (recordData._schemaName.includes('NRCED')) {
       const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 5);
       const masterModel = require('mongoose').model(masterSchema);
-      await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.client_roles } }, { isNrcedPublished: true });
-    }
-    else if (recordData._schemaName.includes('LNG')) {
+      await masterModel.findOneAndUpdate(
+        { _id: record._master, write: { $in: args.swagger.params.auth_payload.client_roles } },
+        { isNrcedPublished: true }
+      );
+    } else if (recordData._schemaName.includes('LNG')) {
       const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 3);
       const masterModel = require('mongoose').model(masterSchema);
-      await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.client_roles } }, { isLngPublished: true });
-    }
-    else if (!['CollectionBCMI', 'MineBCMI'].includes(recordData._schemaName) && recordData._schemaName.includes('BCMI')) {
+      await masterModel.findOneAndUpdate(
+        { _id: record._master, write: { $in: args.swagger.params.auth_payload.client_roles } },
+        { isLngPublished: true }
+      );
+    } else if (
+      !['CollectionBCMI', 'MineBCMI'].includes(recordData._schemaName) &&
+      recordData._schemaName.includes('BCMI')
+    ) {
       const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 4);
       const masterModel = require('mongoose').model(masterSchema);
-      await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.client_roles } }, { isBcmiPublished: true });
+      await masterModel.findOneAndUpdate(
+        { _id: record._master, write: { $in: args.swagger.params.auth_payload.client_roles } },
+        { isBcmiPublished: true }
+      );
     }
 
     if (!record) {
@@ -335,23 +373,34 @@ exports.protectedUnPublish = async function (args, res, next) {
 
     const model = require('mongoose').model(recordData._schemaName);
 
-    const record = await model.findOne({ _id: recordData._id, write: { $in: args.swagger.params.auth_payload.client_roles } });
+    const record = await model.findOne({
+      _id: recordData._id,
+      write: { $in: args.swagger.params.auth_payload.client_roles }
+    });
     // If we are updating a flavour, we have to make sure we update master as well
     if (recordData._schemaName.includes('NRCED')) {
       const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 5);
       const masterModel = require('mongoose').model(masterSchema);
-      await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.client_roles } }, { isNrcedPublished: false });
-    }
-    else if (recordData._schemaName.includes('LNG')) {
+      await masterModel.findOneAndUpdate(
+        { _id: record._master, write: { $in: args.swagger.params.auth_payload.client_roles } },
+        { isNrcedPublished: false }
+      );
+    } else if (recordData._schemaName.includes('LNG')) {
       const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 3);
       const masterModel = require('mongoose').model(masterSchema);
-      await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.client_roles } }, { isLngPublished: false });
+      await masterModel.findOneAndUpdate(
+        { _id: record._master, write: { $in: args.swagger.params.auth_payload.client_roles } },
+        { isLngPublished: false }
+      );
     }
     // Mines are a special case where they have no master and only exist as the BCMI flavour.
     else if (recordData._schemaName.includes('BCMI') && recordData._schemaName !== 'MineBCMI') {
       const masterSchema = recordData._schemaName.substring(0, recordData._schemaName.length - 4);
       const masterModel = require('mongoose').model(masterSchema);
-      await masterModel.findOneAndUpdate({ _id: record._master, write: { $in: args.swagger.params.auth_payload.client_roles } }, { isBcmiPublished: false });
+      await masterModel.findOneAndUpdate(
+        { _id: record._master, write: { $in: args.swagger.params.auth_payload.client_roles } },
+        { isBcmiPublished: false }
+      );
     }
 
     if (!record) {
@@ -408,10 +457,7 @@ const processPostRequest = async function (args, res, next, property, data) {
     if (typeMethods) {
       // Force the creation of a BCMI flavour.
       const bcmiFlavourSchemaName = typeMethods.schemaName.concat('BCMI');
-      if (
-        RecordTypeEnum.BCMI_SCHEMA_NAMES.includes(bcmiFlavourSchemaName) &&
-        !data[i][bcmiFlavourSchemaName]
-      ) {
+      if (RecordTypeEnum.BCMI_SCHEMA_NAMES.includes(bcmiFlavourSchemaName) && !data[i][bcmiFlavourSchemaName]) {
         data[i][bcmiFlavourSchemaName] = {};
       }
       promises.push(typeMethods.add.createItem(args, res, next, data[i]));

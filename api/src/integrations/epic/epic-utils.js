@@ -5,7 +5,7 @@
  * @returns {Order} updated Epic record.
  * @throws {Error} if record is not provided.
  */
-const preTransformRecord = function(epicRecord) {
+const preTransformRecord = function (epicRecord) {
   if (!epicRecord) {
     throw Error('preTransformRecord - required record must be non-null.');
   }

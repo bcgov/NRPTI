@@ -48,7 +48,7 @@ exports.ADDITIONAL_ROLES = ADDITIONAL_ROLES;
  * @param {*} incomingObj see example
  * @returns object containing the operation's status and created records
  */
-exports.createItem = async function(args, res, next, incomingObj) {
+exports.createItem = async function (args, res, next, incomingObj) {
   const flavourFunctions = {
     AdministrativePenaltyLNG: this.createLNG,
     AdministrativePenaltyNRCED: this.createNRCED,
@@ -57,7 +57,6 @@ exports.createItem = async function(args, res, next, incomingObj) {
 
   return await postUtils.createRecordWithFlavours(args, res, next, incomingObj, this.createMaster, flavourFunctions);
 };
-
 
 /**
  * Performs all operations necessary to create a master Administrative Penalty record.
@@ -89,7 +88,7 @@ exports.createItem = async function(args, res, next, incomingObj) {
  * @param {*} flavourIds array of flavour record _ids
  * @returns created master administrativePenalty record
  */
-exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
+exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   let AdministrativePenalty = mongoose.model('AdministrativePenalty');
   let administrativePenalty = new AdministrativePenalty();
 
@@ -219,7 +218,7 @@ exports.createMaster = function(args, res, next, incomingObj, flavourIds) {
  * @param {*} incomingObj see example
  * @returns created lng administrativePenalty record
  */
-exports.createLNG = function(args, res, next, incomingObj) {
+exports.createLNG = function (args, res, next, incomingObj) {
   // Confirm user has correct role to create this type of record.
   if (
     !userHasValidRoles(
@@ -352,7 +351,7 @@ exports.createLNG = function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced administrativePenalty record
  */
-exports.createNRCED = function(args, res, next, incomingObj) {
+exports.createNRCED = function (args, res, next, incomingObj) {
   // Confirm user has correct role to create this type of record.
   if (
     !userHasValidRoles(
@@ -380,8 +379,6 @@ exports.createNRCED = function(args, res, next, incomingObj) {
     (administrativePenaltyNRCED._epicMilestoneId = new ObjectId(incomingObj._epicMilestoneId));
   incomingObj.mineGuid && (administrativePenaltyNRCED.mineGuid = incomingObj.mineGuid);
   incomingObj.unlistedMine && (administrativePenaltyNRCED.unlistedMine = incomingObj.unlistedMine);
-
-
 
   incomingObj._sourceRefOgcPenaltyId &&
     (administrativePenaltyNRCED._sourceRefOgcPenaltyId = incomingObj._sourceRefOgcPenaltyId);
@@ -462,7 +459,6 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   return administrativePenaltyNRCED;
 };
 
-
 /**
  * Performs all operations necessary to create a NRCED Administrative Penalty record.
  *
@@ -497,7 +493,7 @@ exports.createNRCED = function(args, res, next, incomingObj) {
  * @param {*} incomingObj see example
  * @returns created nrced administrativePenalty record
  */
- exports.createBCMI = function(args, res, next, incomingObj) {
+exports.createBCMI = function (args, res, next, incomingObj) {
   // Confirm user has correct role to create this type of record.
   if (
     !userHasValidRoles(
@@ -526,8 +522,6 @@ exports.createNRCED = function(args, res, next, incomingObj) {
   incomingObj.mineGuid && (administrativePenaltyBCMI.mineGuid = incomingObj.mineGuid);
   incomingObj.unlistedMine && (administrativePenaltyBCMI.unlistedMine = incomingObj.unlistedMine);
   incomingObj.unlistedMineType && (administrativePenaltyBCMI.unlistedMineType = incomingObj.unlistedMineType);
-
-
 
   incomingObj._sourceRefOgcPenaltyId &&
     (administrativePenaltyBCMI._sourceRefOgcPenaltyId = incomingObj._sourceRefOgcPenaltyId);

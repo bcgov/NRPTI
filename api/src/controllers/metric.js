@@ -1,5 +1,5 @@
 const QueryActions = require('../utils/query-actions');
-const { metric: Metric }  = require('../models/index');
+const { metric: Metric } = require('../models/index');
 
 exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
@@ -10,7 +10,7 @@ exports.protectedList = async function (args, res, next) {
   const agg = [
     {
       $match: {
-        _schemaName: "Metric"
+        _schemaName: 'Metric'
       }
     },
     {
@@ -31,7 +31,7 @@ exports.protectedGet = async function (args, res, next) {
   }
 
   const query = {
-    _schemaName: "Metric",
+    _schemaName: 'Metric',
     code: args.swagger.params.code.value
   };
 
@@ -42,7 +42,7 @@ exports.protectedGet = async function (args, res, next) {
 
 exports.protectedGetData = async function (args, res, next) {
   const query = {
-    _schemaName: "Metric",
+    _schemaName: 'Metric',
     code: args.swagger.params.code.value
   };
 
