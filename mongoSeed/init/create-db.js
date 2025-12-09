@@ -5,9 +5,9 @@
 
 print("Mongo Seed Starting...");
 
-var db = new Mongo().getDB("nrpti-dev");
-var user = "nrpti-admin";
-var pwd = "nrpti-admin";
+const db = new Mongo().getDB("nrpti-dev");
+const user = "nrpti-admin";
+const pwd = "nrpti-admin";
 
 print("Creating User...");
 
