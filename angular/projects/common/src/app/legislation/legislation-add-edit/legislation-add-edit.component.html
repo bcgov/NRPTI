@@ -11,12 +11,11 @@
         placeholder="Begin typing to filter acts..."
         matInput
         (keyup)="debouncedFilterActsPicklist($event)"
-        (blur)="verifyKnownActValue($event)"
         [matAutocomplete]="actAutocomplete"
       />
-      <mat-autocomplete #actAutocomplete="matAutocomplete">
+      <mat-autocomplete #actAutocomplete="matAutocomplete" requireSelection>
         <mat-option (click)="onEmptyAct()">Clear Selected</mat-option>
-        <mat-option *ngFor="let act of filteredActs" [value]="act" (click)="onSelectAct(act)" title="{{ act }}">
+        <mat-option *ngFor="let act of filteredActs" [value]="act" (onSelectionChange)="onSelectAct(act)" title="{{ act }}">
           {{ act }}
         </mat-option>
       </mat-autocomplete>
@@ -32,10 +31,9 @@
         placeholder="Begin typing to filter regulations..."
         matInput
         (keyup)="debouncedFilterRegulationsPicklist($event)"
-        (blur)="verifyKnownRegulationValue($event)"
         [matAutocomplete]="regulationAutocomplete"
       />
-      <mat-autocomplete #regulationAutocomplete="matAutocomplete">
+      <mat-autocomplete #regulationAutocomplete="matAutocomplete" requireSelection>
         <mat-option (click)="onEmptyRegulation()">Clear Selected</mat-option>
         <mat-option
           *ngFor="let regulation of filteredRegulations"

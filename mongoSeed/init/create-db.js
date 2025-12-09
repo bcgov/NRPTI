@@ -3,24 +3,32 @@
  * @author LocalNewsTV
  */
 
-const db = new Mongo().getDB('nrpti-dev');
-const user = process.env.MONGO_USER || 'nrpti-admin';
-const pwd = process.env.MONGO_PASSWORD || 'nrpti-admin';
+print("Mongo Seed Starting...");
+
+var db = new Mongo().getDB("nrpti-dev");
+var user = "nrpti-admin";
+var pwd = "nrpti-admin";
+
+print("Creating User...");
 
 db.createUser({
   user,
   pwd,
-  roles: [{
-    role: 'readWrite',
-    db: 'nrpti-dev',
-  }],
+  roles: [
+    {
+      role: "readWrite",
+      db: "nrpti-dev"
+    },
+  ],
 });
 
-db.createCollection("audit", {capped: false});
-db.createCollection("description_summary_subset", {capped: false});
-db.createCollection("location_subset", {capped: false});
-db.createCollection("migrations", {capped: false});
-db.createCollection("nrpti", {capped: false});
-db.createCollection("record_name_subset", {capped: false});
-db.createCollection("redacted_record_subset", {capped: false});
-db.createCollection("acts_regulations_mapping", {capped: false});
+print("Creating Collections...");
+
+db.createCollection("audit", { capped: false });
+db.createCollection("description_summary_subset", { capped: false });
+db.createCollection("location_subset", { capped: false });
+db.createCollection("migrations", { capped: false });
+db.createCollection("nrpti", { capped: false });
+db.createCollection("record_name_subset", { capped: false });
+db.createCollection("redacted_record_subset", { capped: false });
+db.createCollection("acts_regulations_mapping", { capped: false });

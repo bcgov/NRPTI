@@ -5,12 +5,15 @@ services:
     container_name: nrpti-mongo
     tty: true
     restart: always
-    volumes: 
+    volumes:
       - ./mongoSeed/init:/docker-entrypoint-initdb.d
     ports:
       - 27017:27017
     networks:
       - nrpti
+    environment:
+      - MONGO_USERNAME=${MONGO_USERNAME}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
     healthcheck:
       test: echo 'db.runCommand({serverStatus:1}).ok' | mongo nrpti-dev -u ${MONGO_USERNAME:-nrpti-admin} -p ${MONGO_PASSWORD:-nrpti-admin} --quiet | grep 1
       interval: 20s
@@ -27,7 +30,12 @@ services:
       - nrpti
     environment:
       - ENVIRONMENT=dev
-      - MONGODB_SERVICE_HOST=mongo
+      - MONGODB_SERVICE_HOST=${MONGODB_SERVICE_HOST}
+      - MONGO_URI=${MONGO_URI}
+      - MONGO_USERNAME=${MONGO_USERNAME}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - MONGODB_DATABASE=${MONGODB_DATABASE}
+      - DB_CONNECTION=${DB_CONNECTION}
       - SSO_ISSUER=https://dev.loginproxy.gov.bc.ca/auth/realms/standard
       - SSO_JWKSURI=https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs
       - KEYCLOAK_CLIENT_ID=nrpti-4869
@@ -41,8 +49,7 @@ services:
       - CORE_TOKEN_ENDPOINT=${CORE_TOKEN_ENDPOINT}
       - CORE_API_HOST=${CORE_API_HOST}
 
-
-    ports: 
+    ports:
       - 3000:3000
     # healthcheck:
     #   test: curl localhost:${PORT:-3000}/api/health | grep 'API is healthy and ready'
