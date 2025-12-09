@@ -73,7 +73,7 @@
   <div *ngIf="tableData.totalListItems === 0">No Records found.</div>
 
   <lib-table-template
-    *ngIf="tableData.totalListItems != 0"
+    *ngIf="tableData.totalListItems !== 0"
     [data]="tableData"
     (messageOut)="onMessageOut($event)"
   ></lib-table-template>
