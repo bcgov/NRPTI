@@ -121,6 +121,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         this.router.navigate(['/']);
         return;
       }
+      console.log("Records List Response: ", res?.records);
       const records =
         (res.records[0] && res.records[0].data && res.records[0].data.searchResults) || // Multiple Records Search
         res.records || // Single Record search
@@ -145,7 +146,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
       // Console log the processed table items
       console.log('Processed table items:', this.tableData.items);
 
-      /* eslint-disable max-len */
       this.tableData.totalListItems =
         (res.records[0] &&
           res.records[0].data &&
@@ -154,7 +154,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
           res.records[0].data.meta[0].searchResultsTotal) || // Multiple results
         (res.records[0] && !res.records[0].data.hasOwnProperty('searchResults') && 1) || // Single results (autofocus param)
         0; // No entries found
-      /* eslint-enable   max-len */
 
       this.tableData.columns = this.tableColumns;
 
