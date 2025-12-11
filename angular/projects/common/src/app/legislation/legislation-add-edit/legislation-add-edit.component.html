@@ -3,6 +3,7 @@
     <div [ngClass]="renderColumns ? 'label-pair__col' : 'label-pair__row'">
       <label for="act">Act</label>
       <input
+        #actInput
         name="act"
         id="act"
         formControlName="act"
@@ -13,9 +14,17 @@
         (keyup)="debouncedFilterActsPicklist($event)"
         [matAutocomplete]="actAutocomplete"
       />
-      <mat-autocomplete #actAutocomplete="matAutocomplete" requireSelection>
-        <mat-option (click)="onEmptyAct()">Clear Selected</mat-option>
-        <mat-option *ngFor="let act of filteredActs" [value]="act" (onSelectionChange)="onSelectAct(act)" title="{{ act }}">
+      <mat-autocomplete 
+        #actAutocomplete="matAutocomplete" 
+        requireSelection
+        (optionSelected)="onActOptionSelected($event.option.value)"
+      >
+        <mat-option [value]="null">Clear Selected</mat-option>
+        <mat-option
+          *ngFor="let act of filteredActs"
+          [value]="act"
+          title="{{ act }}"
+        >
           {{ act }}
         </mat-option>
       </mat-autocomplete>
@@ -23,6 +32,7 @@
     <div [ngClass]="renderColumns ? 'label-pair__col' : 'label-pair__row'">
       <label for="regulation">Regulation</label>
       <input
+        #regulationInput
         name="regulation"
         id="regulation"
         formControlName="regulation"
@@ -33,12 +43,15 @@
         (keyup)="debouncedFilterRegulationsPicklist($event)"
         [matAutocomplete]="regulationAutocomplete"
       />
-      <mat-autocomplete #regulationAutocomplete="matAutocomplete" requireSelection>
-        <mat-option (click)="onEmptyRegulation()">Clear Selected</mat-option>
+      <mat-autocomplete 
+        #regulationAutocomplete="matAutocomplete" 
+        requireSelection
+        (optionSelected)="onRegulationOptionSelected($event.option.value)"  
+      >
+        <mat-option [value]="null">Clear Selected</mat-option>
         <mat-option
           *ngFor="let regulation of filteredRegulations"
           [value]="regulation"
-          (click)="onSelectRegulation(regulation)"
           title="{{ regulation }}"
         >
           {{ regulation }}

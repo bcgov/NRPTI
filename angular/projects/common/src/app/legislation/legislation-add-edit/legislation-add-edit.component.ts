@@ -1,11 +1,12 @@
-import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Picklists } from '../../utils/record-constants';
 import { Legislation } from '../../models/master/common-models/legislation';
 import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { Utils } from 'nrpti-angular-components';
 import { FactoryService } from '../../../../../admin-nrpti/src/app/services/factory.service';
+import { MatAutocompleteTrigger, MatOption } from '@angular/material/autocomplete';
 
 @Component({
   standalone: false,
@@ -40,6 +41,17 @@ export class LegislationAddEditComponent implements OnInit {
 
   public debouncedFilterActsPicklist: any;
   public debouncedFilterRegulationsPicklist: any;
+
+  public pendingActOptionSelect = false;
+  public pendingRegulationOptionSelect = false;
+  public actCloseSub?: Subscription;
+  public regulationCloseSub?: Subscription;
+
+  @ViewChild('actInput', { read: MatAutocompleteTrigger })
+  actAutocompleteTrigger!: MatAutocompleteTrigger;
+
+  @ViewChild('regulationInput', { read: MatAutocompleteTrigger })
+  regulationAutocompleteTrigger!: MatAutocompleteTrigger;
 
   constructor(
     public utils: Utils,
@@ -86,6 +98,31 @@ export class LegislationAddEditComponent implements OnInit {
 
     this.subscribeToFormControlChanges();
     this._changeDetectionRef.detectChanges();
+  }
+
+  ngAfterViewInit() {
+    this.actCloseSub = this.actAutocompleteTrigger.panelClosingActions
+    .subscribe(event => {
+      if (event && event?.source instanceof MatOption) {
+        // User selected an option → do NOT reset
+        return;
+      }
+
+      // Panel closed without selection → reset filter
+      this.onEmptyAct();
+    });
+
+    this.regulationCloseSub = this.regulationAutocompleteTrigger.panelClosingActions
+    .subscribe(event => {
+      if (event && event?.source instanceof MatOption) {
+        // User selected an option → do NOT reset
+        return;
+      }
+
+      // Panel closed without selection → reset filter
+      this.onEmptyAct();
+    });
+
   }
 
   protected subscribeToFormControlChanges() {
@@ -169,31 +206,6 @@ export class LegislationAddEditComponent implements OnInit {
   }
 
   /**
-   * Clears the act control if the value is not a known (allowed) act.
-   *
-   * @memberof LegislationAddEditComponent
-   */
-  verifyKnownActValue(event) {
-    if (event && event.relatedTarget && event.relatedTarget.localName === 'mat-option') {
-      // When a user clicks an item from the overlay select drop-down box, the blur event triggers before the control
-      // is updated, which runs this function too early.  So, ignore blur events that are triggered by selecting a
-      // mat-option element.
-      return;
-    }
-
-    if (!event || !event.target || !event.target.value) {
-      // Treat this as if the user chose to clear the value
-      this.onEmptyAct();
-      return;
-    }
-
-    if (!this.isKnownAct(event.target.value)) {
-      // Treat this as if the user chose to clear the value
-      this.onEmptyAct();
-    }
-  }
-
-  /**
    * Return true if the act is known, false otherwise.
    *
    * @param {*} act
@@ -265,31 +277,6 @@ export class LegislationAddEditComponent implements OnInit {
 
     // Limit the regulations picklist to the regulation as it is an exact match
     this.filteredRegulations = [regulation];
-  }
-
-  /**
-   * Clears the regulation control if the value is not a known (allowed) regulation.
-   *
-   * @memberof LegislationAddEditComponent
-   */
-  verifyKnownRegulationValue(event) {
-    if (event && event.relatedTarget && event.relatedTarget.localName === 'mat-option') {
-      // When a user clicks an item from the overlay select drop-down box, the blur event triggers before the control
-      // is updated, which runs this function too early.  So, ignore blur events that are triggered by selecting a
-      // mat-option element.
-      return;
-    }
-
-    if (!event || !event.target || !event.target.value) {
-      // Treat this as if the user chose to clear the value
-      this.onEmptyRegulation();
-      return;
-    }
-
-    if (!this.isKnownRegulation(event.target.value)) {
-      // Treat this as if the user chose to clear the value
-      this.onEmptyRegulation();
-    }
   }
 
   /**
@@ -451,4 +438,32 @@ export class LegislationAddEditComponent implements OnInit {
 
     return true;
   }
+
+  public onActOptionSelected(act) {
+    this.pendingActOptionSelect = true;
+
+    if (act === null) {
+      this.onEmptyAct();
+      return;
+    }
+    
+    this.onSelectAct(act);
+  }
+
+  public onRegulationOptionSelected(regulation) {
+    this.pendingRegulationOptionSelect = true;
+
+    if (regulation === null) {
+      this.onEmptyAct();
+      return;
+    }
+    
+    this.onSelectRegulation(regulation);
+  }
+
+  ngOnDestroy() {
+    this.actCloseSub?.unsubscribe();
+    this.regulationCloseSub?.unsubscribe();
+  }
+  
 }
