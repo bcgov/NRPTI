@@ -47,11 +47,6 @@ jobs:
         npx prettier 'projects/**/*.html' --check --log-level warn
       env:
        CI: true
-    - name: Install Chrome
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y google-chrome-stable
-        echo "CHROME_BIN=/usr/bin/google-chrome-stable" >> $GITHUB_ENV
     - name: build, and test
       if: steps.filter.outputs.frontend == 'true'
       run: |
