@@ -1,3 +1,6 @@
+// This is DB setup for the mongo service we are running in CI.
+// We are running the CI tests against this database.
+// TODO: 
 const { MongoClient } = require('mongodb');
 
 async function main() {
