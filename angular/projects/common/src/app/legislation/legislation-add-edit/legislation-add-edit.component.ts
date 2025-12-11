@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Picklists } from '../../utils/record-constants';
 import { Legislation } from '../../models/master/common-models/legislation';
@@ -14,7 +14,7 @@ import { MatAutocompleteTrigger, MatOption } from '@angular/material/autocomplet
   templateUrl: './legislation-add-edit.component.html',
   styleUrls: ['./legislation-add-edit.component.scss']
 })
-export class LegislationAddEditComponent implements OnInit {
+export class LegislationAddEditComponent implements AfterViewInit, OnDestroy, OnInit {
   @Input() formGroup: FormGroup;
   @Input() hasOffence: boolean;
   @Input() recordType: string;
@@ -101,8 +101,7 @@ export class LegislationAddEditComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    this.actCloseSub = this.actAutocompleteTrigger.panelClosingActions
-    .subscribe(event => {
+    this.actCloseSub = this.actAutocompleteTrigger.panelClosingActions.subscribe(event => {
       if (event && event?.source instanceof MatOption) {
         // User selected an option → do NOT reset
         return;
@@ -112,8 +111,7 @@ export class LegislationAddEditComponent implements OnInit {
       this.onEmptyAct();
     });
 
-    this.regulationCloseSub = this.regulationAutocompleteTrigger.panelClosingActions
-    .subscribe(event => {
+    this.regulationCloseSub = this.regulationAutocompleteTrigger.panelClosingActions.subscribe(event => {
       if (event && event?.source instanceof MatOption) {
         // User selected an option → do NOT reset
         return;
@@ -122,7 +120,6 @@ export class LegislationAddEditComponent implements OnInit {
       // Panel closed without selection → reset filter
       this.onEmptyAct();
     });
-
   }
 
   protected subscribeToFormControlChanges() {
@@ -446,7 +443,7 @@ export class LegislationAddEditComponent implements OnInit {
       this.onEmptyAct();
       return;
     }
-    
+
     this.onSelectAct(act);
   }
 
@@ -457,7 +454,7 @@ export class LegislationAddEditComponent implements OnInit {
       this.onEmptyAct();
       return;
     }
-    
+
     this.onSelectRegulation(regulation);
   }
 
@@ -465,5 +462,4 @@ export class LegislationAddEditComponent implements OnInit {
     this.actCloseSub?.unsubscribe();
     this.regulationCloseSub?.unsubscribe();
   }
-  
 }
