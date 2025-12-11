@@ -15,7 +15,9 @@ jobs:
         node-version: [18.x]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
     - uses: dorny/paths-filter@4512585405083f25c027a35db413c2b3b9006d50
       id: filter
       with:
@@ -43,7 +45,7 @@ jobs:
         npx eslint 'projects/public-nrpti/src/app/**/*.ts'
         npx eslint 'projects/common/src/app/**/*.ts'
         npx eslint 'projects/global/src/lib/**/*.ts'
-        npx --no-install prettier 'projects/**/*.ts' --check --log-level warn
+        npx prettier 'projects/**/*.ts' --check --log-level warn
         npx prettier 'projects/**/*.html' --check --log-level warn
       env:
        CI: true
