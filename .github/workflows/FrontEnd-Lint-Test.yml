@@ -43,8 +43,9 @@ jobs:
         npx eslint 'projects/public-nrpti/src/app/**/*.ts'
         npx eslint 'projects/common/src/app/**/*.ts'
         npx eslint 'projects/global/src/lib/**/*.ts'
-        npx prettier projects/**/*.ts --check --log-level warn
+        npx prettier 'projects/**/*.ts' --check --log-level warn
         npx prettier 'projects/**/*.html' --check --log-level warn
+        npx prettier --write 'projects/common/src/app/legislation/legislation-add-edit/legislation-add-edit.component.html'
       env:
        CI: true
     - name: build, and test
