@@ -55,6 +55,7 @@ export class SearchService {
     nor: object = {},
     _in: object = {}
   ): Observable<SearchResults[]> {
+    console.log("This is nrced requesting data?");
     let queryString = `search?dataset=${dataset}`;
     if (fields && fields.length > 0) {
       fields.map(item => {
