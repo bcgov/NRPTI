@@ -107,8 +107,16 @@ export class LegislationAddEditComponent implements AfterViewInit, OnDestroy, On
         return;
       }
 
-      // Panel closed without selection → reset filter
-      this.onEmptyAct();
+      if (!event || !event.target || !event.target.value) {
+        // Treat this as if the user chose to clear the value
+        this.onEmptyAct();
+        return;
+      }
+
+      if (!this.isKnownAct(event.target.value)) {
+        // Treat this as if the user chose to clear the value
+        this.onEmptyAct();
+      }
     });
 
     this.regulationCloseSub = this.regulationAutocompleteTrigger.panelClosingActions.subscribe(event => {
@@ -117,8 +125,16 @@ export class LegislationAddEditComponent implements AfterViewInit, OnDestroy, On
         return;
       }
 
-      // Panel closed without selection → reset filter
-      this.onEmptyAct();
+      if (!event || !event.target || !event.target.value) {
+        // Treat this as if the user chose to clear the value
+        this.onEmptyRegulation();
+        return;
+      }
+
+      if (!this.isKnownRegulation(event.target.value)) {
+        // Treat this as if the user chose to clear the value
+        this.onEmptyRegulation();
+      }
     });
   }
 
@@ -451,7 +467,7 @@ export class LegislationAddEditComponent implements AfterViewInit, OnDestroy, On
     this.pendingRegulationOptionSelect = true;
 
     if (regulation === null) {
-      this.onEmptyAct();
+      this.onEmptyRegulation();
       return;
     }
 
