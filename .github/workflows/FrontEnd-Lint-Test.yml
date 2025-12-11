@@ -30,7 +30,7 @@ jobs:
       if: steps.filter.outputs.frontend == 'true'
       run: |
         cd angular
-        npm install
+        npm install --ignore-scripts
       env:
         CI: true
     

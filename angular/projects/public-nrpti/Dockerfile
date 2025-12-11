@@ -8,7 +8,7 @@ WORKDIR /app
 COPY ./angular/package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install --ignore-scripts
 
 # RUN npm install -g @angular/cli@19
 

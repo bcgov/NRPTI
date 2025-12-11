@@ -78,7 +78,7 @@ pipeline {
             try {
               timeout(10) {
                 echo 'Installing NPM Dependencies...'
-                sh 'npm ci'
+                sh 'npm ci --ignore-scripts'
 
                 echo "Testing ${APP_NAME}-${JOB_NAME}..."
                 sh 'npm run test'
