@@ -101,6 +101,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * @memberof RecordsListComponent
    */
   ngOnInit(): void {
+    console.log("Record List ngOnInit");
     this.loadingScreenService.setLoadingState(true, 'body');
     this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe((params: Params) => {
       this.queryParams = { ...params };
