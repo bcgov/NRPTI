@@ -56,7 +56,7 @@ export class SearchService {
     _in: object = {}
   ): Observable<SearchResults[]> {
     console.log("This is nrced requesting data?");
-    console.time("....getting search results");
+    console.time("getting search results");
     let queryString = `search?dataset=${dataset}`;
     if (fields && fields.length > 0) {
       fields.map(item => {
@@ -111,7 +111,7 @@ export class SearchService {
     if (fields) {
       queryString += `&fields=${Utils.convertArrayIntoPipeString(fields)}`;
     }
-    console.timeEnd('...getting search results');
+    console.timeEnd('getting search results');
     return this.http.get<SearchResults[]>(`${pathAPI}/${queryString}`, {}).pipe(
       map(res => {
         if (!res || !res.length) {
