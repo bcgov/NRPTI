@@ -122,7 +122,7 @@ export class SearchService {
         return res.map(item => new SearchResults({ type: item._schemaName, data: item }));
       })
     );
-    console.time("Search Results .get()");
+    console.timeEnd("Search Results .get()");
     return searchResults;
   }
 }
