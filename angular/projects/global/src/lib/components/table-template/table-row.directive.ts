@@ -62,7 +62,7 @@ export class TableRowDirective implements OnInit, OnChanges, OnDestroy {
     );
 
     this.setRowComponentData(tableComponentRef.instance);
-    console.time("TableRowDirective - loadComponent");
+    console.timeEnd("TableRowDirective - loadComponent");
   }
 
   /**
