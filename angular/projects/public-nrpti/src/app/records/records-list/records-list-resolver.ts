@@ -52,6 +52,7 @@ export class RecordsListResolver implements Resolve<Observable<object>> {
         })
       );
     }
+    console.log("RecordsListResolver - getRecords");
     return this.factoryService.getRecords(
       keywords,
       schemaList,

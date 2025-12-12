@@ -106,8 +106,9 @@ export class RecordsListComponent implements OnInit, OnDestroy {
     this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe((params: Params) => {
       this.queryParams = { ...params };
       // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
+      console.time("updateTableObjectWithUrlParams");
       this.tableData = this.tableTemplateUtils.updateTableObjectWithUrlParams(params, this.tableData);
-
+      console.timeEnd("updateTableObjectWithUrlParams");
       if (!this.tableData.sortBy) {
         this.tableData.sortBy = '-dateIssued';
       }
