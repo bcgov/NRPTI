@@ -170,7 +170,6 @@ export class FactoryService {
    * @memberof FactoryService
    */
   public getDocuments(documentIds: string[]): Observable<any[]> {
-    console.log("Factory Service - getDocuments");
     if (!documentIds || !documentIds.length) {
       return of([]);
     }
@@ -187,7 +186,6 @@ export class FactoryService {
    * @memberof FactoryService
    */
   public getMines(): Observable<any[]> {
-    console.log("Factory Service - getMines");
     return this.getRecords(null, ['MineBCMI'], null, null, 1000, null, null, null, null);
   }
 

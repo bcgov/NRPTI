@@ -31,7 +31,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("AppComponent Init");
     this.loadingScreenService.stateChange.subscribe(loadingObj => {
       switch (loadingObj.location) {
         case 'main':
@@ -44,7 +43,6 @@ export class AppComponent implements OnInit {
           break;
       }
       this._changeDetectionRef.detectChanges();
-      console.log("Before udpateMines()");
       this.updateMines();
     });
   }

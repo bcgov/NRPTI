@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { SearchResults } from '../models/search';
@@ -55,7 +55,6 @@ export class SearchService {
     nor: object = {},
     _in: object = {}
   ): Observable<SearchResults[]> {
-    console.log("This is nrced requesting data?");
     let queryString = `search?dataset=${dataset}`;
     if (fields && fields.length > 0) {
       fields.map(item => {
@@ -110,10 +109,9 @@ export class SearchService {
     if (fields) {
       queryString += `&fields=${Utils.convertArrayIntoPipeString(fields)}`;
     }
-    console.log("Search Service SearchResults - pathAPI", pathAPI);
-    console.log("Search Service SearchResults - queryString", queryString);
     console.time("Search Results .get()");
-    const searchResults = this.http.get<SearchResults[]>(`${pathAPI}/${queryString}`, {}).pipe(
+    return this.http.get<SearchResults[]>(`${pathAPI}/${queryString}`, {}).pipe(
+      tap(() => console.timeEnd("Search Results .get()")),
       map(res => {
         if (!res || !res.length) {
           return [] as SearchResults[];
@@ -122,7 +120,5 @@ export class SearchService {
         return res.map(item => new SearchResults({ type: item._schemaName, data: item }));
       })
     );
-    console.timeEnd("Search Results .get()");
-    return searchResults;
   }
 }
