@@ -109,9 +109,7 @@ export class SearchService {
     if (fields) {
       queryString += `&fields=${Utils.convertArrayIntoPipeString(fields)}`;
     }
-    console.time("Search Results .get()");
     return this.http.get<SearchResults[]>(`${pathAPI}/${queryString}`, {}).pipe(
-      tap(() => console.timeEnd("Search Results .get()")),
       map(res => {
         if (!res || !res.length) {
           return [] as SearchResults[];
