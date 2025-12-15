@@ -101,14 +101,11 @@ export class RecordsListComponent implements OnInit, OnDestroy {
    * @memberof RecordsListComponent
    */
   ngOnInit(): void {
-    console.log("Record List ngOnInit");
     this.loadingScreenService.setLoadingState(true, 'body');
     this.route.params.pipe(takeUntil(this.ngUnsubscribe)).subscribe((params: Params) => {
       this.queryParams = { ...params };
       // Get params from route, shove into the tableTemplateUtils so that we get a new dataset to work with.
-      console.time("updateTableObjectWithUrlParams");
       this.tableData = this.tableTemplateUtils.updateTableObjectWithUrlParams(params, this.tableData);
-      console.timeEnd("updateTableObjectWithUrlParams");
       if (!this.tableData.sortBy) {
         this.tableData.sortBy = '-dateIssued';
       }
@@ -123,7 +120,6 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         this.router.navigate(['/']);
         return;
       }
-      console.log("Records List Response: ", res?.records);
       const records =
         (res.records[0] && res.records[0].data && res.records[0].data.searchResults) || // Multiple Records Search
         res.records || // Single Record search

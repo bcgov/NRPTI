@@ -43,18 +43,11 @@ export function initConfig(
   actService: ActService
 ) {
   return async () => {
-    console.log("initConfig starting");
-    console.time('ConfigService.init()');
     await configService.init();
-    console.timeEnd('ConfigService.init()');
 
-    console.time('ApplicationAgencyService.init()');
     await applicationAgency.init();
-    console.timeEnd('ApplicationAgencyService.init()');
 
-    console.time('ActService.init()');
     await actService.init();
-    console.timeEnd('ActService.init()');
   };
 }
 

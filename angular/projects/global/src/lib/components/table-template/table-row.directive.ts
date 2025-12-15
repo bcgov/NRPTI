@@ -37,13 +37,17 @@ export class TableRowDirective implements OnInit, OnChanges, OnDestroy {
   ) {}
 
   ngOnInit() {
+    console.log("TableRowDirective - ngOnInit");
     this.loadComponent();
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (!changes.firstChange && changes['tableData'].currentValue) {
+
+      console.time("TableRowDirective - noOnChanges");
       this.tableData = changes['tableData'].currentValue;
       this.rowObject = this.tableData.items.find(element => element.rowData._id === this.rowObject.rowData._id);
+      console.timeEnd("TableRowDirective - noOnChanges");
 
       this.loadComponent();
     }
@@ -55,14 +59,12 @@ export class TableRowDirective implements OnInit, OnChanges, OnDestroy {
    * @memberof TableRowDirective
    */
   loadComponent() {
-    console.time("TableRowDirective - loadComponent");
     const tableComponentRef: ComponentRef<TableRowComponent> = this.injectComponentService.injectComponentIntoView(
       this.viewContainerRef,
       this.rowObject.component || this.tableData.component
     );
 
     this.setRowComponentData(tableComponentRef.instance);
-    console.timeEnd("TableRowDirective - loadComponent");
   }
 
   /**
