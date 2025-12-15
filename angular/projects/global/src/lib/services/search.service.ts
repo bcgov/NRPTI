@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { SearchResults } from '../models/search';
@@ -109,9 +109,8 @@ export class SearchService {
     if (fields) {
       queryString += `&fields=${Utils.convertArrayIntoPipeString(fields)}`;
     }
-    console.time("Search Results .get()");
+
     return this.http.get<SearchResults[]>(`${pathAPI}/${queryString}`, {}).pipe(
-      tap(() => console.timeEnd("Search Results .get()")),
       map(res => {
         if (!res || !res.length) {
           return [] as SearchResults[];

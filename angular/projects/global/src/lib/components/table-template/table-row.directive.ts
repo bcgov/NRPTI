@@ -43,11 +43,8 @@ export class TableRowDirective implements OnInit, OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges) {
     if (!changes.firstChange && changes['tableData'].currentValue) {
-
-      console.time("TableRowDirective - noOnChanges");
       this.tableData = changes['tableData'].currentValue;
       this.rowObject = this.tableData.items.find(element => element.rowData._id === this.rowObject.rowData._id);
-      console.timeEnd("TableRowDirective - noOnChanges");
 
       this.loadComponent();
     }
