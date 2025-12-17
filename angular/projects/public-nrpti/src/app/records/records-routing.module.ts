@@ -21,8 +21,7 @@ const routes: Routes = [
         component: RecordsListComponent,
         resolve: {
           records: RecordsListResolver
-        },
-        runGuardsAndResolvers: 'pathParamsChange'
+        }
       }
     ]
   }
