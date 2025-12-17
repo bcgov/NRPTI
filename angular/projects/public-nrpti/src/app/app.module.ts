@@ -43,11 +43,11 @@ export function initConfig(
   actService: ActService
 ) {
   return async () => {
-    await Promise.all([
-      configService.init(),
-      applicationAgency.init(),
-      actService.init(),
-    ]);
+    await configService.init();
+
+    await applicationAgency.init();
+
+    await actService.init();
   };
 }
 
