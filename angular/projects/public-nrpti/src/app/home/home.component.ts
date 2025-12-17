@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FactoryService } from '../services/factory.service';
+// import { FactoryService } from '../services/factory.service';
 import { AgencyDataService } from '../../../../global/src/lib/utils/agency-data-service-nrced';
 
 @Component({
@@ -13,11 +13,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
   agencyDataService: AgencyDataService;
   constructor(
     public route: ActivatedRoute,
-    private factoryService: FactoryService
+    // private factoryService: FactoryService
   ) {}
 
   async ngOnInit() {
-    this.agencyDataService = new AgencyDataService(this.factoryService);
+    // this.agencyDataService = new AgencyDataService(this.factoryService);
   }
 
   ngAfterViewInit() {
