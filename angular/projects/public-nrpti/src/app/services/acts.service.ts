@@ -33,7 +33,6 @@ export class ActService {
    * @async
    */
   async init() {
-    console.log("ActService async init");
     this.api = `${this.configService.config['API_LOCATION']}${this.configService.config['API_PATH']}`;
     await firstValueFrom(this.refreshAct());
   }
@@ -43,7 +42,6 @@ export class ActService {
    */
   refreshAct(): Observable<void> {
     return new Observable<void>(observer => {
-      console.log("ActService refreshAct");
       const apiEndpoint = `${this.api}/acts-regulations`;
       const getActsRegulationsURL = this.http.get<{ [key: string]: string }>(apiEndpoint);
 
