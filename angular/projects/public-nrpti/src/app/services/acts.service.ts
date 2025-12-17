@@ -43,6 +43,7 @@ export class ActService {
    */
   refreshAct(): Observable<void> {
     return new Observable<void>(observer => {
+      console.log("ActService refreshAct");
       const apiEndpoint = `${this.api}/acts-regulations`;
       const getActsRegulationsURL = this.http.get<{ [key: string]: string }>(apiEndpoint);
 
