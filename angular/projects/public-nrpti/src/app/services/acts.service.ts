@@ -4,7 +4,7 @@
  */
 import { Injectable } from '@angular/core';
 import { ConfigService } from 'nrpti-angular-components';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 /**
@@ -35,7 +35,7 @@ export class ActService {
   async init() {
     console.log("ActService async init");
     this.api = `${this.configService.config['API_LOCATION']}${this.configService.config['API_PATH']}`;
-    await this.refreshAct().toPromise();
+    await firstValueFrom(this.refreshAct());
   }
   /**
    * Refresh the map of actCodes from the API.
