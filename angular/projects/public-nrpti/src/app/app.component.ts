@@ -48,9 +48,7 @@ export class AppComponent implements OnInit {
   }
 
   private updateMines() {
-    console.log("updateMines");
     this.factoryService.getMines().subscribe((mineResults: any[]) => {
-      console.log("updateMines - getMines");
       this.setStoreServiceItem('mines', mineResults[0].data.searchResults);
     });
   }

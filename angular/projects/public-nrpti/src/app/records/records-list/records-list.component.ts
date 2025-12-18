@@ -110,7 +110,7 @@ export class RecordsListComponent implements OnInit, OnDestroy {
         this.tableData.sortBy = '-dateIssued';
       }
 
-      // this._changeDetectionRef.detectChanges();
+      this._changeDetectionRef.detectChanges();
     });
 
     this.route.data.pipe(takeUntil(this.ngUnsubscribe)).subscribe((res: any) => {
