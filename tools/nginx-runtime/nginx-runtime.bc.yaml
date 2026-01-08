@@ -61,4 +61,4 @@ parameters:
     value: https://github.com/bcgov/angular-scaffold
   - name: SOURCE_REPOSITORY_REF
     required: true
-    value: master
+    value: main

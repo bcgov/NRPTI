@@ -72,7 +72,7 @@ parameters:
     value: https://github.com/bcgov/NRPTI
   - name: SOURCE_REPOSITORY_REF
     required: true
-    value: master
+    value: main
   - name: SOURCE_IMAGE_NAME
     required: true
     value: nodejs
