@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { IBreadcrumb, LoadingScreenService, StoreService} from 'nrpti-angular-components';
+import { IBreadcrumb, LoadingScreenService, StoreService } from 'nrpti-angular-components';
 import { FactoryService } from './services/factory.service';
 
 @Component({
