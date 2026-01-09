@@ -538,11 +538,13 @@ let searchCollection = async function (
     }
   });
 
-  aggregation.push({
-    $addFields: {
-      score: { $meta: 'textScore' }
-    }
-  });
+  if (searchProperties && searchProperties?.$text) {
+    aggregation.push({
+      $addFields: {
+        score: { $meta: 'textScore' }
+      }
+    });
+  }
 
   // add a lookup and replace root
   // to finalize the facet
