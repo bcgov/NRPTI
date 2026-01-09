@@ -1,0 +1,41 @@
+name: Task
+description: Any work that does not directly impact the user
+title: ""
+labels:
+  - Task
+
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the Task
+      description: A clear and concise description of what the task is.
+      placeholder: Describe what needs to be done
+    validations:
+      required: true
+
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Purpose
+      description: The reason why this task is needed and/or what value it adds.
+      placeholder: Explain why this task is necessary
+    validations:
+      required: true
+  
+  - type: checkboxes
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      description: Conditions that must be met for this task to be considered complete.
+      options:
+        - label: first
+        - label: second
+        - label: third
+  
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional context
+      description: Add any other context, links, or notes.
+      placeholder: Additional details, links, screenshots, etc.
