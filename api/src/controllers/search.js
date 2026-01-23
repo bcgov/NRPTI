@@ -538,7 +538,9 @@ let searchCollection = async function (
     }
   });
 
+  console.log("Before textScore");
   if (searchProperties && searchProperties?.$text) {
+    console.log("searchProperties Exist", searchProperties);
     aggregation.push({
       $addFields: {
         score: { $meta: 'textScore' }
