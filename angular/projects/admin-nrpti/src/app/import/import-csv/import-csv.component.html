@@ -5,7 +5,7 @@
     <label for="csvImportRecordType">Source System</label>
     <select
       id="csvImportRecordType"
-      class="form-control"
+      class="form-select"
       [(ngModel)]="dataSourceType"
       (change)="onDataSourceTypeChange($event.target.value)"
     >
@@ -19,7 +19,7 @@
     <label for="csvImportRecordType">Record Type</label>
     <select
       id="csvImportRecordType"
-      class="form-control"
+      class="form-select"
       [(ngModel)]="recordType"
       [disabled]="!dataSourceType"
       (change)="onRecordTypeChange($event.target.value)"
