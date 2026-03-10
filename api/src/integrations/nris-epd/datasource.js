@@ -73,7 +73,7 @@ class NrisDataSource {
       // Set a startDate and temporary endDate, which defines the first query.  This is because NRIS will 500/timeout
       // if we set a range larger than a few months.  After which, increment both the startDate and endDate to get the
       // next month, until we reach the final stop date of December 31, 2019
-      let startDate = moment('2017-10-01');
+      let startDate = moment(process.env.NRIS_EPD_IMPORT_START_DATE || '2017-10-01');
       let endDate = moment(startDate).add(1, 'M');
       let stopDate = moment();
 
@@ -87,16 +87,20 @@ class NrisDataSource {
       // Keep going until we'd start past today's date.
       while (startDate < stopDate) {
         defaultLog.info('dateRange:', startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD'));
+
         const { status, message, itemsProcessed, itemTotal } = await this.updateRecords(
           startDate.format('YYYY-MM-DD'),
           endDate.format('YYYY-MM-DD')
         );
+
         if (status === 'Failed') {
           statusObject.status = status;
           statusObject.message += message + ':' + startDate.format('YYYY-MM-DD');
         }
+
         statusObject.itemsProcessed += itemsProcessed;
         statusObject.itemTotal += itemTotal;
+
         await this.taskAuditRecord.updateTaskRecord({
           itemTotal: statusObject.itemTotal,
           itemsProcessed: statusObject.itemsProcessed
@@ -116,6 +120,7 @@ class NrisDataSource {
 
   async updateRecords(startDate, endDate) {
     let processingObject = { itemsProcessed: 0, itemTotal: 0, status: 'Running' };
+
     try {
       const url = {
         href: NRIS_EPD_API_ENDPOINT + '?inspectionStartDate=' + startDate + '&inspectionEndDate=' + endDate
@@ -124,6 +129,7 @@ class NrisDataSource {
 
       // Get records
       defaultLog.info('NRIS Call:', url.href);
+
       let records = null;
       const delaySeconds = 10;
 
