@@ -92,7 +92,7 @@ class NrisDataSource {
           startDate.format('YYYY-MM-DD'),
           endDate.format('YYYY-MM-DD')
         );
-        
+
         if (status === 'Failed') {
           statusObject.status = status;
           statusObject.message += message + ':' + startDate.format('YYYY-MM-DD');
