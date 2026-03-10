@@ -88,16 +88,11 @@ class NrisDataSource {
       while (startDate < stopDate) {
         defaultLog.info('dateRange:', startDate.format('YYYY-MM-DD'), endDate.format('YYYY-MM-DD'));
 
-        const { 
-          status, 
-          message, 
-          itemsProcessed, 
-          itemTotal 
-        } = await this.updateRecords(
+        const { status, message, itemsProcessed, itemTotal } = await this.updateRecords(
           startDate.format('YYYY-MM-DD'),
           endDate.format('YYYY-MM-DD')
         );
-
+        
         if (status === 'Failed') {
           statusObject.status = status;
           statusObject.message += message + ':' + startDate.format('YYYY-MM-DD');
