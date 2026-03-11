@@ -14,13 +14,13 @@ jest.setTimeout(100000);
 beforeAll(async () => {
   try {
     mongoUri = process.env.MONGO_URI;
-    await mongoose.connect(mongoUri, mongooseOpts)
+    await mongoose.connect(mongoUri, mongooseOpts);
 
     if (process.env.CI === 'true') {
       mongoose.set('runValidators', false);
 
-      mongoose.plugin((schema) => {
-        schema.pre('save', function(next) {
+      mongoose.plugin(schema => {
+        schema.pre('save', function (next) {
           this.$__.skipValidation = true;
           next();
         });
@@ -28,12 +28,10 @@ beforeAll(async () => {
 
       console.log('CI mode: mongoose validation disabled');
     }
-
-  } catch(error) {
+  } catch (error) {
     console.error(`Failed to connect to MongoDB for tests: ${error}`);
     throw error;
   }
-
 });
 
 afterAll(async () => {
