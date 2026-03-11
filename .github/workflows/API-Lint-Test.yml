@@ -53,10 +53,6 @@ jobs:
           cd api
           npx eslint .
           npx prettier './**/*.js' --check
-
-      - name: Install MongoDB driver
-        if: steps.filter.outputs.api == 'true'
-        run: npm install --ignore-scripts mongodb@4.4.30
       - name: Setup Mongo DB
         if: steps.filter.outputs.api == 'true'
         run: node ./mongoSeed/mongo-seed-CI.js
