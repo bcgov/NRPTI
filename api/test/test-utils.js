@@ -15,8 +15,8 @@ beforeAll(async () => {
   mongoUri = process.env.MONGO_URI;
   await mongoose.connect(mongoUri, mongooseOpts, err => {
     if (err) {
-      throw Error(err)
-;    }
+      throw Error(err);
+    }
   });
 });
 
