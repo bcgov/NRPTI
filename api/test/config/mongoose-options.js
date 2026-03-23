@@ -1,6 +1,4 @@
 const mongooseOptions = {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
   autoReconnect: true,
   poolSize: 10,
   bufferMaxEntries: 0,
