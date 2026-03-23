@@ -6,6 +6,7 @@ services:
     tty: true
     restart: always
     volumes:
+      - mongo-data:/data/db
       - ./mongoSeed/init:/docker-entrypoint-initdb.d
     ports:
       - 27017:27017
@@ -122,3 +123,6 @@ services:
 networks:
   nrpti:
     driver: "bridge"
+
+volumes:
+  mongo-data:
