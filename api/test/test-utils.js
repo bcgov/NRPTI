@@ -16,10 +16,9 @@ beforeAll(async () => {
     mongoUri = process.env.MONGO_URI;
 
     await mongoose.connect(mongoUri, mongooseOpts);
-
   } catch (error) {
     console.log('MongoDB connection failed: ', error);
-    throw Error(error)
+    throw Error(error);
   }
 });
 
@@ -32,10 +31,9 @@ beforeEach(async () => {
     mongoUri = process.env.MONGO_URI;
 
     await mongoose.connect(mongoUri, mongooseOpts);
-
   } catch (error) {
     console.log('MongoDB connection failed: ', error);
-    throw Error(error)
+    throw Error(error);
   }
 });
 
