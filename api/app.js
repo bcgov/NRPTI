@@ -123,7 +123,7 @@ swaggerTools.initializeMiddleware(swaggerConfig, async function (middleware) {
 
   defaultLog.info('Attempting to connect to mongo database:', DB_CONNECTION);
 
-  mongoose.connect(encodeURI(DB_CONNECTION), mongooseDBConfig).then(
+  mongoose.connect(DB_CONNECTION, mongooseDBConfig).then(
     () => {
       defaultLog.info('Database connected');
 
