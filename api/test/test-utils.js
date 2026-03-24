@@ -12,12 +12,15 @@ setupAppServer();
 jest.setTimeout(100000);
 
 beforeAll(async () => {
-  mongoUri = process.env.MONGO_URI;
-  await mongoose.connect(mongoUri, mongooseOpts, err => {
-    if (err) {
-      throw Error(err);
-    }
-  });
+  try {
+    mongoUri = process.env.MONGO_URI;
+
+    await mongoose.connect(mongoUri, mongooseOpts);
+
+  } catch (error) {
+    console.log('MongoDB connection failed: ', error);
+    throw Error(error)
+  }
 });
 
 afterAll(async () => {
@@ -25,11 +28,15 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  await mongoose.connect(mongoUri, mongooseOpts, err => {
-    if (err) {
-      throw Error(err);
-    }
-  });
+  try {
+    mongoUri = process.env.MONGO_URI;
+
+    await mongoose.connect(mongoUri, mongooseOpts);
+
+  } catch (error) {
+    console.log('MongoDB connection failed: ', error);
+    throw Error(error)
+  }
 });
 
 afterEach(async () => {
