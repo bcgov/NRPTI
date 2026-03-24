@@ -124,6 +124,7 @@ swaggerTools.initializeMiddleware(swaggerConfig, async function (middleware) {
     defaultLog.info('Database connected');
     defaultLog.info('Loading database models');
 
+
     // Load database models (from directory)
     require('./src/models');
 
