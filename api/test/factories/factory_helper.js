@@ -6,7 +6,6 @@ const mongTypes = require('mongoose').Types;
 let faker = require('faker/locale/en');
 const fs = require('fs');
 const path = require('path');
-const shell = require('shelljs');
 const CONSTANTS = require('../../src/utils/constants/misc.js');
 
 let bcCities = [];
@@ -233,7 +232,7 @@ function touchPath(pathToTouch) {
 
 let epicAppTmpBasePath = path.sep + 'tmp' + path.sep + 'epic' + path.sep;
 let generatedDocBasePath = epicAppTmpBasePath + 'sampleGeneratedDocs' + path.sep;
-shell.mkdir('-p', generatedDocBasePath);
+fs.mkdirSync(generatedDocBasePath, { recursive: true });
 
 const generatedDocExt = '.pdf';
 
