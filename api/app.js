@@ -114,7 +114,7 @@ swaggerTools.initializeMiddleware(swaggerConfig, async function (middleware) {
     bufferCommands: false,
     connectTimeoutMS: 10000, // Give up initial connection after 10 seconds
     serverSelectionTimeoutMS: 5000,
-    socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+    socketTimeoutMS: 45000 // Close sockets after 45 seconds of inactivity
   };
 
   defaultLog.info('Attempting to connect to mongo database:', DB_CONNECTION);
@@ -124,7 +124,6 @@ swaggerTools.initializeMiddleware(swaggerConfig, async function (middleware) {
     defaultLog.info('Database connected');
     defaultLog.info('Loading database models');
 
-
     // Load database models (from directory)
     require('./src/models');
 
@@ -132,7 +131,6 @@ swaggerTools.initializeMiddleware(swaggerConfig, async function (middleware) {
     app.listen(3000, '0.0.0.0', function () {
       defaultLog.info('Started server on port 3000');
     });
-
   } catch (error) {
     defaultLog.error('Mongoose connect error:', error);
     process.exit(1);
