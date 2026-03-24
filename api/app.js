@@ -109,37 +109,30 @@ swaggerTools.initializeMiddleware(swaggerConfig, async function (middleware) {
   const mongooseDBConfig = {
     user: DB_USERNAME,
     pass: DB_PASSWORD,
-    poolSize: 10, // Maintain up to 10 socket connections
+    maxPoolSize: 10, // Maintain up to 10 socket connections
     // If not connected, return errors immediately rather than waiting for reconnect
     bufferCommands: false,
-    keepAlive: 1,
     connectTimeoutMS: 10000, // Give up initial connection after 10 seconds
-    socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false // https://mongoosejs.com/docs/deprecations.html#-findandmodify-
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000 // Close sockets after 45 seconds of inactivity
   };
 
   defaultLog.info('Attempting to connect to mongo database:', DB_CONNECTION);
 
-  mongoose.connect(DB_CONNECTION, mongooseDBConfig).then(
-    () => {
-      defaultLog.info('Database connected');
+  try {
+    await mongoose.connect(DB_CONNECTION, mongooseDBConfig);
+    defaultLog.info('Database connected');
+    defaultLog.info('Loading database models');
 
-      defaultLog.info('Loading database models');
+    // Load database models (from directory)
+    require('./src/models');
 
-      // Load database models (from directory)
-      require('./src/models');
-
-      // Start application
-      app.listen(3000, '0.0.0.0', function () {
-        defaultLog.info('Started server on port 3000');
-      });
-    },
-    error => {
-      defaultLog.info('Mongoose connect error:', error);
-      return;
-    }
-  );
+    // Start application
+    app.listen(3000, '0.0.0.0', function () {
+      defaultLog.info('Started server on port 3000');
+    });
+  } catch (error) {
+    defaultLog.error('Mongoose connect error:', error);
+    process.exit(1);
+  }
 });
