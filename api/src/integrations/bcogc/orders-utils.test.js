@@ -89,11 +89,11 @@ describe('orders-utils testing', () => {
     mongoose.connect(mongo);
 
     beforeAll(async () => {
-      await Document.remove({});
+      await Document.deleteMany({});
     });
 
     beforeEach(async () => {
-      await Document.remove({});
+      await Document.deleteMany({});
     });
 
     afterAll(async () => {

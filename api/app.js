@@ -109,6 +109,7 @@ swaggerTools.initializeMiddleware(swaggerConfig, async function (middleware) {
   const mongooseDBConfig = {
     user: DB_USERNAME,
     pass: DB_PASSWORD,
+    strictQuery: true,
     maxPoolSize: 10, // Maintain up to 10 socket connections
     // If not connected, return errors immediately rather than waiting for reconnect
     bufferCommands: false,

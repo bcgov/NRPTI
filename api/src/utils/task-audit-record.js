@@ -44,7 +44,7 @@ class TaskAuditRecord {
 
     // update the existing record
     return await Task.findOneAndUpdate(
-      { _id: mongoose.Types.ObjectId(this.taskRecord._id) },
+      { _id: new mongoose.Types.ObjectId(this.taskRecord._id) },
       { $set: { _id: this.taskRecord._id, ...params } },
       { new: true }
     );

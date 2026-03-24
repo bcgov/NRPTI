@@ -158,11 +158,11 @@ describe('AdministrativePenalty', () => {
 
     beforeAll(async () => {
       await mongoose.connect(mongo);
-      await Document.remove({});
+      await Document.deleteMany({});
     });
 
     beforeEach(async () => {
-      await Document.remove({});
+      await Document.deleteMany({});
     });
 
     afterAll(async () => {
@@ -227,11 +227,11 @@ describe('AdministrativePenalty', () => {
 
     beforeAll(async () => {
       await mongoose.connect(mongo);
-      await AdminPenalty.remove({});
+      await AdminPenalty.deleteMany({});
     });
 
     beforeEach(async () => {
-      await AdminPenalty.remove({});
+      await AdminPenalty.deleteMany({});
     });
 
     afterAll(async () => {

@@ -205,10 +205,10 @@ exports.getConvertedValue = getConvertedValue;
 
 const convertValue = function (item) {
   if (isNaN(item) || item === null) {
-    if (mongoose.Types.ObjectId.isValid(item) && mongoose.Types.ObjectId(item).toString() === item) {
+    if (mongoose.Types.ObjectId.isValid(item) && new mongoose.Types.ObjectId(item).toString() === item) {
       defaultLog.info('objectid', item);
       // ObjectID
-      return mongoose.Types.ObjectId(item);
+      return new mongoose.Types.ObjectId(item);
     } else if (item === 'true') {
       defaultLog.info('bool');
       // Bool
@@ -395,7 +395,7 @@ let searchCollection = async function (
 ) {
   let properties = undefined;
   if (project) {
-    properties = { project: mongoose.Types.ObjectId(project) };
+    properties = { project: new mongoose.Types.ObjectId(project) };
   }
 
   // optional search keys
@@ -848,7 +848,7 @@ const executeQuery = async function (args, res, next) {
 
     let aggregation = [
       {
-        $match: { _id: mongoose.Types.ObjectId(args.swagger.params._id.value) }
+        $match: { _id: new mongoose.Types.ObjectId(args.swagger.params._id.value) }
       }
     ];
 
@@ -1064,7 +1064,7 @@ const executeQuery = async function (args, res, next) {
     let aggregation = [
       // match on collectionBCMI schema and by supplied objectId
       {
-        $match: { _id: mongoose.Types.ObjectId(args.swagger.params._id.value) }
+        $match: { _id: new mongoose.Types.ObjectId(args.swagger.params._id.value) }
       },
       // lookup the records in collection
       {
