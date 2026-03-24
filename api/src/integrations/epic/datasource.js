@@ -346,9 +346,9 @@ class DataSource {
     // Save/update this id's name in our DB
     const EPICProjectModel = mongoose.model('EPICProject');
     await EPICProjectModel.findOneAndUpdate(
-      { _id: mongoose.Types.ObjectId(response[0]._id) },
+      { _id: new mongoose.Types.ObjectId(response[0]._id) },
       {
-        _id: mongoose.Types.ObjectId(response[0]._id),
+        _id: new mongoose.Types.ObjectId(response[0]._id),
         _schemaName: 'EPICProject',
         name: response[0].name,
         read: ['sysadmin', 'public'],
