@@ -396,6 +396,11 @@ export class Picklists {
             }
           }
         }
+      },
+      'Environmental Assessment Act': {
+        '60': {
+          description: 'Penalty for contravention of this Act or regulations, failure to comply with an order or environmental certificate issued under this Act, or making false or misleading statement in a record filed under this Act'
+        }
       }
     },
     AdministrativeSanction: {
