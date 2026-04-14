@@ -1029,7 +1029,7 @@ const executeQuery = async function (args, res, next) {
         let collectionObj = mongoose.model(args.swagger.params._schemaName.value);
         data = await collectionObj.aggregate(aggregation);
       } else {
-        const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+        const db = mongoose.connection.db;
         const collection = db.collection('nrpti');
         data = await collection
           .aggregate(aggregation, {
