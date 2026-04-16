@@ -656,7 +656,7 @@ let searchCollection = async function (
 
   defaultLog.info('Executing searching on schema(s):', schemaName);
 
-  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+  const db = mongoose.connection.db;
 
   // If we have a subset filter on, we must change to the appropriate collection.
   let collectionName = 'nrpti';
