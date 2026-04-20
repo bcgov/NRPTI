@@ -1,6 +1,6 @@
 let defaultLog = require('winston').loggers.get('default');
 let mongoose = require('mongoose');
-let ObjectID = mongoose.mongo.ObjectId
+let ObjectID = mongoose.mongo.ObjectId;
 let QueryActions = require('../utils/query-actions');
 let QueryUtils = require('../utils/query-utils');
 let qs = require('qs');
