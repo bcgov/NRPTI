@@ -1,10 +1,9 @@
 let defaultLog = require('winston').loggers.get('default');
 let mongoose = require('mongoose');
-let ObjectID = require('mongodb').ObjectID;
+let ObjectID = mongoose.mongo.ObjectId
 let QueryActions = require('../utils/query-actions');
 let QueryUtils = require('../utils/query-utils');
 let qs = require('qs');
-let mongodb = require('../utils/mongodb');
 let moment = require('moment');
 let fuzzySearch = require('../utils/fuzzySearch');
 const {
@@ -675,6 +674,7 @@ let searchCollection = async function (
       collectionName = 'outcome_description_subset';
     }
   }
+
   const collection = db.collection(collectionName);
 
   const data = await collection
@@ -1139,7 +1139,7 @@ const executeQuery = async function (args, res, next) {
     let data = [];
 
     try {
-      const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+      const db = mongoose.connection.db;
       const collection = db.collection('nrpti');
       data = await collection
         .aggregate(aggregation, {
