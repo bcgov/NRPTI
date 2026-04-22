@@ -1,4 +1,5 @@
-const ObjectID = require('mongodb').ObjectID;
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 const Inspections = require('./inspections-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
@@ -70,7 +71,7 @@ describe('transformRecord', () => {
       location: 'West Coast',
       outcomeDescription: 'Compliant',
       projectName: 'LNG Canada Development Inc.',
-      _epicProjectId: ObjectID('588511d0aaecd9001b826192'),
+      _epicProjectId: ObjectId('588511d0aaecd9001b826192'),
       centroid: [-125, 50],
 
       sourceSystemRef: 'nris-flnr-csv'

@@ -3,8 +3,9 @@
  * @description This file contains API endpoints for loading and updating agency names from the database.
  */
 
+const mongoose = require('mongoose');
+
 const queryActions = require('../utils/query-actions');
-const mongodb = require('../utils/mongodb');
 const RECORD_TYPE = require('../utils/constants/record-type-enum');
 const defaultLog = require('../utils/logger')('record');
 
@@ -16,7 +17,7 @@ const defaultLog = require('../utils/logger')('record');
  * @description Get API for retrieving agency code and names from the database.
  */
 exports.publicGet = async function (args, res, next) {
-  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+  const db = mongoose.connection.db;
   const collectionDB = db.collection('nrpti');
 
   let agencyList;
@@ -60,7 +61,7 @@ exports.publicGet = async function (args, res, next) {
  *   }
  */
 exports.protectedPut = async function (args, res, next) {
-  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+  const db = mongoose.connection.db;
   let promises = [];
   let result = null;
   let incomingObj = args.swagger.params.data.value;

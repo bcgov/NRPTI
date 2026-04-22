@@ -1,10 +1,10 @@
 'use strict';
 
-const ObjectID = require('mongodb').ObjectID;
-const mongodb = require('../../utils/mongodb');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 exports.updateById = async function (id, obj) {
-  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+  const db = mongoose.connection.db;
   const collectionDB = db.collection('nrpti');
-  return await collectionDB.findOneAndUpdate({ _id: new ObjectID(id) }, obj);
+  return await collectionDB.findOneAndUpdate({ _id: new ObjectId(id) }, obj);
 };
