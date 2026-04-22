@@ -2,6 +2,8 @@
 
 const AWS = require('aws-sdk');
 
+let mongoose = require('mongoose');
+
 const AWS_BULK_LIMIT = 1000;
 const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
 const OBJECT_STORE_BUCKET = process.env.OBJECT_STORE_bucket_name || 'uploads';
