@@ -8,8 +8,7 @@ const { userHasValidRoles } = require('../utils/auth-utils');
 const utils = require('../utils/constants/misc');
 const RECORD_TYPE = require('../utils/constants/record-type-enum');
 const mongoose = require('mongoose');
-const ObjectId = require('mongodb').ObjectId;
-const mongodb = require('../utils/mongodb');
+let ObjectId = mongoose.mongo.ObjectId;
 const PutUtils = require('../utils/put-utils');
 const { publishS3Document, unpublishS3Document } = require('../controllers/document-controller');
 
@@ -81,7 +80,7 @@ exports.protectedPut = async function (args, res, next) {
 };
 
 const updateCollection = async function (incomingObj, collectionId, displayName) {
-  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+  const db = mongoose.connection.db;
   const collectionDB = db.collection('nrpti');
 
   // if any values in the "records" attribute exist on any other collection, throw an error
@@ -267,7 +266,7 @@ exports.protectedDelete = async function (args, res, next) {
  */
 exports.unpublishCollections = async function (mineId, auth_payload) {
   mineId = new ObjectId(mineId);
-  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+  const db = mongoose.connection.db;
   const nrpti = db.collection('nrpti');
 
   const collections = await nrpti
@@ -391,7 +390,7 @@ exports.unpublishCollections = async function (mineId, auth_payload) {
  */
 exports.publishCollections = async function (mineId, auth_payload) {
   mineId = new ObjectId(mineId);
-  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+  const db = mongoose.connection.db;
   const nrpti = db.collection('nrpti');
 
   const collections = await nrpti
@@ -507,7 +506,7 @@ exports.publishCollections = async function (mineId, auth_payload) {
 };
 
 const checkRecordExistsInCollection = async function (records, collectionId, collectionRead, editing = false) {
-  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+  const db = mongoose.connection.db;
   const collectionDB = db.collection('nrpti');
   let promises = [];
   for (const record of records) {
@@ -619,7 +618,7 @@ const createCollection = async function (collectionObj, user) {
 exports.createCollection = createCollection;
 
 const isMinePublished = async function (incomingObj) {
-  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+  const db = mongoose.connection.db;
   const nrpti = db.collection('nrpti');
 
   const mine = await nrpti.findOne({ _id: new ObjectId(incomingObj.project) });
