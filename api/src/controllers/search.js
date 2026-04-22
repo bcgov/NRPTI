@@ -1,6 +1,6 @@
 let defaultLog = require('winston').loggers.get('default');
 let mongoose = require('mongoose');
-let ObjectID = mongoose.mongo.ObjectId;
+const ObjectId = mongoose.Types.ObjectId;
 let QueryActions = require('../utils/query-actions');
 let QueryUtils = require('../utils/query-utils');
 let qs = require('qs');
@@ -68,7 +68,7 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
         });
         return { [logicalOperator]: [{ [item]: { $in: arrayExp } }] };
       } else if (!Array.isArray(entry) && comparisonOperator === '$in') {
-        return { [logicalOperator]: [{ [item]: { $in: [ObjectID(entry)] } }] };
+        return { [logicalOperator]: [{ [item]: { $in: [ObjectId(entry)] } }] };
       }
 
       if (Array.isArray(entry) && comparisonOperator !== '$in') {
@@ -837,7 +837,7 @@ const executeQuery = async function (args, res, next) {
   if (dataset[0] === 'Item') {
     defaultLog.info('ITEM GET', { _id: args.swagger.params._id.value });
 
-    if (!args.swagger.params._id.value || !ObjectID.isValid(args.swagger.params._id.value)) {
+    if (!args.swagger.params._id.value || !ObjectId.isValid(args.swagger.params._id.value)) {
       defaultLog.warn(`Error searching for item: ${args.swagger.params._id.value}, Error: Invalid Item ID supplied`);
       return QueryActions.sendResponse(
         res,
@@ -1052,7 +1052,7 @@ const executeQuery = async function (args, res, next) {
     // dataset == collection, id = collection id, flavourtype?
     defaultLog.info('COLLECTION DOCUMENTS GET', { _id: args.swagger.params._id.value });
 
-    if (!args.swagger.params._id.value || !ObjectID.isValid(args.swagger.params._id.value)) {
+    if (!args.swagger.params._id.value || !ObjectId.isValid(args.swagger.params._id.value)) {
       defaultLog.warn(`Error searching for item: ${args.swagger.params._id.value}, Error: Invalid Item ID supplied`);
       return QueryActions.sendResponse(
         res,

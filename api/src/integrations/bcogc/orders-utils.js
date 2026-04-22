@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const ObjectID = require('mongodb').ObjectID;
+const ObjectId = mongoose.Types.ObjectId;
 const defaultLog = require('../../utils/logger')('bcogc-csv-orders-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const BaseRecordUtils = require('./base-record-utils');
@@ -79,7 +79,7 @@ class Orders extends BaseRecordUtils {
     // Only update NRPTI project details if the csv contains known project information
     if (projectDetails) {
       order['projectName'] = projectDetails.projectName;
-      order['_epicProjectId'] = (projectDetails._epicProjectId && new ObjectID(projectDetails._epicProjectId)) || null;
+      order['_epicProjectId'] = (projectDetails._epicProjectId && new ObjectId(projectDetails._epicProjectId)) || null;
     }
 
     return order;

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const ObjectID = require('mongodb').ObjectID;
+const ObjectId = mongoose.Types.ObjectId;
 const PutUtils = require('../../utils/put-utils');
 const PermitPost = require('../post/permit');
 
@@ -94,7 +94,7 @@ exports.editMaster = function (args, res, next, incomingObj, flavourIds) {
 
   if (flavourIds && flavourIds.length) {
     updateObj.$set = { ...updateObj.$set };
-    updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectID(id)) };
+    updateObj.$addToSet = { _flavourRecords: flavourIds.map(id => new ObjectId(id)) };
   }
 
   return updateObj;

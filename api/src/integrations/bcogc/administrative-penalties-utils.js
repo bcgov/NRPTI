@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const ObjectID = require('mongodb').ObjectID;
+const ObjectId = mongoose.Types.ObjectId;
 const defaultLog = require('../../utils/logger')('bcogc-csv-orders-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const BaseRecordUtils = require('./base-record-utils');
@@ -71,7 +71,7 @@ class AdministrativePenalty extends BaseRecordUtils {
     if (projectDetails) {
       penalty['projectName'] = projectDetails.projectName;
       penalty['_epicProjectId'] =
-        (projectDetails._epicProjectId && new ObjectID(projectDetails._epicProjectId)) || null;
+        (projectDetails._epicProjectId && new ObjectId(projectDetails._epicProjectId)) || null;
     }
 
     return penalty;

@@ -6,7 +6,7 @@ const queryActions = require('../utils/query-actions');
 const defaultLog = require('../utils/logger')('record');
 const utils = require('../utils/constants/misc');
 const mongoose = require('mongoose');
-const ObjectID = require('mongodb').ObjectID;
+const ObjectId = mongoose.Types.ObjectId;
 
 exports.protectedOptions = function (args, res, next) {
   res.status(200).send();
@@ -59,7 +59,7 @@ exports.protectedPut = async function (args, res, next) {
       description: incomingObj.description,
       url: incomingObj.url,
       title: incomingObj.title,
-      _epicProjectId: new ObjectID(incomingObj._epicProjectId),
+      _epicProjectId: new ObjectId(incomingObj._epicProjectId),
       type: incomingObj.type,
       date: new Date(incomingObj.date)
     }
@@ -93,8 +93,8 @@ exports.protectedPost = async function (args, res, next) {
   news._schemaName = 'ActivityLNG';
 
   incomingObj._epicProjectId &&
-    ObjectID.isValid(incomingObj._epicProjectId) &&
-    (news._epicProjectId = new ObjectID(incomingObj._epicProjectId));
+    ObjectId.isValid(incomingObj._epicProjectId) &&
+    (news._epicProjectId = new ObjectId(incomingObj._epicProjectId));
 
   incomingObj.description && (news.description = incomingObj.description);
   incomingObj.projectName && (news.projectName = incomingObj.projectName);

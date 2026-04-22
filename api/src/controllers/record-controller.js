@@ -1,7 +1,7 @@
 'use strict';
 
-const ObjectID = require('mongodb').ObjectID;
-const mongodb = require('../utils/mongodb');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 const Delete = require('../controllers/delete/delete');
 const RecordTypeEnum = require('../utils/constants/misc');
 
@@ -242,7 +242,7 @@ exports.protectedPut = async function (args, res, next) {
 };
 
 exports.protectedDelete = async function (args, res, next) {
-  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+  const db = mongoose.connection.db;
   const collection = db.collection('nrpti');
 
   let recordId = null;
@@ -256,7 +256,7 @@ exports.protectedDelete = async function (args, res, next) {
 
   let record = null;
   try {
-    record = await collection.findOne({ _id: new ObjectID(recordId) });
+    record = await collection.findOne({ _id: new ObjectId(recordId) });
   } catch (error) {
     defaultLog.info(`protectedDelete - couldn't find record for recordId: ${recordId}`);
     defaultLog.debug(error);

@@ -2,6 +2,8 @@
 
 const AWS = require('aws-sdk');
 
+let mongoose = require('mongoose');
+
 const AWS_BULK_LIMIT = 1000;
 const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
 const OBJECT_STORE_BUCKET = process.env.OBJECT_STORE_bucket_name || 'uploads';
@@ -51,14 +53,13 @@ async function listS3Objects(marker = null) {
  * @returns array of document keys.
  */
 async function getDbDocs() {
-  const mongodb = require('../utils/mongodb');
+  // TODO: this should no longer be needed with mongoose
+  // // Wait for mongodb helper to create connection
+  // while (!mongodb.connection) {
+  //   await new Promise(resolve => setTimeout(resolve, 500));
+  // }
 
-  // Wait for mongodb helper to create connection
-  while (!mongodb.connection) {
-    await new Promise(resolve => setTimeout(resolve, 500));
-  }
-
-  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti');
+  const db = mongoose.connection.db;
 
   try {
     const nrpti = db.collection('nrpti');

@@ -8,7 +8,7 @@ const { userHasValidRoles } = require('../utils/auth-utils');
 const utils = require('../utils/constants/misc');
 const RECORD_TYPE = require('../utils/constants/record-type-enum');
 const mongoose = require('mongoose');
-let ObjectId = mongoose.mongo.ObjectId;
+let ObjectId = mongoose.Types.ObjectId;
 const PutUtils = require('../utils/put-utils');
 const { publishS3Document, unpublishS3Document } = require('../controllers/document-controller');
 

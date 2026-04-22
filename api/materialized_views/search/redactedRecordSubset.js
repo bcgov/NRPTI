@@ -1,4 +1,5 @@
-const mongodb = require('../../src/utils/mongodb');
+const mongoose = require('mongoose');
+
 const defaultLog = require('../../src/utils/logger')('redacted-record-subset');
 const BusinessLogicManager = require('../../src/utils/business-logic-manager');
 
@@ -34,7 +35,7 @@ async function saveOneRecord(record) {
   try {
     defaultLog.info('Updating redacted_record_subset');
 
-    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const db = mongoose.connection.db;
     const redactedCollection = db.collection('redacted_record_subset');
     await redactedCollection.save(redactedRecord);
 
@@ -57,7 +58,7 @@ async function updateOneRecord(record) {
   try {
     defaultLog.info('Updating redacted_record_subset');
 
-    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const db = mongoose.connection.db;
     const redactedCollection = db.collection('redacted_record_subset');
     await redactedCollection.findOneAndUpdate({ _id: redactedRecord._id }, { $set: redactedRecord });
 
@@ -78,7 +79,7 @@ async function deleteOneRecord(record) {
   try {
     defaultLog.info('Updating redacted_record_subset');
 
-    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const db = mongoose.connection.db;
     const redactedCollection = db.collection('redacted_record_subset');
     await redactedCollection.deleteOne({ _id: record._id });
 

@@ -1,7 +1,7 @@
-const ObjectID = require('mongodb').ObjectID;
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 const Warnings = require('./warnings-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
-const mongoose = require('mongoose');
 const { createURLDocument } = require('../../controllers/document-controller');
 
 describe('warnings-utils', () => {
@@ -59,7 +59,7 @@ describe('warnings-utils', () => {
         location: 'British Columbia',
         recordName: 'Warning-letter-sample.pdf',
         projectName: 'Coastal Gaslink',
-        _epicProjectId: new ObjectID('588511c4aaecd9001b825604'),
+        _epicProjectId: new ObjectId('588511c4aaecd9001b825604'),
 
         sourceSystemRef: 'bcogc'
       });

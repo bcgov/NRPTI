@@ -162,8 +162,7 @@ exports.createRecordWithFlavours = async function (args, res, next, incomingObj,
   try {
     result = await Promise.all(promises);
   } catch (e) {
-    const mongodb = require('../utils/mongodb');
-    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const db = mongoose.connection.db;
     const collection = db.collection('nrpti');
     // Something went wrong. Attempt to clean up
     let orArray = [];

@@ -1,4 +1,4 @@
-const mongodb = require('../../src/utils/mongodb');
+const mongoose = require('mongoose');
 
 /**
  * Updates the recordName subset.
@@ -32,7 +32,7 @@ async function update(defaultLog) {
   ];
 
   try {
-    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const db = mongoose.connection.db;
     const mainCollection = db.collection('nrpti');
 
     defaultLog.info('Updating record_name_subset');
