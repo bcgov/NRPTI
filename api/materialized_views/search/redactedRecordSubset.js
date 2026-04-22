@@ -37,11 +37,7 @@ async function saveOneRecord(record) {
 
     const db = mongoose.connection.db;
     const redactedCollection = db.collection('redacted_record_subset');
-    await redactedCollection.replaceOne(
-      { _id: redactedRecord._id },
-      redactedRecord,
-      { upsert: true }
-    );
+    await redactedCollection.replaceOne({ _id: redactedRecord._id }, redactedRecord, { upsert: true });
 
     defaultLog.info('(saveOneRecord) Done Updating redacted_record_subset');
   } catch (error) {
