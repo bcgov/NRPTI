@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const Warnings = require('./warnings-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
-const mongoose = require('mongoose');
 const { createURLDocument } = require('../../controllers/document-controller');
 
 describe('warnings-utils', () => {
