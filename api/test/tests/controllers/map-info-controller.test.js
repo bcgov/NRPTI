@@ -8,7 +8,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mapInfo = require('../../../src/controllers/map-info-controller');
 const { ApplicationRoles } = require('../../../src/utils/constants/misc');
-const { restorativeJustice } = require('../../../src/models/master');
 
 // mock next function
 function next() {
@@ -62,8 +61,6 @@ describe('Map-Info Controller Testing', () => {
   });
 
   test('Protectd post returns 200 with invalid post body', async () => {
-    const db = mongoose.connection.db;
-    const nrptiCollection = db.collection('nrpti');
     const roles = ['sysadmin'];
     const postObj = {
       application: 'LNG',
