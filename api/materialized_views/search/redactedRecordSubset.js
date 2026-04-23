@@ -37,11 +37,11 @@ async function saveOneRecord(record) {
 
     const db = mongoose.connection.db;
     const redactedCollection = db.collection('redacted_record_subset');
-    await redactedCollection.save(redactedRecord);
+    await redactedCollection.replaceOne({ _id: redactedRecord._id }, redactedRecord, { upsert: true });
 
-    defaultLog.info('Done Updating redacted_record_subset');
+    defaultLog.info('(saveOneRecord) Done Updating redacted_record_subset');
   } catch (error) {
-    defaultLog.info('Failed to update redacted_record_subset, error: ' + error);
+    defaultLog.error('(saveOneRecord) Failed to update redacted_record_subset, error: ' + error);
   }
 }
 
@@ -62,9 +62,9 @@ async function updateOneRecord(record) {
     const redactedCollection = db.collection('redacted_record_subset');
     await redactedCollection.findOneAndUpdate({ _id: redactedRecord._id }, { $set: redactedRecord });
 
-    defaultLog.info('Done Updating redacted_record_subset');
+    defaultLog.info('(updateOneRecord) Done Updating redacted_record_subset');
   } catch (error) {
-    defaultLog.info('Failed to update redacted_record_subset, error: ' + error);
+    defaultLog.error('(updateOneRecord) Failed to update redacted_record_subset, error: ' + error);
   }
 }
 
@@ -83,9 +83,9 @@ async function deleteOneRecord(record) {
     const redactedCollection = db.collection('redacted_record_subset');
     await redactedCollection.deleteOne({ _id: record._id });
 
-    defaultLog.info('Done Updating redacted_record_subset');
+    defaultLog.info('(deleteOneRecord) Done Updating redacted_record_subset');
   } catch (error) {
-    defaultLog.info('Failed to update redacted_record_subset, error: ' + error);
+    defaultLog.error('(deleteOneRecord) Failed to update redacted_record_subset, error: ' + error);
   }
 }
 

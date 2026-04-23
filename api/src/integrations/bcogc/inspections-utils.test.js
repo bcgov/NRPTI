@@ -4,8 +4,13 @@ const Inspections = require('./inspections-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const { getActTitleFromDB } = require('../../controllers/acts-regulations-controller');
 const { energyActCode } = require('../../utils/constants/legislation-code-map.js');
+require('../../../test/test-utils');
 
-const actName = getActTitleFromDB(energyActCode);
+let actName;
+
+beforeAll(async () => {
+  actName = await getActTitleFromDB(energyActCode);
+});
 
 describe('transformRecord', () => {
   const inspections = new Inspections('authPayload', RECORD_TYPE.Inspection, null);
