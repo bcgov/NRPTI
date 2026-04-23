@@ -1,17 +1,21 @@
 const request = require('supertest');
 // const qs = require('qs');
-const ObjectId = require('mongodb').ObjectId;
+let mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 const test_util = require('../../test-utils');
+const express = require('express');
+const bodyParser = require('body-parser');
 const mapInfo = require('../../../src/controllers/map-info-controller');
 const { ApplicationRoles } = require('../../../src/utils/constants/misc');
+const { restorativeJustice } = require('../../../src/models/master');
 
 // mock next function
 function next() {
   return;
 }
 
-const app = test_util.app;
+let app;
 const endpoint = '/map-info';
 
 describe('Map-Info Controller Testing', () => {
@@ -31,16 +35,19 @@ describe('Map-Info Controller Testing', () => {
     segment: 'Section 8'
   };
 
-  beforeAll(async () => {
-    const MongoClient = require('mongodb').MongoClient;
+  beforeEach(async () => {
+    const db = mongoose.connection.db;
+    await db.collection('nrpti').deleteMany({});
 
-    const client = await MongoClient.connect(process.env.MONGO_URI);
-    const db = client.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
-    const nrptiCollection = db.collection('nrpti');
-    nrptiCollection.insertOne(testObj);
+    app = express();
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: true }));
   });
 
   test('Protectd post returns 400 with invalid post body', async () => {
+    const db = mongoose.connection.db;
+    const nrptiCollection = db.collection('nrpti');
+    nrptiCollection.insertOne(testObj);
     const roles = ['sysadmin'];
 
     app.post(endpoint, (req, res) => {
@@ -55,6 +62,8 @@ describe('Map-Info Controller Testing', () => {
   });
 
   test('Protectd post returns 200 with invalid post body', async () => {
+    const db = mongoose.connection.db;
+    const nrptiCollection = db.collection('nrpti');
     const roles = ['sysadmin'];
     const postObj = {
       application: 'LNG',
@@ -124,6 +133,9 @@ describe('Map-Info Controller Testing', () => {
   // });
 
   test('Protectd delete returns 200', async () => {
+    const db = mongoose.connection.db;
+    const nrptiCollection = db.collection('nrpti');
+    nrptiCollection.insertOne(testObj);
     const roles = ['sysadmin'];
 
     app.delete(endpoint, (req, res) => {
@@ -134,6 +146,6 @@ describe('Map-Info Controller Testing', () => {
 
     const res = await request(app).delete(endpoint).query({ mapInfoId: testObjectId.toString() }).expect(200);
 
-    expect(res.body).toEqual({ n: 1, ok: 1 });
+    expect(res.body).toEqual({ acknowledged: true, deletedCount: 1 });
   });
 });

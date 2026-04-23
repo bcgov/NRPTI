@@ -3,6 +3,7 @@ const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const { createURLDocument } = require('../../controllers/document-controller');
 const { getActTitleFromDB } = require('../../controllers/acts-regulations-controller');
 const { energyActCode } = require('../../utils/constants/legislation-code-map.js');
+require('../../../test/test-utils');
 
 const actName = getActTitleFromDB(energyActCode);
 
@@ -154,10 +155,8 @@ describe('AdministrativePenalty', () => {
     const mongoose = require('mongoose');
     const Document = require('../../models/document');
     const utils = require('../../utils/constants/misc');
-    const mongo = 'mongodb://127.0.0.1/nrpti-testing';
 
     beforeAll(async () => {
-      await mongoose.connect(mongo);
       await Document.deleteMany({});
     });
 
@@ -165,10 +164,10 @@ describe('AdministrativePenalty', () => {
       await Document.deleteMany({});
     });
 
-    afterAll(async () => {
-      await mongoose.connection.db.dropDatabase();
-      await mongoose.connection.close();
-    });
+    // afterAll(async () => {
+    //   await mongoose.connection.db.dropDatabase();
+    //   await mongoose.connection.close();
+    // });
 
     jest.fn('../../controllers/document-controller', () => ({
       createURLDocument: jest.fn((fileName, addedBy, url, readRoles = [], writeRoles = []) => {
@@ -223,10 +222,8 @@ describe('AdministrativePenalty', () => {
     const mongoose = require('mongoose');
     const AdminPenalty = require('../../models/master/administrativePenalty');
     const utils = require('../../utils/constants/misc');
-    const mongo = 'mongodb://127.0.0.1/nrpti-testing';
 
     beforeAll(async () => {
-      await mongoose.connect(mongo);
       await AdminPenalty.deleteMany({});
     });
 
@@ -234,10 +231,10 @@ describe('AdministrativePenalty', () => {
       await AdminPenalty.deleteMany({});
     });
 
-    afterAll(async () => {
-      await mongoose.connection.db.dropDatabase();
-      await mongoose.connection.close();
-    });
+    // afterAll(async () => {
+    //   await mongoose.connection.db.dropDatabase();
+    //   await mongoose.connection.close();
+    // });
 
     jest.fn('../../controllers/document-controller', () => ({
       createURLDocument: jest.fn((fileName, addedBy, url, readRoles = [], writeRoles = []) => {

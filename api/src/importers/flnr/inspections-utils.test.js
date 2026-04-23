@@ -71,7 +71,7 @@ describe('transformRecord', () => {
       location: 'West Coast',
       outcomeDescription: 'Compliant',
       projectName: 'LNG Canada Development Inc.',
-      _epicProjectId: ObjectId('588511d0aaecd9001b826192'),
+      _epicProjectId: new ObjectId('588511d0aaecd9001b826192'),
       centroid: [-125, 50],
 
       sourceSystemRef: 'nris-flnr-csv'

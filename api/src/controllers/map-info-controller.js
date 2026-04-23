@@ -66,7 +66,7 @@ exports.protectedPost = async function (args, res, next) {
   let obj = null;
   try {
     obj = await Post.insert(map);
-    queryUtils.audit(args, 'POST', JSON.stringify(obj.ops[0]), args.swagger.params.auth_payload, obj.ops[0]._id);
+    queryUtils.audit(args, 'POST', JSON.stringify(obj), args.swagger.params.auth_payload, obj._id);
   } catch (error) {
     errorMsg = `protectedPost - error inserting map layer info: ${map}`;
     defaultLog.info(errorMsg);
@@ -74,7 +74,7 @@ exports.protectedPost = async function (args, res, next) {
     return queryActions.sendResponse(res, 400, errorMsg);
   }
 
-  return queryActions.sendResponse(res, 200, obj.ops[0]);
+  return queryActions.sendResponse(res, 200, map);
 };
 
 exports.protectedPut = async function (args, res, next) {

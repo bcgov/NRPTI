@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const { createURLDocument } = require('../../controllers/document-controller');
 const { getActTitleFromDB } = require('../../controllers/acts-regulations-controller');
 const { energyActCode } = require('../../utils/constants/legislation-code-map.js');
+require('../../../test/test-utils');
 
 const actName = getActTitleFromDB(energyActCode);
 
@@ -85,8 +86,6 @@ describe('orders-utils testing', () => {
   describe('createItem', () => {
     const Document = require('../../models/document');
     const utils = require('../../utils/constants/misc');
-    const mongo = 'mongodb://127.0.0.1/nrpti-testing';
-    mongoose.connect(mongo);
 
     beforeAll(async () => {
       await Document.deleteMany({});
@@ -96,10 +95,10 @@ describe('orders-utils testing', () => {
       await Document.deleteMany({});
     });
 
-    afterAll(async () => {
-      mongoose.connection.db.dropDatabase();
-      await mongoose.connection.close();
-    });
+    // afterAll(async () => {
+    //   mongoose.connection.db.dropDatabase();
+    //   await mongoose.connection.close();
+    // });
 
     jest.fn('../../controllers/document-controller', () => ({
       createURLDocument: jest.fn((fileName, addedBy, url, readRoles = [], writeRoles = []) => {

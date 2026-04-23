@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+require('../../test/test-utils');
 const redactedRecordSubset = require('./redactedRecordSubset');
 const { generateIssuedTo } = require('../../test/factories/factory_helper');
 
@@ -10,10 +11,7 @@ describe('Record Individual issuedTo redaction test', () => {
   let TestModel = null;
 
   beforeAll(async () => {
-    const MongoClient = require('mongodb').MongoClient;
-
-    const client = await MongoClient.connect(process.env.MONGO_URI);
-    const db = client.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const db = mongoose.connection.db;
     nrptiCollection = db.collection('nrpti');
     redacted_record_subset = db.collection('redacted_record_subset');
 

@@ -22,10 +22,6 @@ beforeAll(async () => {
   }
 });
 
-afterAll(async () => {
-  await mongoose.disconnect();
-});
-
 beforeEach(async () => {
   try {
     mongoUri = process.env.MONGO_URI;
@@ -45,7 +41,6 @@ afterEach(async () => {
       routes.pop();
     }
   });
-  await mongoose.disconnect();
 });
 
 function setupAppServer() {
