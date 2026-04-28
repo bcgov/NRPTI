@@ -52,6 +52,7 @@ services:
       - NRIS_TOKEN_ENDPOINT=${NRIS_TOKEN_ENDPOINT}
       - NRIS_EPD_API_ENDPOINT=${NRIS_EPD_API_ENDPOINT}
       - NRIS_EPD_IMPORT_START_DATE=${NRIS_EPD_IMPORT_START_DATE}
+      - OBJECT_STORE_bucket_name=${OBJECT_STORE_bucket_name}
     ports:
       - 3000:3000
     # healthcheck:

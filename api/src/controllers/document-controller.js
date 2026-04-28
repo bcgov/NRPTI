@@ -88,7 +88,10 @@ exports.protectedPost = async function (args, res, next) {
 
     let docResponse = null;
     let s3Response = null;
-    if (args.swagger.params.url && args.swagger.params.url.value) {
+    const addDocumentFromURL = args.swagger.params.url && args.swagger.params.url.value;
+    const addDocumentFromUpload = args.swagger.params.upfile && args.swagger.params.upfile.value;
+
+    if (addDocumentFromURL) {
       // If the document already has a url we can assume it's a link
       try {
         docResponse = await createURLDocument(
@@ -108,7 +111,7 @@ exports.protectedPost = async function (args, res, next) {
           `Error creating document for ${args.swagger.params.fileName.value}.`
         );
       }
-    } else if (args.swagger.params.upfile && args.swagger.params.upfile.value) {
+    } else if (addDocumentFromUpload) {
       // Create document meta and upload file to S3
       try {
         ({ docResponse, s3Response } = await createS3Document(
@@ -421,14 +424,20 @@ async function uploadS3Document(s3Key, fileContent, s3ACLRole = null) {
     throw new Error('Missing required s3Key param');
   }
 
-  return s3
-    .upload({
-      Bucket: process.env.OBJECT_STORE_bucket_name,
-      Key: s3Key,
-      Body: fileContent,
-      ACL: s3ACLRole || 'authenticated-read'
-    })
-    .promise();
+  try {
+    const s3Response = await s3
+      .upload({
+        Bucket: process.env.OBJECT_STORE_bucket_name,
+        Key: s3Key,
+        Body: fileContent,
+        ACL: s3ACLRole || 'authenticated-read'
+      })
+      .promise();
+
+    return s3Response;
+  } catch (error) {
+    defaultLog.error('(document-controller) uploadS3Document - Error: ', error);
+  }
 }
 
 exports.uploadS3Document = uploadS3Document;
