@@ -219,7 +219,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.recordName && (reportBCMI.recordName = incomingObj.recordName);
   reportBCMI.recordType = 'Report';
   reportBCMI.issuedTo && (reportBCMI.issuedTo.read = utils.ApplicationAdminRoles);
-  reportBCMI.issuedTo && (reportBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI]);
+  reportBCMI.issuedTo &&
+    (reportBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (reportBCMI.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -326,7 +327,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.recordName && (reportNRCED.recordName = incomingObj.recordName);
   reportNRCED.recordType = 'Report';
   reportNRCED.issuedTo && (reportNRCED.issuedTo.read = utils.ApplicationAdminRoles);
-  reportNRCED.issuedTo && (reportNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI]);
+  reportNRCED.issuedTo &&
+    (reportNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (reportNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&

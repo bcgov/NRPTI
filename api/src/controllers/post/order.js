@@ -377,7 +377,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.legislation && (orderNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   orderNRCED.issuedTo && (orderNRCED.issuedTo.read = utils.ApplicationAdminRoles);
-  orderNRCED.issuedTo && (orderNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED]);
+  orderNRCED.issuedTo &&
+    (orderNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (orderNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&

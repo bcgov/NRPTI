@@ -378,7 +378,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.legislation && (warningNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   warningNRCED.issuedTo && (warningNRCED.issuedTo.read = utils.ApplicationAdminRoles);
-  warningNRCED.issuedTo && (warningNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED]);
+  warningNRCED.issuedTo &&
+    (warningNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (warningNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&

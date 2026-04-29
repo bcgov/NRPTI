@@ -372,7 +372,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.legislation && (ticketNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   ticketNRCED.issuedTo && (ticketNRCED.issuedTo.read = utils.ApplicationAdminRoles);
-  ticketNRCED.issuedTo && (ticketNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED]);
+  ticketNRCED.issuedTo &&
+    (ticketNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (ticketNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&

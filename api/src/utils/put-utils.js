@@ -352,7 +352,11 @@ exports.editRecordWithFlavours = async function (
     if (flavourRead.includes('public')) {
       flavourPublishedCount++;
     }
-    if (masterRec._flavourRecords[x].issuedTo && masterRec._flavourRecords[x].issuedTo.read && masterRec._flavourRecords[x].issuedTo.read.includes('public')) {
+    if (
+      masterRec._flavourRecords[x].issuedTo &&
+      masterRec._flavourRecords[x].issuedTo.read &&
+      masterRec._flavourRecords[x].issuedTo.read.includes('public')
+    ) {
       issuedToPublishedCount++;
     }
   }

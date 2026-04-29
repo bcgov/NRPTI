@@ -214,7 +214,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.recordName && (correspondenceBCMI.recordName = incomingObj.recordName);
   correspondenceBCMI.recordType = 'Correspondence';
   correspondenceBCMI.issuedTo && (correspondenceBCMI.issuedTo.read = utils.ApplicationAdminRoles);
-  correspondenceBCMI.issuedTo && (correspondenceBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI]);
+  correspondenceBCMI.issuedTo &&
+    (correspondenceBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (correspondenceBCMI.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -323,7 +324,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.recordName && (correspondenceNRCED.recordName = incomingObj.recordName);
   correspondenceNRCED.recordType = 'Correspondence';
   correspondenceNRCED.issuedTo && (correspondenceNRCED.issuedTo.read = utils.ApplicationAdminRoles);
-  correspondenceNRCED.issuedTo && (correspondenceNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI]);
+  correspondenceNRCED.issuedTo &&
+    (correspondenceNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (correspondenceNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&

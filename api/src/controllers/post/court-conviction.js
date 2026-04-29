@@ -268,7 +268,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.legislation && (courtConvictionLNG.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   courtConvictionLNG.issuedTo && (courtConvictionLNG.issuedTo.read = utils.ApplicationAdminRoles);
-  courtConvictionLNG.issuedTo && (courtConvictionLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG]);
+  courtConvictionLNG.issuedTo &&
+    (courtConvictionLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (courtConvictionLNG.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -399,10 +400,12 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.issuingAgency && (courtConvictionNRCED.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (courtConvictionNRCED.author = incomingObj.author);
 
-  incomingObj.legislation && (courtConvictionNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation));
+  incomingObj.legislation &&
+    (courtConvictionNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   courtConvictionNRCED.issuedTo && (courtConvictionNRCED.issuedTo.read = utils.ApplicationAdminRoles);
-  courtConvictionNRCED.issuedTo && (courtConvictionNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED]);
+  courtConvictionNRCED.issuedTo &&
+    (courtConvictionNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (courtConvictionNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -541,7 +544,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.legislation && (courtConvictionBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   courtConvictionBCMI.issuedTo && (courtConvictionBCMI.issuedTo.read = utils.ApplicationAdminRoles);
-  courtConvictionBCMI.issuedTo && (courtConvictionBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI]);
+  courtConvictionBCMI.issuedTo &&
+    (courtConvictionBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (courtConvictionBCMI.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&

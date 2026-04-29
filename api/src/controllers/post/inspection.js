@@ -264,7 +264,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.legislation && (inspectionLNG.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   inspectionLNG.issuedTo && (inspectionLNG.issuedTo.read = utils.ApplicationAdminRoles);
-  inspectionLNG.issuedTo && (inspectionLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG]);
+  inspectionLNG.issuedTo &&
+    (inspectionLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (inspectionLNG.issuedTo.type = incomingObj.issuedTo.type);
 
   incomingObj.issuedTo &&
@@ -403,7 +404,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.legislation && (inspectionNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   inspectionNRCED.issuedTo && (inspectionNRCED.issuedTo.read = utils.ApplicationAdminRoles);
-  inspectionNRCED.issuedTo && (inspectionNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED]);
+  inspectionNRCED.issuedTo &&
+    (inspectionNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED]);
 
   incomingObj.issuedTo && incomingObj.issuedTo.type && (inspectionNRCED.issuedTo.type = incomingObj.issuedTo.type);
 
@@ -547,7 +549,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.legislation && (inspectionBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   inspectionBCMI.issuedTo && (inspectionBCMI.issuedTo.read = utils.ApplicationAdminRoles);
-  inspectionBCMI.issuedTo && (inspectionBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED]);
+  inspectionBCMI.issuedTo &&
+    (inspectionBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (inspectionBCMI.issuedTo.type = incomingObj.issuedTo.type);
 
   incomingObj.issuedTo &&

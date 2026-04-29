@@ -122,7 +122,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.dateIssued && (certificateAmendment.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (certificateAmendment.issuingAgency = incomingObj.issuingAgency);
 
-  incomingObj.legislation && (certificateAmendment.legislation = postUtils.populateLegislation(incomingObj.legislation));
+  incomingObj.legislation &&
+    (certificateAmendment.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   incomingObj.projectName && (certificateAmendment.projectName = incomingObj.projectName);
   incomingObj.location && (certificateAmendment.location = incomingObj.location);
@@ -212,7 +213,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
   certificateAmendmentLNG.recordType = 'Certificate Amendment';
   certificateAmendmentLNG.recordSubtype = 'Certificate';
   certificateAmendmentLNG.issuedTo && (certificateAmendmentLNG.issuedTo.read = utils.ApplicationAdminRoles);
-  certificateAmendmentLNG.issuedTo && (certificateAmendmentLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG]);
+  certificateAmendmentLNG.issuedTo &&
+    (certificateAmendmentLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG]);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&
     (certificateAmendmentLNG.issuedTo.type = incomingObj.issuedTo.type);
@@ -236,7 +238,8 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.dateIssued && (certificateAmendmentLNG.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (certificateAmendmentLNG.issuingAgency = incomingObj.issuingAgency);
 
-  incomingObj.legislation && (certificateAmendmentLNG.legislation = postUtils.populateLegislation(incomingObj.legislation));
+  incomingObj.legislation &&
+    (certificateAmendmentLNG.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   incomingObj.projectName && (certificateAmendmentLNG.projectName = incomingObj.projectName);
   incomingObj.location && (certificateAmendmentLNG.location = incomingObj.location);
@@ -331,7 +334,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   certificateAmendmentBCMI.recordType = 'Certificate Amendment';
   certificateAmendmentBCMI.recordSubtype = 'Certificate';
   certificateAmendmentBCMI.issuedTo && (certificateAmendmentBCMI.issuedTo.read = utils.ApplicationAdminRoles);
-  certificateAmendmentBCMI.issuedTo && (certificateAmendmentBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI]);
+  certificateAmendmentBCMI.issuedTo &&
+    (certificateAmendmentBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI]);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&
     (certificateAmendmentBCMI.issuedTo.type = incomingObj.issuedTo.type);

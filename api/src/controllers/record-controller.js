@@ -191,8 +191,8 @@ exports.protectedPost = async function (args, res, next) {
     let response;
 
     try {
-       response = await Promise.all(promises);
-    } catch(e) {
+      response = await Promise.all(promises);
+    } catch (e) {
       console.log('(record-controller) protectedPost Error: ', e);
     }
 
@@ -241,7 +241,6 @@ exports.protectedPut = async function (args, res, next) {
     } catch (e) {
       console.error('(record-controller) protectedPut - Error: ', e);
     }
-
 
     let meta = response && response[0] && response[0][0] ? response[0][0] : null;
     let metaID = meta && meta.object && meta.object[0] ? meta.object[0]._id : null;
