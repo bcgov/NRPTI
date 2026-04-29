@@ -125,10 +125,10 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.issuingAgency && (restorativeJustice.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (restorativeJustice.author = incomingObj.author);
 
-  restorativeJustice.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (restorativeJustice.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
-  restorativeJustice.issuedTo.read = utils.ApplicationAdminRoles;
-  restorativeJustice.issuedTo.write = utils.ApplicationAdminRoles;
+  restorativeJustice.issuedTo && (restorativeJustice.issuedTo.read = utils.ApplicationAdminRoles);
+  restorativeJustice.issuedTo && (restorativeJustice.issuedTo.write = utils.ApplicationAdminRoles);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (restorativeJustice.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -247,10 +247,10 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.issuingAgency && (restorativeJusticeLNG.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (restorativeJusticeLNG.author = incomingObj.author);
 
-  restorativeJusticeLNG.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (restorativeJusticeLNG.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
-  restorativeJusticeLNG.issuedTo.read = utils.ApplicationAdminRoles;
-  restorativeJusticeLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
+  restorativeJusticeLNG.issuedTo && (restorativeJusticeLNG.issuedTo.read = utils.ApplicationAdminRoles);
+  restorativeJusticeLNG.issuedTo && (restorativeJusticeLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG]);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&
     (restorativeJusticeLNG.issuedTo.type = incomingObj.issuedTo.type);
@@ -377,10 +377,10 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.issuingAgency && (restorativeJusticeNRCED.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (restorativeJusticeNRCED.author = incomingObj.author);
 
-  restorativeJusticeNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (restorativeJusticeNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
-  restorativeJusticeNRCED.issuedTo.read = utils.ApplicationAdminRoles;
-  restorativeJusticeNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+  restorativeJusticeNRCED.issuedTo && (restorativeJusticeNRCED.issuedTo.read = utils.ApplicationAdminRoles);
+  restorativeJusticeNRCED.issuedTo && (restorativeJusticeNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED]);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&
     (restorativeJusticeNRCED.issuedTo.type = incomingObj.issuedTo.type);

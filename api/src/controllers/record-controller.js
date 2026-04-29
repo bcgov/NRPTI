@@ -188,7 +188,13 @@ exports.protectedPost = async function (args, res, next) {
       }
     }
 
-    let response = await Promise.all(promises);
+    let response;
+
+    try {
+       response = await Promise.all(promises);
+    } catch(e) {
+      console.log('(record-controller) protectedPost Error: ', e);
+    }
 
     // Audit the POST action.
     // If multiple observables are triggered, response will have multiple objects
@@ -228,7 +234,14 @@ exports.protectedPut = async function (args, res, next) {
       }
     }
 
-    let response = await Promise.all(promises);
+    let response;
+
+    try {
+      response = await Promise.all(promises);
+    } catch (e) {
+      console.error('(record-controller) protectedPut - Error: ', e);
+    }
+
 
     let meta = response && response[0] && response[0][0] ? response[0][0] : null;
     let metaID = meta && meta.object && meta.object[0] ? meta.object[0]._id : null;
@@ -471,6 +484,7 @@ const processPostRequest = async function (args, res, next, property, data) {
   try {
     return await Promise.all(promises);
   } catch (e) {
+    console.error('(record-controller) processPostRequest - Error: ', e);
     return {
       status: 'failure',
       object: promises,

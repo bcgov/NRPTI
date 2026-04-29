@@ -91,8 +91,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   // set data
   incomingObj.recordName && (annualReport.recordName = incomingObj.recordName);
   annualReport.recordType = 'Annual Report';
-  annualReport.issuedTo.read = utils.ApplicationAdminRoles;
-  annualReport.issuedTo.write = utils.ApplicationAdminRoles;
+  annualReport.issuedTo && (annualReport.issuedTo.read = utils.ApplicationAdminRoles);
+  annualReport.issuedTo && (annualReport.issuedTo.write = utils.ApplicationAdminRoles);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (annualReport.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -113,7 +113,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.dateIssued && (annualReport.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (annualReport.issuingAgency = incomingObj.issuingAgency);
 
-  annualReport.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (annualReport.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   incomingObj.projectName && (annualReport.projectName = incomingObj.projectName);
   incomingObj.location && (annualReport.location = incomingObj.location);
@@ -200,8 +200,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   // set data
   incomingObj.recordName && (annualReportBCMI.recordName = incomingObj.recordName);
   annualReportBCMI.recordType = 'Annual Report';
-  annualReportBCMI.issuedTo.read = utils.ApplicationAdminRoles;
-  annualReportBCMI.issuedTo.write = utils.ApplicationAdminRoles;
+  annualReportBCMI.issuedTo && (annualReportBCMI.issuedTo.read = utils.ApplicationAdminRoles);
+  annualReportBCMI.issuedTo && (annualReportBCMI.issuedTo.write = utils.ApplicationAdminRoles);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (annualReportBCMI.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -223,7 +223,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.dateIssued && (annualReportBCMI.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (annualReportBCMI.issuingAgency = incomingObj.issuingAgency);
 
-  annualReportBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (annualReportBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   incomingObj.projectName && (annualReportBCMI.projectName = incomingObj.projectName);
   incomingObj.location && (annualReportBCMI.location = incomingObj.location);

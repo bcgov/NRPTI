@@ -135,10 +135,10 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.issuingAgency && (courtConviction.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (courtConviction.author = incomingObj.author);
 
-  courtConviction.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (courtConviction.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
-  courtConviction.issuedTo.read = utils.ApplicationAdminRoles;
-  courtConviction.issuedTo.write = utils.ApplicationAdminRoles;
+  courtConviction.issuedTo && (courtConviction.issuedTo.read = utils.ApplicationAdminRoles);
+  courtConviction.issuedTo && (courtConviction.issuedTo.write = utils.ApplicationAdminRoles);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (courtConviction.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -265,10 +265,10 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.issuingAgency && (courtConvictionLNG.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (courtConvictionLNG.author = incomingObj.author);
 
-  courtConvictionLNG.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (courtConvictionLNG.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
-  courtConvictionLNG.issuedTo.read = utils.ApplicationAdminRoles;
-  courtConvictionLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
+  courtConvictionLNG.issuedTo && (courtConvictionLNG.issuedTo.read = utils.ApplicationAdminRoles);
+  courtConvictionLNG.issuedTo && (courtConvictionLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (courtConvictionLNG.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -399,10 +399,10 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.issuingAgency && (courtConvictionNRCED.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (courtConvictionNRCED.author = incomingObj.author);
 
-  courtConvictionNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (courtConvictionNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
-  courtConvictionNRCED.issuedTo.read = utils.ApplicationAdminRoles;
-  courtConvictionNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+  courtConvictionNRCED.issuedTo && (courtConvictionNRCED.issuedTo.read = utils.ApplicationAdminRoles);
+  courtConvictionNRCED.issuedTo && (courtConvictionNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (courtConvictionNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -538,10 +538,10 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.issuingAgency && (courtConvictionBCMI.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (courtConvictionBCMI.author = incomingObj.author);
 
-  courtConvictionBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (courtConvictionBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
-  courtConvictionBCMI.issuedTo.read = utils.ApplicationAdminRoles;
-  courtConvictionBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  courtConvictionBCMI.issuedTo && (courtConvictionBCMI.issuedTo.read = utils.ApplicationAdminRoles);
+  courtConvictionBCMI.issuedTo && (courtConvictionBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (courtConvictionBCMI.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&

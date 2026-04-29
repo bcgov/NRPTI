@@ -134,10 +134,10 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.issuingAgency && (administrativePenalty.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (administrativePenalty.author = incomingObj.author);
 
-  administrativePenalty.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (administrativePenalty.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
-  administrativePenalty.issuedTo.read = utils.ApplicationAdminRoles;
-  administrativePenalty.issuedTo.write = utils.ApplicationAdminRoles;
+  administrativePenalty.issuedTo && (administrativePenalty.issuedTo.read = utils.ApplicationAdminRoles);
+  administrativePenalty.issuedTo && (administrativePenalty.issuedTo.write = utils.ApplicationAdminRoles);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&
     (administrativePenalty.issuedTo.type = incomingObj.issuedTo.type);
@@ -262,10 +262,10 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.issuingAgency && (administrativePenaltyLNG.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (administrativePenaltyLNG.author = incomingObj.author);
 
-  administrativePenaltyLNG.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (administrativePenaltyLNG.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
-  administrativePenaltyLNG.issuedTo.read = utils.ApplicationAdminRoles;
-  administrativePenaltyLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
+  administrativePenaltyLNG.issuedTo && (administrativePenaltyLNG.issuedTo.read = utils.ApplicationAdminRoles);
+  administrativePenaltyLNG.issuedTo && (administrativePenaltyLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG]);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&
     (administrativePenaltyLNG.issuedTo.type = incomingObj.issuedTo.type);
@@ -397,10 +397,10 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.issuingAgency && (administrativePenaltyNRCED.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (administrativePenaltyNRCED.author = incomingObj.author);
 
-  administrativePenaltyNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (administrativePenaltyNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
-  administrativePenaltyNRCED.issuedTo.read = utils.ApplicationAdminRoles;
-  administrativePenaltyNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+  administrativePenaltyNRCED.issuedTo && (administrativePenaltyNRCED.issuedTo.read = utils.ApplicationAdminRoles);
+  administrativePenaltyNRCED.issuedTo && (administrativePenaltyNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED]);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&
     (administrativePenaltyNRCED.issuedTo.type = incomingObj.issuedTo.type);
@@ -540,10 +540,10 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.issuingAgency && (administrativePenaltyBCMI.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (administrativePenaltyBCMI.author = incomingObj.author);
 
-  administrativePenaltyBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (administrativePenaltyBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
-  administrativePenaltyBCMI.issuedTo.read = utils.ApplicationAdminRoles;
-  administrativePenaltyBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  administrativePenaltyBCMI.issuedTo && (administrativePenaltyBCMI.issuedTo.read = utils.ApplicationAdminRoles);
+  administrativePenaltyBCMI.issuedTo && (administrativePenaltyBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI]);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&
     (administrativePenaltyBCMI.issuedTo.type = incomingObj.issuedTo.type);

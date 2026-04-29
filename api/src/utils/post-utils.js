@@ -105,7 +105,7 @@ exports.createRecordWithFlavours = async function (args, res, next, incomingObj,
   for (let i = 0; i < flavours.length; i++) {
     const flavour = flavours[i];
     flavour._master = new ObjectId(masterRecord._id);
-    if (flavour.issuedTo && flavour.issuedTo.read.includes('public')) {
+    if (flavour.issuedTo && flavour.issuedTo?.read?.includes('public')) {
       issuedToPublishedCount++;
     }
 
@@ -149,7 +149,7 @@ exports.createRecordWithFlavours = async function (args, res, next, incomingObj,
   // Tracker on issuedTo property - this will be 0 on objects that don't have an issuedTo or
   // where the issuedTo wasn't published, and < total when there's a mismatch.
   if (issuedToPublishedCount > 0) {
-    if (masterRecord.issuedTo && !masterRecord.issuedTo.read.includes('public')) {
+    if (masterRecord?.issuedTo?.read && !masterRecord.issuedTo.read.includes('public')) {
       masterRecord.issuedTo.read.push('public');
     }
   }
@@ -162,6 +162,7 @@ exports.createRecordWithFlavours = async function (args, res, next, incomingObj,
   try {
     result = await Promise.all(promises);
   } catch (e) {
+    console.log('(post-utils) createRecordWithFlavours - Error: ', e);
     const db = mongoose.connection.db;
     const collection = db.collection('nrpti');
     // Something went wrong. Attempt to clean up
@@ -200,10 +201,10 @@ exports.setAdditionalRoleOnRecord = function (record, userRoles, rolesToCheck) {
 
   for (const role of rolesToCheck) {
     if (userIsOnlyInRole(userRoles, role)) {
-      record.read.push(role);
-      record.write.push(role);
-      record.issuedTo.read.push(role);
-      record.issuedTo.write.push(role);
+      if (record.read) record.read.push(role);
+      if (record.write) record.write.push(role);
+      if (record.issuedTo?.read) record.issuedTo.read.push(role);
+      if (record.issuedTo?.write) record.issuedTo.write.push(role);
 
       break;
     }
@@ -215,10 +216,10 @@ exports.setAdditionalRoleOnRecord = function (record, userRoles, rolesToCheck) {
     const roles = CSV_SOURCE_DEFAULT_ROLES[record.sourceSystemRef];
 
     // Merge exisitng roles with default CSV roles, and de-dup using Set
-    record.read = [...new Set([...record.read, ...roles])];
-    record.write = [...new Set([...record.write, ...roles])];
-    record.issuedTo.read = [...new Set([...record.issuedTo.read, ...roles])];
-    record.issuedTo.write = [...new Set([...record.issuedTo.write, ...roles])];
+    if (record.read) record.read = [...new Set([...record.read, ...roles])];
+    if (record.write) record.write = [...new Set([...record.write, ...roles])];
+    if (record.issuedTo?.read) record.issuedTo.read = [...new Set([...record.issuedTo.read, ...roles])];
+    if (record.issuedTo?.write) record.issuedTo.write = [...new Set([...record.issuedTo.write, ...roles])];
   }
 };
 

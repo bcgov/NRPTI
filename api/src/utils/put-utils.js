@@ -294,7 +294,7 @@ exports.editRecordWithFlavours = async function (
     // We can only edit epicProjectId/mineGuid on records with sourceSystemRef as nrpti or anything csv import
     if (
       masterRecord.sourceSystemRef === 'nrpti' ||
-      masterRecord.sourceSystemRef.includes('csv') ||
+      (masterRecord.sourceSystemRef && masterRecord.sourceSystemRef.includes('csv')) ||
       (overridePutParams && overridePutParams.forceMineBCMIGUIDUpdate)
     ) {
       const MineBCMI = mongoose.model('MineBCMI');
@@ -348,10 +348,11 @@ exports.editRecordWithFlavours = async function (
 
   const masterRec = await this.fetchMasterForReference(masterSchemaName, masterId);
   for (let x = 0; x < masterRec._flavourRecords.length; x++) {
-    if (masterRec._flavourRecords[x].read.includes('public')) {
+    const flavourRead = masterRec._flavourRecords[x].read || [];
+    if (flavourRead.includes('public')) {
       flavourPublishedCount++;
     }
-    if (masterRec._flavourRecords[x].issuedTo && masterRec._flavourRecords[x].issuedTo.read.includes('public')) {
+    if (masterRec._flavourRecords[x].issuedTo && masterRec._flavourRecords[x].issuedTo.read && masterRec._flavourRecords[x].issuedTo.read.includes('public')) {
       issuedToPublishedCount++;
     }
   }
@@ -374,7 +375,7 @@ exports.editRecordWithFlavours = async function (
   // Tracker on issuedTo property - this will be 0 on objects that don't have an issuedTo or
   // where the issuedTo wasn't published, and < total when there's a mismatch.
   if (issuedToPublishedCount > 0 && masterRec.read.includes('public')) {
-    if (masterRec.issuedTo && !masterRec.issuedTo.read.includes('public')) {
+    if (masterRec.issuedTo?.read && !masterRec.issuedTo.read.includes('public')) {
       masterRec.issuedTo.read.push('public');
     }
   } else {

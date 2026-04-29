@@ -53,6 +53,8 @@ services:
       - NRIS_EPD_API_ENDPOINT=${NRIS_EPD_API_ENDPOINT}
       - NRIS_EPD_IMPORT_START_DATE=${NRIS_EPD_IMPORT_START_DATE}
       - OBJECT_STORE_bucket_name=${OBJECT_STORE_bucket_name}
+      - OBJECT_STORE_password=${OBJECT_STORE_password}
+      - OBJECT_STORE_user_account=${OBJECT_STORE_user_account}
     ports:
       - 3000:3000
     # healthcheck:
