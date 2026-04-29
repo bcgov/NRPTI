@@ -129,10 +129,10 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.issuingAgency && (warning.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (warning.author = incomingObj.author);
 
-  warning.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (warning.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
-  warning.issuedTo.read = utils.ApplicationAdminRoles;
-  warning.issuedTo.write = utils.ApplicationAdminRoles;
+  warning.issuedTo && (warning.issuedTo.read = utils.ApplicationAdminRoles);
+  warning.issuedTo && (warning.issuedTo.write = utils.ApplicationAdminRoles);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (warning.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -248,10 +248,10 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.issuingAgency && (warningLNG.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (warningLNG.author = incomingObj.author);
 
-  warningLNG.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (warningLNG.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
-  warningLNG.issuedTo.read = utils.ApplicationAdminRoles;
-  warningLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
+  warningLNG.issuedTo && (warningLNG.issuedTo.read = utils.ApplicationAdminRoles);
+  warningLNG.issuedTo && (warningLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (warningLNG.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -375,10 +375,11 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.issuingAgency && (warningNRCED.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (warningNRCED.author = incomingObj.author);
 
-  warningNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (warningNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
-  warningNRCED.issuedTo.read = utils.ApplicationAdminRoles;
-  warningNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+  warningNRCED.issuedTo && (warningNRCED.issuedTo.read = utils.ApplicationAdminRoles);
+  warningNRCED.issuedTo &&
+    (warningNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (warningNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&

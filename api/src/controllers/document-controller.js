@@ -436,7 +436,8 @@ async function uploadS3Document(s3Key, fileContent, s3ACLRole = null) {
 
     return s3Response;
   } catch (error) {
-    defaultLog.error('(document-controller) uploadS3Document - Error: ', error);
+    defaultLog.error('(document-controller) uploadS3Document - Error: ', error.msg, error.stack);
+    throw error;
   }
 }
 

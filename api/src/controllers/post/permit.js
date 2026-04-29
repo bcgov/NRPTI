@@ -105,10 +105,10 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.issuingAgency && (permit.issuingAgency = incomingObj.issuingAgency);
   // set issued to and its r/w arrays
   incomingObj.issuedTo && (permit.issuedTo = incomingObj.issuedTo);
-  permit.issuedTo.read = utils.ApplicationAdminRoles;
-  permit.issuedTo.write = utils.ApplicationAdminRoles;
+  permit.issuedTo && (permit.issuedTo.read = utils.ApplicationAdminRoles);
+  permit.issuedTo && (permit.issuedTo.write = utils.ApplicationAdminRoles);
 
-  permit.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (permit.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   incomingObj.projectName && (permit.projectName = incomingObj.projectName);
   incomingObj.location && (permit.location = incomingObj.location);
@@ -218,10 +218,10 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.issuingAgency && (permitLNG.issuingAgency = incomingObj.issuingAgency);
   //set issued to and it's r/w arrays
   incomingObj.issuedTo && (permitLNG.issuedTo = incomingObj.issuedTo);
-  permitLNG.issuedTo.read = utils.ApplicationAdminRoles;
-  permitLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
+  permitLNG.issuedTo && (permitLNG.issuedTo.read = utils.ApplicationAdminRoles);
+  permitLNG.issuedTo && (permitLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG]);
 
-  permitLNG.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (permitLNG.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   incomingObj.projectName && (permitLNG.projectName = incomingObj.projectName);
   incomingObj.location && (permitLNG.location = incomingObj.location);
@@ -307,10 +307,11 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.issuingAgency && (permitBCMI.issuingAgency = incomingObj.issuingAgency);
   // set issued to and it's r/w arrays
   incomingObj.issuedTo && (permitBCMI.issuedTo = incomingObj.issuedTo);
-  permitBCMI.issuedTo.read = utils.ApplicationAdminRoles;
-  permitBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  permitBCMI.issuedTo && (permitBCMI.issuedTo.read = utils.ApplicationAdminRoles);
+  permitBCMI.issuedTo &&
+    (permitBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI]);
 
-  permitBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (permitBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   incomingObj.projectName && (permitBCMI.projectName = incomingObj.projectName);
   incomingObj.location && (permitBCMI.location = incomingObj.location);
