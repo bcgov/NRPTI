@@ -451,7 +451,6 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
     }
 
     if (inspection['_epicProjectId']) {
-      console.log("inpsection epic project id: ", inspection['_epicProjectId'])
       // Set the friendly name of projectName
       const epicProjectList = this.storeService.getItem('epicProjects') || [];
 
