@@ -238,7 +238,7 @@ exports.protectedDelete = async function (args, res, next) {
           'DELETE',
           JSON.stringify(s3DeleteResult),
           args.swagger.params.auth_payload,
-          docResponse.key
+          docResponse._id
         );
 
         s3Response = s3DeleteResult;
@@ -278,7 +278,7 @@ exports.protectedDelete = async function (args, res, next) {
         'Doc Record Update',
         JSON.stringify(recordResponse),
         args.swagger.params.auth_payload,
-        recordResponse.key
+        recordResponse._id
       );
     } catch (e) {
       defaultLog.info(
@@ -293,8 +293,8 @@ exports.protectedDelete = async function (args, res, next) {
 
     // remove from flavour records
     let observables = [];
-    if (recordResponse && recordResponse.value && recordResponse.value._flavourRecords) {
-      recordResponse.value._flavourRecords.forEach(id => {
+    if (recordResponse && recordResponse._flavourRecords) {
+      recordResponse._flavourRecords.forEach(id => {
         observables.push(
           masterModel.findOneAndUpdate(
             { _id: new ObjectId(id), write: { $in: args.swagger.params.auth_payload.client_roles } },
