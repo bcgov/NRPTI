@@ -225,6 +225,7 @@ export class RecordUtils {
   parseResForErrors(res) {
     if (!res || !res.length || !res[0] || !res[0].length || !res[0][0]) {
       alert('Failed to save record.');
+      return;
     }
 
     if (res[0][0].status === 'failure') {

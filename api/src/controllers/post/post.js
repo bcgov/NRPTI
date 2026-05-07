@@ -1,9 +1,9 @@
 'use strict';
 
-const mongodb = require('../../utils/mongodb');
+const mongoose = require('mongoose');
 
 exports.insert = async function (obj) {
-  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+  const db = mongoose.connection.db;
   const collectionDB = db.collection('nrpti');
   return await collectionDB.insertOne(obj);
 };

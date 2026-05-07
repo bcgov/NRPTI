@@ -2,9 +2,9 @@
  * @summary APIs for the Update Issuing Agency page.
  * @description This file contains API endpoints for loading and updating agency names from the database.
  */
+const mongoose = require('mongoose');
 
 const queryActions = require('../utils/query-actions');
-const mongodb = require('../utils/mongodb');
 const RECORD_TYPE = require('../utils/constants/record-type-enum');
 const defaultLog = require('../utils/logger')('record');
 const axios = require('axios');
@@ -39,7 +39,7 @@ exports.publicGet = async function (args, res, next) {
  */
 let updateTitlesInDB = async actMap => {
   try {
-    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const db = mongoose.connection.db;
     const actsRegulationsCollection = db.collection('acts_regulations_mapping');
     for (let [actCode, actTitle] of Object.entries(actMap)) {
       await actsRegulationsCollection.update(
@@ -81,7 +81,7 @@ exports.updateActTitles = async function (args, res, next) {
  */
 exports.getActTitleFromDB = async function (actCode) {
   try {
-    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const db = mongoose.connection.db;
     const actsRegulationsCollection = db.collection('acts_regulations_mapping');
     let act = await actsRegulationsCollection
       .find({ _schemaName: RECORD_TYPE.ActsRegulationsMapping._schemaName, actCode: actCode })
@@ -96,7 +96,7 @@ exports.getActTitleFromDB = async function (actCode) {
 
 exports.getActCodeFromActTitle = async function (actName) {
   try {
-    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const db = mongoose.connection.db;
     const actsRegulationsCollection = db.collection('acts_regulations_mapping');
     let act = await actsRegulationsCollection
       .find({ _schemaName: RECORD_TYPE.ActsRegulationsMapping._schemaName, actName: actName })
@@ -116,7 +116,7 @@ exports.getActCodeFromActTitle = async function (actName) {
  */
 exports.getAllActsAndRegulationsFromDB = async function () {
   try {
-    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const db = mongoose.connection.db;
     const actsRegulationsCollection = db.collection('acts_regulations_mapping');
     let actsRegulationsMapResponse = await actsRegulationsCollection
       .find({ _schemaName: RECORD_TYPE.ActsRegulationsMapping._schemaName })

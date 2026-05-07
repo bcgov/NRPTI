@@ -1,4 +1,4 @@
-let mongodb = require('../../src/utils/mongodb');
+const mongoose = require('mongoose');
 
 async function update(defaultLog) {
   // All records with non-blank outcomeDescription fields
@@ -11,7 +11,7 @@ async function update(defaultLog) {
   ];
 
   try {
-    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const db = mongoose.connection.db;
     const mainCollection = db.collection('nrpti');
 
     console.log('Updating outcome_description_subset');

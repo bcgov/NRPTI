@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 const AWS = require('aws-sdk');
-const ObjectID = require('mongodb').ObjectID;
 const utils = require('../utils/constants/misc');
 
 const queryActions = require('../utils/query-actions');
 const queryUtils = require('../utils/query-utils');
 const businessLogicManager = require('../utils/business-logic-manager');
-const mongodb = require('../utils/mongodb');
 const defaultLog = require('../utils/logger')('record');
 const { userIsOnlyInRole } = require('../utils/auth-utils');
 
@@ -32,7 +31,7 @@ exports.protectedPost = async function (args, res, next) {
     args.swagger.params.recordId &&
     args.swagger.params.recordId.value
   ) {
-    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const db = mongoose.connection.db;
     const collection = db.collection('nrpti');
 
     // fetch master record
@@ -40,7 +39,7 @@ exports.protectedPost = async function (args, res, next) {
     // It's possible to bring down the API if you pass in an invalid record ID, or null.
     // a post to "/api/record/thisWillBreakTheServer/document" will cause the server to die.
     // This will still let any 12 char value through (it passes isValid)
-    if (!args.swagger.params.recordId.value || !ObjectID.isValid(args.swagger.params.recordId.value)) {
+    if (!args.swagger.params.recordId.value || !ObjectId.isValid(args.swagger.params.recordId.value)) {
       defaultLog.info(
         `Error creating document: ${args.swagger.params.fileName.value}, Error: Invalid Master Record ID supplied`
       );
@@ -52,7 +51,7 @@ exports.protectedPost = async function (args, res, next) {
     }
 
     const masterRecord = await collection.findOne({
-      _id: new ObjectID(args.swagger.params.recordId.value),
+      _id: new ObjectId(args.swagger.params.recordId.value),
       write: { $in: args.swagger.params.auth_payload.client_roles }
     });
     const masterModel = mongoose.model(masterRecord._schemaName);
@@ -89,7 +88,10 @@ exports.protectedPost = async function (args, res, next) {
 
     let docResponse = null;
     let s3Response = null;
-    if (args.swagger.params.url && args.swagger.params.url.value) {
+    const addDocumentFromURL = args.swagger.params.url && args.swagger.params.url.value;
+    const addDocumentFromUpload = args.swagger.params.upfile && args.swagger.params.upfile.value;
+
+    if (addDocumentFromURL) {
       // If the document already has a url we can assume it's a link
       try {
         docResponse = await createURLDocument(
@@ -109,7 +111,7 @@ exports.protectedPost = async function (args, res, next) {
           `Error creating document for ${args.swagger.params.fileName.value}.`
         );
       }
-    } else if (args.swagger.params.upfile && args.swagger.params.upfile.value) {
+    } else if (addDocumentFromUpload) {
       // Create document meta and upload file to S3
       try {
         ({ docResponse, s3Response } = await createS3Document(
@@ -138,10 +140,10 @@ exports.protectedPost = async function (args, res, next) {
       // add to master record
       recordResponse = await masterModel.findOneAndUpdate(
         {
-          _id: new ObjectID(args.swagger.params.recordId.value),
+          _id: new ObjectId(args.swagger.params.recordId.value),
           write: { $in: args.swagger.params.auth_payload.client_roles }
         },
-        { $addToSet: { documents: new ObjectID(docResponse._id) } },
+        { $addToSet: { documents: new ObjectId(docResponse._id) } },
         { new: true }
       );
 
@@ -169,8 +171,8 @@ exports.protectedPost = async function (args, res, next) {
       recordResponse._flavourRecords.forEach(id => {
         observables.push(
           masterModel.findOneAndUpdate(
-            { _id: new ObjectID(id), write: { $in: args.swagger.params.auth_payload.client_roles } },
-            { $addToSet: { documents: new ObjectID(docResponse._id) } },
+            { _id: new ObjectId(id), write: { $in: args.swagger.params.auth_payload.client_roles } },
+            { $addToSet: { documents: new ObjectId(docResponse._id) } },
             { new: true }
           )
         );
@@ -213,7 +215,7 @@ exports.protectedDelete = async function (args, res, next) {
     let s3Response = null;
     try {
       docResponse = await Document.findOneAndRemove({
-        _id: new ObjectID(args.swagger.params.docId.value),
+        _id: new ObjectId(args.swagger.params.docId.value),
         write: { $in: args.swagger.params.auth_payload.client_roles }
       });
       queryUtils.audit(args, 'DELETE', JSON.stringify(docResponse), args.swagger.params.auth_payload, docResponse._id);
@@ -236,7 +238,7 @@ exports.protectedDelete = async function (args, res, next) {
           'DELETE',
           JSON.stringify(s3DeleteResult),
           args.swagger.params.auth_payload,
-          docResponse.key
+          docResponse._id
         );
 
         s3Response = s3DeleteResult;
@@ -250,11 +252,11 @@ exports.protectedDelete = async function (args, res, next) {
       }
     }
 
-    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const db = mongoose.connection.db;
     const collection = db.collection('nrpti');
 
     const masterRecord = await collection.findOne({
-      _id: new ObjectID(args.swagger.params.recordId.value),
+      _id: new ObjectId(args.swagger.params.recordId.value),
       write: { $in: args.swagger.params.auth_payload.client_roles }
     });
     const masterModel = mongoose.model(masterRecord._schemaName);
@@ -265,10 +267,10 @@ exports.protectedDelete = async function (args, res, next) {
       // remove from master record
       recordResponse = await masterModel.findOneAndUpdate(
         {
-          _id: new ObjectID(args.swagger.params.recordId.value),
+          _id: new ObjectId(args.swagger.params.recordId.value),
           write: { $in: args.swagger.params.auth_payload.client_roles }
         },
-        { $pull: { documents: new ObjectID(docResponse._id) } },
+        { $pull: { documents: new ObjectId(docResponse._id) } },
         { new: true }
       );
       queryUtils.audit(
@@ -276,7 +278,7 @@ exports.protectedDelete = async function (args, res, next) {
         'Doc Record Update',
         JSON.stringify(recordResponse),
         args.swagger.params.auth_payload,
-        recordResponse.key
+        recordResponse._id
       );
     } catch (e) {
       defaultLog.info(
@@ -291,12 +293,12 @@ exports.protectedDelete = async function (args, res, next) {
 
     // remove from flavour records
     let observables = [];
-    if (recordResponse && recordResponse.value && recordResponse.value._flavourRecords) {
-      recordResponse.value._flavourRecords.forEach(id => {
+    if (recordResponse && recordResponse._flavourRecords) {
+      recordResponse._flavourRecords.forEach(id => {
         observables.push(
           masterModel.findOneAndUpdate(
-            { _id: new ObjectID(id), write: { $in: args.swagger.params.auth_payload.client_roles } },
-            { $pull: { documents: new ObjectID(docResponse._id) } },
+            { _id: new ObjectId(id), write: { $in: args.swagger.params.auth_payload.client_roles } },
+            { $pull: { documents: new ObjectId(docResponse._id) } },
             { new: true }
           )
         );
@@ -422,14 +424,21 @@ async function uploadS3Document(s3Key, fileContent, s3ACLRole = null) {
     throw new Error('Missing required s3Key param');
   }
 
-  return s3
-    .upload({
-      Bucket: process.env.OBJECT_STORE_bucket_name,
-      Key: s3Key,
-      Body: fileContent,
-      ACL: s3ACLRole || 'authenticated-read'
-    })
-    .promise();
+  try {
+    const s3Response = await s3
+      .upload({
+        Bucket: process.env.OBJECT_STORE_bucket_name,
+        Key: s3Key,
+        Body: fileContent,
+        ACL: s3ACLRole || 'authenticated-read'
+      })
+      .promise();
+
+    return s3Response;
+  } catch (error) {
+    defaultLog.error('(document-controller) uploadS3Document - Error: ', error.msg, error.stack);
+    throw error;
+  }
 }
 
 exports.uploadS3Document = uploadS3Document;
@@ -502,7 +511,7 @@ async function publishDocument(docId, auth_payload) {
   }
 
   const Document = require('mongoose').model('Document');
-  const document = await Document.findOne({ _id: new ObjectID(docId), write: { $in: auth_payload.client_roles } });
+  const document = await Document.findOne({ _id: new ObjectId(docId), write: { $in: auth_payload.client_roles } });
 
   if (!document) {
     defaultLog.info(`publishDocument - couldn't find document for docId: ${docId}`);
@@ -532,7 +541,7 @@ async function unpublishDocument(docId, auth_payload) {
   }
 
   const Document = require('mongoose').model('Document');
-  const document = await Document.findOne({ _id: new ObjectID(docId), write: { $in: auth_payload.client_roles } });
+  const document = await Document.findOne({ _id: new ObjectId(docId), write: { $in: auth_payload.client_roles } });
 
   if (!document) {
     defaultLog.info(`unpublishDocument - couldn't find document for docId: ${docId}`);
@@ -564,7 +573,7 @@ exports.protectedGetS3SignedURL = async function (args, res, next) {
 
   const Document = mongoose.model('Document');
   const document = await Document.findOne({
-    _id: new ObjectID(args.swagger.params.docId.value),
+    _id: new ObjectId(args.swagger.params.docId.value),
     write: { $in: args.swagger.params.auth_payload.client_roles }
   });
 

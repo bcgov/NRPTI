@@ -105,8 +105,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   // set data
   incomingObj.recordName && (report.recordName = incomingObj.recordName);
   report.recordType = 'Report';
-  report.issuedTo.read = utils.ApplicationAdminRoles;
-  report.issuedTo.write = utils.ApplicationAdminRoles;
+  report.issuedTo && (report.issuedTo.read = utils.ApplicationAdminRoles);
+  report.issuedTo && (report.issuedTo.write = utils.ApplicationAdminRoles);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (report.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -125,7 +125,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.dateIssued && (report.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (report.issuingAgency = incomingObj.issuingAgency);
 
-  report.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (report.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   incomingObj.projectName && (report.projectName = incomingObj.projectName);
   incomingObj.location && (report.location = incomingObj.location);
@@ -218,8 +218,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   // set data
   incomingObj.recordName && (reportBCMI.recordName = incomingObj.recordName);
   reportBCMI.recordType = 'Report';
-  reportBCMI.issuedTo.read = utils.ApplicationAdminRoles;
-  reportBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  reportBCMI.issuedTo && (reportBCMI.issuedTo.read = utils.ApplicationAdminRoles);
+  reportBCMI.issuedTo &&
+    (reportBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (reportBCMI.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -240,7 +241,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.dateIssued && (reportBCMI.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (reportBCMI.issuingAgency = incomingObj.issuingAgency);
 
-  reportBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (reportBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   incomingObj.projectName && (reportBCMI.projectName = incomingObj.projectName);
   incomingObj.location && (reportBCMI.location = incomingObj.location);
@@ -325,8 +326,9 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   // set data
   incomingObj.recordName && (reportNRCED.recordName = incomingObj.recordName);
   reportNRCED.recordType = 'Report';
-  reportNRCED.issuedTo.read = utils.ApplicationAdminRoles;
-  reportNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  reportNRCED.issuedTo && (reportNRCED.issuedTo.read = utils.ApplicationAdminRoles);
+  reportNRCED.issuedTo &&
+    (reportNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (reportNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -347,7 +349,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.dateIssued && (reportNRCED.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (reportNRCED.issuingAgency = incomingObj.issuingAgency);
 
-  reportNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (reportNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   incomingObj.projectName && (reportNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (reportNRCED.location = incomingObj.location);

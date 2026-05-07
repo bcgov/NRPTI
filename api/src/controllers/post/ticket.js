@@ -127,10 +127,10 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.issuingAgency && (ticket.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (ticket.author = incomingObj.author);
 
-  ticket.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (ticket.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
-  ticket.issuedTo.read = utils.ApplicationAdminRoles;
-  ticket.issuedTo.write = utils.ApplicationAdminRoles;
+  ticket.issuedTo && (ticket.issuedTo.read = utils.ApplicationAdminRoles);
+  ticket.issuedTo && (ticket.issuedTo.write = utils.ApplicationAdminRoles);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (ticket.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -244,10 +244,10 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.issuingAgency && (ticketLNG.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (ticketLNG.author = incomingObj.author);
 
-  ticketLNG.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (ticketLNG.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
-  ticketLNG.issuedTo.read = utils.ApplicationAdminRoles;
-  ticketLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG];
+  ticketLNG.issuedTo && (ticketLNG.issuedTo.read = utils.ApplicationAdminRoles);
+  ticketLNG.issuedTo && (ticketLNG.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_LNG]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (ticketLNG.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -369,10 +369,11 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.issuingAgency && (ticketNRCED.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (ticketNRCED.author = incomingObj.author);
 
-  ticketNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (ticketNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
-  ticketNRCED.issuedTo.read = utils.ApplicationAdminRoles;
-  ticketNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED];
+  ticketNRCED.issuedTo && (ticketNRCED.issuedTo.read = utils.ApplicationAdminRoles);
+  ticketNRCED.issuedTo &&
+    (ticketNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_NRCED]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (ticketNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&

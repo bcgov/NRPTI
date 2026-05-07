@@ -450,13 +450,16 @@ export class InspectionAddEditComponent implements OnInit, OnDestroy {
       inspection['mineGuid'] = this.myForm.get('association.mineGuid').value;
     }
 
-    // Set the friendly name of projectName
-    const epicProjectList = this.storeService.getItem('epicProjects');
-    const filterResult = epicProjectList.filter(item => {
-      return item._id === inspection['_epicProjectId'];
-    });
-    if (filterResult && filterResult[0] && filterResult[0].name) {
-      inspection['projectName'] = filterResult[0].name;
+    if (inspection['_epicProjectId']) {
+      // Set the friendly name of projectName
+      const epicProjectList = this.storeService.getItem('epicProjects') || [];
+
+      const filterResult = epicProjectList.filter(item => {
+        return item._id === inspection['_epicProjectId'];
+      });
+      if (filterResult && filterResult[0] && filterResult[0].name) {
+        inspection['projectName'] = filterResult[0].name;
+      }
     }
 
     if (!this.isEditing) {
