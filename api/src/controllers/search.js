@@ -68,7 +68,7 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
         });
         return { [logicalOperator]: [{ [item]: { $in: arrayExp } }] };
       } else if (!Array.isArray(entry) && comparisonOperator === '$in') {
-        return { [logicalOperator]: [{ [item]: { $in: [ObjectId(entry)] } }] };
+        return { [logicalOperator]: [{ [item]: { $in: [new ObjectId(entry)] } }] };
       }
 
       if (Array.isArray(entry) && comparisonOperator !== '$in') {
