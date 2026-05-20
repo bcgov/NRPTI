@@ -1,4 +1,5 @@
-const ObjectID = require('mongodb').ObjectID;
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 const BaseRecordUtils = require('./base-record-utils');
 const CsvUtils = require('./utils/csv-utils');
@@ -62,7 +63,7 @@ class Inspections extends BaseRecordUtils {
 
     if (projectData) {
       inspection['projectName'] = projectData.projectName;
-      inspection['_epicProjectId'] = (projectData._epicProjectId && new ObjectID(projectData._epicProjectId)) || null;
+      inspection['_epicProjectId'] = (projectData._epicProjectId && new ObjectId(projectData._epicProjectId)) || null;
     }
 
     const entityType = CsvUtils.getEntityType(csvRow);

@@ -1,7 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const ObjectID = require('mongodb').ObjectID;
+const ObjectId = mongoose.Types.ObjectId;
 const defaultLog = require('../../utils/logger')('epic-base-record-utils');
 const EpicUtils = require('./epic-utils');
 const DocumentController = require('./../../controllers/document-controller');
@@ -90,7 +90,7 @@ class BaseRecordUtils {
 
     const DocumentModel = mongoose.model('Document');
 
-    const documentIds = nrptiRecord.documents.map(id => new ObjectID(id));
+    const documentIds = nrptiRecord.documents.map(id => new ObjectId(id));
 
     // Check if any documents uploaded to S3, and delete if any
     for (let idx = 0; idx < documentIds.length; idx++) {
@@ -127,15 +127,15 @@ class BaseRecordUtils {
     let mineRecord = null;
     if (epicRecord.project) {
       const MineBCMI = mongoose.model('MineBCMI');
-      if (ObjectID.isValid(epicRecord.project)) {
+      if (ObjectId.isValid(epicRecord.project)) {
         mineRecord = await MineBCMI.findOne({
           _schemaName: 'MineBCMI',
-          _epicProjectIds: new ObjectID(epicRecord.project)
+          _epicProjectIds: new ObjectId(epicRecord.project)
         });
       } else {
         mineRecord = await MineBCMI.findOne({
           _schemaName: 'MineBCMI',
-          _epicProjectIds: new ObjectID(epicRecord.project._id)
+          _epicProjectIds: new ObjectId(epicRecord.project._id)
         });
       }
     }
@@ -143,7 +143,7 @@ class BaseRecordUtils {
     return {
       _schemaName: this.recordType._schemaName,
       _epicProjectId: (epicRecord.project && epicRecord.project._id) || '',
-      _sourceRefId: new ObjectID(epicRecord._id) || '',
+      _sourceRefId: new ObjectId(epicRecord._id) || '',
       _epicMilestoneId: epicRecord.milestone || '',
       mineGuid: (mineRecord && mineRecord._sourceRefId) || null,
       issuingAgency: 'AGENCY_EAO',
@@ -181,7 +181,7 @@ class BaseRecordUtils {
     return await masterRecordModel
       .findOne({
         _schemaName: this.recordType._schemaName,
-        _sourceRefId: new ObjectID(nrptiRecord._sourceRefId)
+        _sourceRefId: new ObjectId(nrptiRecord._sourceRefId)
       })
       .populate('_flavourRecords');
   }

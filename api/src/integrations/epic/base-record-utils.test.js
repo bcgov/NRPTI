@@ -2,12 +2,11 @@ const BaseRecordUtils = require('./base-record-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
 const mongoose = require('mongoose');
 const RecordController = require('../../controllers/record-controller');
+require('../../../test/test-utils');
 
 describe('BaseRecordUtils', () => {
   const Document = require('../../models/document');
   const utils = require('../../utils/constants/misc');
-  const mongo = 'mongodb://127.0.0.1/nrpti-testing';
-  mongoose.connect(mongo);
 
   beforeAll(async () => {
     await Document.deleteMany({});
@@ -15,11 +14,6 @@ describe('BaseRecordUtils', () => {
 
   beforeEach(async () => {
     await Document.deleteMany({});
-  });
-
-  afterAll(async () => {
-    mongoose.connection.db.dropDatabase();
-    await mongoose.connection.close();
   });
 
   jest.fn('../../controllers/document-controller', () => ({

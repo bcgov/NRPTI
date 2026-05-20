@@ -1,7 +1,7 @@
 'use strict';
 
-const ObjectID = require('mongodb').ObjectID;
-const mongodb = require('../utils/mongodb');
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 const Delete = require('../controllers/delete/delete');
 const RecordTypeEnum = require('../utils/constants/misc');
 
@@ -188,7 +188,13 @@ exports.protectedPost = async function (args, res, next) {
       }
     }
 
-    let response = await Promise.all(promises);
+    let response;
+
+    try {
+      response = await Promise.all(promises);
+    } catch (e) {
+      console.log('(record-controller) protectedPost Error: ', e);
+    }
 
     // Audit the POST action.
     // If multiple observables are triggered, response will have multiple objects
@@ -228,7 +234,13 @@ exports.protectedPut = async function (args, res, next) {
       }
     }
 
-    let response = await Promise.all(promises);
+    let response;
+
+    try {
+      response = await Promise.all(promises);
+    } catch (e) {
+      console.error('(record-controller) protectedPut - Error: ', e);
+    }
 
     let meta = response && response[0] && response[0][0] ? response[0][0] : null;
     let metaID = meta && meta.object && meta.object[0] ? meta.object[0]._id : null;
@@ -242,7 +254,7 @@ exports.protectedPut = async function (args, res, next) {
 };
 
 exports.protectedDelete = async function (args, res, next) {
-  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+  const db = mongoose.connection.db;
   const collection = db.collection('nrpti');
 
   let recordId = null;
@@ -256,7 +268,7 @@ exports.protectedDelete = async function (args, res, next) {
 
   let record = null;
   try {
-    record = await collection.findOne({ _id: new ObjectID(recordId) });
+    record = await collection.findOne({ _id: new ObjectId(recordId) });
   } catch (error) {
     defaultLog.info(`protectedDelete - couldn't find record for recordId: ${recordId}`);
     defaultLog.debug(error);
@@ -471,6 +483,7 @@ const processPostRequest = async function (args, res, next, property, data) {
   try {
     return await Promise.all(promises);
   } catch (e) {
+    console.error('(record-controller) processPostRequest - Error: ', e);
     return {
       status: 'failure',
       object: promises,

@@ -1,8 +1,9 @@
-const ObjectID = require('mongodb').ObjectID;
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 const Warnings = require('./warnings-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
-const mongoose = require('mongoose');
 const { createURLDocument } = require('../../controllers/document-controller');
+require('../../../test/test-utils');
 
 describe('warnings-utils', () => {
   const warnings = new Warnings('authPayload', RECORD_TYPE.Warning, null);
@@ -59,7 +60,7 @@ describe('warnings-utils', () => {
         location: 'British Columbia',
         recordName: 'Warning-letter-sample.pdf',
         projectName: 'Coastal Gaslink',
-        _epicProjectId: new ObjectID('588511c4aaecd9001b825604'),
+        _epicProjectId: new ObjectId('588511c4aaecd9001b825604'),
 
         sourceSystemRef: 'bcogc'
       });
@@ -69,8 +70,6 @@ describe('warnings-utils', () => {
   describe('createItem', () => {
     const Document = require('../../models/document');
     const utils = require('../../utils/constants/misc');
-    const mongo = 'mongodb://127.0.0.1/nrpti-testing';
-    mongoose.connect(mongo);
 
     beforeAll(async () => {
       await Document.deleteMany({});
@@ -80,10 +79,10 @@ describe('warnings-utils', () => {
       await Document.deleteMany({});
     });
 
-    afterAll(async () => {
-      mongoose.connection.db.dropDatabase();
-      await mongoose.connection.close();
-    });
+    // afterAll(async () => {
+    //   mongoose.connection.db.dropDatabase();
+    //   await mongoose.connection.close();
+    // });
 
     jest.fn('../../controllers/document-controller', () => ({
       createURLDocument: jest.fn((fileName, addedBy, url, readRoles = [], writeRoles = []) => {

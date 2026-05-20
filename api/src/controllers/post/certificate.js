@@ -101,7 +101,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.dateIssued && (certificate.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (certificate.issuingAgency = incomingObj.issuingAgency);
 
-  certificate.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (certificate.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   incomingObj.projectName && (certificate.projectName = incomingObj.projectName);
   incomingObj.location && (certificate.location = incomingObj.location);
@@ -193,7 +193,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.dateIssued && (certificateLNG.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (certificateLNG.issuingAgency = incomingObj.issuingAgency);
 
-  certificateLNG.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (certificateLNG.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   incomingObj.projectName && (certificateLNG.projectName = incomingObj.projectName);
   incomingObj.location && (certificateLNG.location = incomingObj.location);
@@ -260,7 +260,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.dateIssued && (certificateBCMI.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (certificateBCMI.issuingAgency = incomingObj.issuingAgency);
 
-  certificateBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (certificateBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   incomingObj.projectName && (certificateBCMI.projectName = incomingObj.projectName);
   incomingObj.location && (certificateBCMI.location = incomingObj.location);

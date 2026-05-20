@@ -1,4 +1,5 @@
-const ObjectID = require('mongodb').ObjectID;
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 const BaseRecordUtils = require('./base-record-utils');
 const CsvUtils = require('./utils/csv-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
@@ -77,7 +78,7 @@ class Inspections extends BaseRecordUtils {
     if (projectDetails) {
       inspection['projectName'] = projectDetails.projectName;
       inspection['_epicProjectId'] =
-        (projectDetails._epicProjectId && new ObjectID(projectDetails._epicProjectId)) || null;
+        (projectDetails._epicProjectId && new ObjectId(projectDetails._epicProjectId)) || null;
     }
 
     inspection['location'] = 'British Columbia';

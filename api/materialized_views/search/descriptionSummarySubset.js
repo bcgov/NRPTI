@@ -1,4 +1,4 @@
-const mongodb = require('../../src/utils/mongodb');
+const mongoose = require('mongoose');
 
 async function update(defaultLog) {
   const aggregate = [
@@ -35,7 +35,7 @@ async function update(defaultLog) {
   ];
 
   try {
-    const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+    const db = mongoose.connection.db;
     const mainCollection = db.collection('nrpti');
 
     defaultLog.info('Updating description_summary_subset');

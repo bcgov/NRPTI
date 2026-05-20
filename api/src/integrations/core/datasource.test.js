@@ -3,6 +3,7 @@ const defaultLogger = require('../../utils/logger')('core-datasource');
 const integrationUtils = require('../integration-utils');
 const coreUtil = require('../core-util');
 const moment = require('moment-timezone');
+require('../../../test/test-utils');
 
 const mockedTaskAuditRecord = { updateTaskRecord: jest.fn() };
 const mockedAuthPayload = 'auth_payload';
