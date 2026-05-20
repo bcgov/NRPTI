@@ -92,8 +92,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   // set data
   incomingObj.recordName && (damSafetyInspection.recordName = incomingObj.recordName);
   damSafetyInspection.recordType = 'Dam Safety Inspection';
-  damSafetyInspection.issuedTo.read = utils.ApplicationAdminRoles;
-  damSafetyInspection.issuedTo.write = utils.ApplicationAdminRoles;
+  damSafetyInspection.issuedTo && (damSafetyInspection.issuedTo.read = utils.ApplicationAdminRoles);
+  damSafetyInspection.issuedTo && (damSafetyInspection.issuedTo.write = utils.ApplicationAdminRoles);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (damSafetyInspection.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -115,7 +115,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.dateIssued && (damSafetyInspection.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (damSafetyInspection.issuingAgency = incomingObj.issuingAgency);
 
-  damSafetyInspection.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (damSafetyInspection.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   incomingObj.projectName && (damSafetyInspection.projectName = incomingObj.projectName);
   incomingObj.location && (damSafetyInspection.location = incomingObj.location);
@@ -203,8 +203,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   // set data
   incomingObj.recordName && (damSafetyInspectionBCMI.recordName = incomingObj.recordName);
   damSafetyInspectionBCMI.recordType = 'Dam Safety Inspection';
-  damSafetyInspectionBCMI.issuedTo.read = utils.ApplicationAdminRoles;
-  damSafetyInspectionBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  damSafetyInspectionBCMI.issuedTo && (damSafetyInspectionBCMI.issuedTo.read = utils.ApplicationAdminRoles);
+  damSafetyInspectionBCMI.issuedTo &&
+    (damSafetyInspectionBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI]);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&
     (damSafetyInspectionBCMI.issuedTo.type = incomingObj.issuedTo.type);
@@ -228,7 +229,8 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.dateIssued && (damSafetyInspectionBCMI.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (damSafetyInspectionBCMI.issuingAgency = incomingObj.issuingAgency);
 
-  damSafetyInspectionBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation &&
+    (damSafetyInspectionBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   incomingObj.projectName && (damSafetyInspectionBCMI.projectName = incomingObj.projectName);
   incomingObj.location && (damSafetyInspectionBCMI.location = incomingObj.location);
@@ -308,8 +310,9 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   // set data
   incomingObj.recordName && (damSafetyInspectionNRCED.recordName = incomingObj.recordName);
   damSafetyInspectionNRCED.recordType = 'DamSafetyInspection';
-  damSafetyInspectionNRCED.issuedTo.read = utils.ApplicationAdminRoles;
-  damSafetyInspectionNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  damSafetyInspectionNRCED.issuedTo && (damSafetyInspectionNRCED.issuedTo.read = utils.ApplicationAdminRoles);
+  damSafetyInspectionNRCED.issuedTo &&
+    (damSafetyInspectionNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI]);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.type &&
     (damSafetyInspectionNRCED.issuedTo.type = incomingObj.issuedTo.type);
@@ -333,7 +336,8 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.dateIssued && (damSafetyInspectionNRCED.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (damSafetyInspectionNRCED.issuingAgency = incomingObj.issuingAgency);
 
-  damSafetyInspectionNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation &&
+    (damSafetyInspectionNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   incomingObj.projectName && (damSafetyInspectionNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (damSafetyInspectionNRCED.location = incomingObj.location);

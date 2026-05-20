@@ -1,10 +1,9 @@
 let defaultLog = require('winston').loggers.get('default');
 let mongoose = require('mongoose');
-let ObjectID = require('mongodb').ObjectID;
+const ObjectId = mongoose.Types.ObjectId;
 let QueryActions = require('../utils/query-actions');
 let QueryUtils = require('../utils/query-utils');
 let qs = require('qs');
-let mongodb = require('../utils/mongodb');
 let moment = require('moment');
 let fuzzySearch = require('../utils/fuzzySearch');
 const {
@@ -69,7 +68,7 @@ let generateExpArray = async function (field, logicalOperator = '$or', compariso
         });
         return { [logicalOperator]: [{ [item]: { $in: arrayExp } }] };
       } else if (!Array.isArray(entry) && comparisonOperator === '$in') {
-        return { [logicalOperator]: [{ [item]: { $in: [ObjectID(entry)] } }] };
+        return { [logicalOperator]: [{ [item]: { $in: [new ObjectId(entry)] } }] };
       }
 
       if (Array.isArray(entry) && comparisonOperator !== '$in') {
@@ -656,7 +655,7 @@ let searchCollection = async function (
 
   defaultLog.info('Executing searching on schema(s):', schemaName);
 
-  const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+  const db = mongoose.connection.db;
 
   // If we have a subset filter on, we must change to the appropriate collection.
   let collectionName = 'nrpti';
@@ -675,6 +674,7 @@ let searchCollection = async function (
       collectionName = 'outcome_description_subset';
     }
   }
+
   const collection = db.collection(collectionName);
 
   const data = await collection
@@ -837,7 +837,7 @@ const executeQuery = async function (args, res, next) {
   if (dataset[0] === 'Item') {
     defaultLog.info('ITEM GET', { _id: args.swagger.params._id.value });
 
-    if (!args.swagger.params._id.value || !ObjectID.isValid(args.swagger.params._id.value)) {
+    if (!args.swagger.params._id.value || !ObjectId.isValid(args.swagger.params._id.value)) {
       defaultLog.warn(`Error searching for item: ${args.swagger.params._id.value}, Error: Invalid Item ID supplied`);
       return QueryActions.sendResponse(
         res,
@@ -1029,7 +1029,7 @@ const executeQuery = async function (args, res, next) {
         let collectionObj = mongoose.model(args.swagger.params._schemaName.value);
         data = await collectionObj.aggregate(aggregation);
       } else {
-        const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+        const db = mongoose.connection.db;
         const collection = db.collection('nrpti');
         data = await collection
           .aggregate(aggregation, {
@@ -1052,7 +1052,7 @@ const executeQuery = async function (args, res, next) {
     // dataset == collection, id = collection id, flavourtype?
     defaultLog.info('COLLECTION DOCUMENTS GET', { _id: args.swagger.params._id.value });
 
-    if (!args.swagger.params._id.value || !ObjectID.isValid(args.swagger.params._id.value)) {
+    if (!args.swagger.params._id.value || !ObjectId.isValid(args.swagger.params._id.value)) {
       defaultLog.warn(`Error searching for item: ${args.swagger.params._id.value}, Error: Invalid Item ID supplied`);
       return QueryActions.sendResponse(
         res,
@@ -1139,7 +1139,7 @@ const executeQuery = async function (args, res, next) {
     let data = [];
 
     try {
-      const db = mongodb.connection.db(process.env.MONGODB_DATABASE || 'nrpti-dev');
+      const db = mongoose.connection.db;
       const collection = db.collection('nrpti');
       data = await collection
         .aggregate(aggregation, {

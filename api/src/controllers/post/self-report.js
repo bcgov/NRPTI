@@ -100,7 +100,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.issuingAgency && (selfReport.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (selfReport.author = incomingObj.author);
 
-  selfReport.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (selfReport.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   incomingObj.projectName && (selfReport.projectName = incomingObj.projectName);
   incomingObj.location && (selfReport.location = incomingObj.location);
@@ -192,7 +192,7 @@ exports.createLNG = function (args, res, next, incomingObj) {
   incomingObj.issuingAgency && (selfReportLNG.issuingAgency = incomingObj.issuingAgency);
   incomingObj.author && (selfReportLNG.author = incomingObj.author);
 
-  selfReportLNG.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (selfReportLNG.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   incomingObj.projectName && (selfReportLNG.projectName = incomingObj.projectName);
   incomingObj.location && (selfReportLNG.location = incomingObj.location);

@@ -196,7 +196,7 @@ function hexaDecimal(count) {
 
 function generateSeededObjectId(value) {
   let oid = typeof value === 'undefined' ? hexaDecimal(24).toLocaleLowerCase() : value;
-  if (!bsonObjectId.isValid(oid)) throw new Error(`Invalid attempt to generate an ObjectID: ${oid}`);
+  if (!bsonObjectId.isValid(oid)) throw new Error(`Invalid attempt to generate an ObjectId: ${oid}`);
   return mongTypes.ObjectId(oid);
 }
 

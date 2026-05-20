@@ -1,5 +1,6 @@
 const moment = require('moment');
-const ObjectID = require('mongodb').ObjectID;
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId;
 
 const searchController = require('../../controllers/search');
 
@@ -208,7 +209,7 @@ describe('getConvertedValue', () => {
   describe('objectId', () => {
     describe('comparisonOperator = $eq', () => {
       it('returns equals expression for a objectId value', () => {
-        const objectId = new ObjectID(112233445566);
+        const objectId = new ObjectId(112233445566);
 
         const result = searchController.getConvertedValue('item', objectId, '$eq');
 
@@ -218,7 +219,7 @@ describe('getConvertedValue', () => {
 
     describe('comparisonOperator = $ne', () => {
       it('returns not equals expression for a objectId value', () => {
-        const objectId = new ObjectID(112233445566);
+        const objectId = new ObjectId(112233445566);
 
         const result = searchController.getConvertedValue('item', objectId, '$ne');
 

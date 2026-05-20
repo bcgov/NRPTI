@@ -97,8 +97,8 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   // set data
   incomingObj.recordName && (correspondence.recordName = incomingObj.recordName);
   correspondence.recordType = 'Correspondence';
-  correspondence.issuedTo.read = utils.ApplicationAdminRoles;
-  correspondence.issuedTo.write = utils.ApplicationAdminRoles;
+  correspondence.issuedTo && (correspondence.issuedTo.read = utils.ApplicationAdminRoles);
+  correspondence.issuedTo && (correspondence.issuedTo.write = utils.ApplicationAdminRoles);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (correspondence.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -119,7 +119,7 @@ exports.createMaster = function (args, res, next, incomingObj, flavourIds) {
   incomingObj.dateIssued && (correspondence.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (correspondence.issuingAgency = incomingObj.issuingAgency);
 
-  correspondence.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (correspondence.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   incomingObj.projectName && (correspondence.projectName = incomingObj.projectName);
   incomingObj.location && (correspondence.location = incomingObj.location);
@@ -213,8 +213,9 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   // set data
   incomingObj.recordName && (correspondenceBCMI.recordName = incomingObj.recordName);
   correspondenceBCMI.recordType = 'Correspondence';
-  correspondenceBCMI.issuedTo.read = utils.ApplicationAdminRoles;
-  correspondenceBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  correspondenceBCMI.issuedTo && (correspondenceBCMI.issuedTo.read = utils.ApplicationAdminRoles);
+  correspondenceBCMI.issuedTo &&
+    (correspondenceBCMI.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (correspondenceBCMI.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -236,7 +237,7 @@ exports.createBCMI = function (args, res, next, incomingObj) {
   incomingObj.dateIssued && (correspondenceBCMI.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (correspondenceBCMI.issuingAgency = incomingObj.issuingAgency);
 
-  correspondenceBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (correspondenceBCMI.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   incomingObj.projectName && (correspondenceBCMI.projectName = incomingObj.projectName);
   incomingObj.location && (correspondenceBCMI.location = incomingObj.location);
@@ -322,8 +323,9 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   // set data
   incomingObj.recordName && (correspondenceNRCED.recordName = incomingObj.recordName);
   correspondenceNRCED.recordType = 'Correspondence';
-  correspondenceNRCED.issuedTo.read = utils.ApplicationAdminRoles;
-  correspondenceNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
+  correspondenceNRCED.issuedTo && (correspondenceNRCED.issuedTo.read = utils.ApplicationAdminRoles);
+  correspondenceNRCED.issuedTo &&
+    (correspondenceNRCED.issuedTo.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI]);
   incomingObj.issuedTo && incomingObj.issuedTo.type && (correspondenceNRCED.issuedTo.type = incomingObj.issuedTo.type);
   incomingObj.issuedTo &&
     incomingObj.issuedTo.companyName &&
@@ -345,7 +347,7 @@ exports.createNRCED = function (args, res, next, incomingObj) {
   incomingObj.dateIssued && (correspondenceNRCED.dateIssued = incomingObj.dateIssued);
   incomingObj.issuingAgency && (correspondenceNRCED.issuingAgency = incomingObj.issuingAgency);
 
-  correspondenceNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation);
+  incomingObj.legislation && (correspondenceNRCED.legislation = postUtils.populateLegislation(incomingObj.legislation));
 
   incomingObj.projectName && (correspondenceNRCED.projectName = incomingObj.projectName);
   incomingObj.location && (correspondenceNRCED.location = incomingObj.location);
