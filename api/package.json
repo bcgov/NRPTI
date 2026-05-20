@@ -63,7 +63,7 @@
     "express": "^4.19.2",
     "jwks-rsa": "1.6.0",
     "keycloak-js": "^26.2.0",
-    "moment": "^2.29.4",
+    "moment": "^2.30.1",
     "moment-timezone": "^0.5.43",
     "mongoose": "7.8.9",
     "qs": "^6.11.2",
