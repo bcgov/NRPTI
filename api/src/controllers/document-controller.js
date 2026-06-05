@@ -435,13 +435,12 @@ async function uploadS3Document(s3Key, fileContent, s3ACLRole = null) {
       client: s3,
 
       params: {
-          Bucket: process.env.OBJECT_STORE_bucket_name,
-          Key: s3Key,
-          Body: fileContent,
-          ACL: s3ACLRole || 'authenticated-read'
-        }
-    })
-      .done();
+        Bucket: process.env.OBJECT_STORE_bucket_name,
+        Key: s3Key,
+        Body: fileContent,
+        ACL: s3ACLRole || 'authenticated-read'
+      }
+    }).done();
 
     return s3Response;
   } catch (error) {
@@ -608,12 +607,16 @@ exports.protectedGetS3SignedURL = async function (args, res, next) {
  * @returns
  */
 async function getS3SignedURL(s3Key) {
-  return await getSignedUrl(s3, new GetObjectCommand({
-    Bucket: process.env.OBJECT_STORE_bucket_name,
-    Key: s3Key
-  }), {
-    expiresIn: 300
-  });
+  return await getSignedUrl(
+    s3,
+    new GetObjectCommand({
+      Bucket: process.env.OBJECT_STORE_bucket_name,
+      Key: s3Key
+    }),
+    {
+      expiresIn: 300
+    }
+  );
 }
 
 exports.getS3SignedURL = getS3SignedURL;
