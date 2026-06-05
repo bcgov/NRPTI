@@ -1,5 +1,4 @@
-'use strict';
-
+'use strict';;
 const ObjectID = require('mongodb').ObjectID;
 const Document = require('../src/models/document');
 const utils = require('../src/utils/constants/misc');
@@ -20,27 +19,44 @@ const { managementPlan: ManagementPlan,
   permit: Permit,
   correspondence: Correspondence } = require('../src/models/master/index');
 
-const AWS = require('aws-sdk');
+const { Upload } = require('@aws-sdk/lib-storage');
+const { S3 } = require('@aws-sdk/client-s3');
 
 const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
 const OBJ_STORE_BUCKET = process.env.OBJECT_STORE_bucket_name || 'test';
-const ep = new AWS.Endpoint(OBJ_STORE_URL);
-const s3 = new AWS.S3({
+const ep = new URL(OBJ_STORE_URL);
+const s3 = new S3({
   endpoint: ep,
-  accessKeyId: process.env.OBJECT_STORE_user_account,
-  secretAccessKey: process.env.OBJECT_STORE_password,
+
+  credentials: {
+    accessKeyId: process.env.OBJECT_STORE_user_account,
+    secretAccessKey: process.env.OBJECT_STORE_password,
+  },
+
+  // The key signatureVersion is no longer supported in v3, and can be removed.
+  // @deprecated SDK v3 only supports signature v4.
   signatureVersion: 'v4',
-  s3ForcePathStyle: true
+
+  // The key s3ForcePathStyle is renamed to forcePathStyle.
+  forcePathStyle: true,
 });
 
 const MINIO_URL = process.env.MEM_MINIO_endpoint_url || 'minio-mem-prod-mem-mmt-prod.pathfinder.gov.bc.ca';
 const MINIO_BUCKET = process.env.MEM_MINIO_bucket_name;
-const minioEndpoint = new AWS.Endpoint(MINIO_URL);
-const minio = new AWS.S3({
+const minioEndpoint = new URL(MINIO_URL);
+const minio = new S3({
   endpoint: minioEndpoint,
-  accessKeyId: process.env.MEM_MINIO_user_account,
-  secretAccessKey: process.env.MEM_MINIO_password,
-  s3ForcePathStyle: true,
+
+  credentials: {
+    accessKeyId: process.env.MEM_MINIO_user_account,
+    secretAccessKey: process.env.MEM_MINIO_password,
+  },
+
+  // The key s3ForcePathStyle is renamed to forcePathStyle.
+  forcePathStyle: true,
+
+  // The key signatureVersion is no longer supported in v3, and can be removed.
+  // @deprecated SDK v3 only supports signature v4.
   signatureVersion: "v4",
 });
 
@@ -316,7 +332,7 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
   const minioObject = await minio.getObject({
     Bucket: MINIO_BUCKET,
     Key: collectionDoc.document.internalURL
-  }).promise();
+  });
 
   // create a document meta
   let document = new Document();
@@ -331,12 +347,16 @@ async function createMineDocument(nrpti, nrptiMine, collection, collectionDoc, n
   document.write = [utils.ApplicationRoles.ADMIN, utils.ApplicationRoles.ADMIN_BCMI];
 
   // upload to s3
-  await s3.upload({
-    Bucket: OBJ_STORE_BUCKET,
-    Key: s3Key,
-    Body: minioObject.Body,
-    ACL: 'authenticated-read'
-  }).promise()
+  await new Upload({
+    client: s3,
+
+    params: {
+      Bucket: OBJ_STORE_BUCKET,
+      Key: s3Key,
+      Body: minioObject.Body,
+      ACL: 'authenticated-read'
+    },
+  }).done()
 
   // save the document meta
   await nrpti.insertOne(document);

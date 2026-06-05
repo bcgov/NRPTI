@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
-const AWS = require('aws-sdk');
+
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+const { Upload } = require('@aws-sdk/lib-storage');
+const { GetObjectCommand, S3 } = require('@aws-sdk/client-s3');
+
 const utils = require('../utils/constants/misc');
 
 const queryActions = require('../utils/query-actions');
@@ -10,13 +14,21 @@ const defaultLog = require('../utils/logger')('record');
 const { userIsOnlyInRole } = require('../utils/auth-utils');
 
 const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
-const ep = new AWS.Endpoint(OBJ_STORE_URL);
-const s3 = new AWS.S3({
+const ep = new URL(OBJ_STORE_URL);
+const s3 = new S3({
   endpoint: ep,
-  accessKeyId: process.env.OBJECT_STORE_user_account,
-  secretAccessKey: process.env.OBJECT_STORE_password,
+
+  credentials: {
+    accessKeyId: process.env.OBJECT_STORE_user_account,
+    secretAccessKey: process.env.OBJECT_STORE_password
+  },
+
+  // The key signatureVersion is no longer supported in v3, and can be removed.
+  // @deprecated SDK v3 only supports signature v4.
   signatureVersion: 'v4',
-  s3ForcePathStyle: true
+
+  // The key s3ForcePathStyle is renamed to forcePathStyle.
+  forcePathStyle: true
 });
 
 exports.protectedOptions = function (args, res, next) {
@@ -398,7 +410,7 @@ async function deleteS3Document(s3Key) {
     throw new Error('Missing required s3Key param');
   }
 
-  return s3.deleteObject({ Bucket: process.env.OBJECT_STORE_bucket_name, Key: s3Key }).promise();
+  return s3.deleteObject({ Bucket: process.env.OBJECT_STORE_bucket_name, Key: s3Key });
 }
 
 exports.deleteS3Document = deleteS3Document;
@@ -425,14 +437,17 @@ async function uploadS3Document(s3Key, fileContent, s3ACLRole = null) {
   }
 
   try {
-    const s3Response = await s3
-      .upload({
-        Bucket: process.env.OBJECT_STORE_bucket_name,
-        Key: s3Key,
-        Body: fileContent,
-        ACL: s3ACLRole || 'authenticated-read'
-      })
-      .promise();
+    const s3Response = await new Upload({
+      client: s3,
+
+      params: {
+          Bucket: process.env.OBJECT_STORE_bucket_name,
+          Key: s3Key,
+          Body: fileContent,
+          ACL: s3ACLRole || 'authenticated-read'
+        }
+    })
+      .done();
 
     return s3Response;
   } catch (error) {
@@ -599,10 +614,11 @@ exports.protectedGetS3SignedURL = async function (args, res, next) {
  * @returns
  */
 async function getS3SignedURL(s3Key) {
-  return s3.getSignedUrl('getObject', {
+  return await getSignedUrl(s3, new GetObjectCommand({
     Bucket: process.env.OBJECT_STORE_bucket_name,
-    Key: s3Key,
-    Expires: 300 // 5 minutes
+    Key: s3Key
+  }), {
+    expiresIn: 300
   });
 }
 

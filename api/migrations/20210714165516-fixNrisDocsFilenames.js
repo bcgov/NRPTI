@@ -1,14 +1,22 @@
 'use strict';
 const ObjectID = require('mongodb').ObjectID;
-const AWS = require('aws-sdk');
+const { S3 } = require('@aws-sdk/client-s3');
 const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
-const ep = new AWS.Endpoint(OBJ_STORE_URL);
-const s3 = new AWS.S3({
+const ep = new URL(OBJ_STORE_URL);
+const s3 = new S3({
   endpoint: ep,
-  accessKeyId: process.env.OBJECT_STORE_user_account,
-  secretAccessKey: process.env.OBJECT_STORE_password,
+
+  credentials: {
+    accessKeyId: process.env.OBJECT_STORE_user_account,
+    secretAccessKey: process.env.OBJECT_STORE_password
+  },
+
+  // The key signatureVersion is no longer supported in v3, and can be removed.
+  // @deprecated SDK v3 only supports signature v4.
   signatureVersion: 'v4',
-  s3ForcePathStyle: true
+
+  // The key s3ForcePathStyle is renamed to forcePathStyle.
+  forcePathStyle: true
 });
 
 /**
@@ -158,7 +166,7 @@ async function renameS3Object(sourceKey, newKey, isPublic) {
   }
 
   try {
-    await s3.headObject({ Bucket: process.env.OBJECT_STORE_bucket_name, Key: sourceKey }).promise();
+    await s3.headObject({ Bucket: process.env.OBJECT_STORE_bucket_name, Key: sourceKey });
   } catch (err) {
     throw new Error(`Source key not found in S3 ${sourceKey}`);
   }
@@ -168,16 +176,17 @@ async function renameS3Object(sourceKey, newKey, isPublic) {
       Bucket: process.env.OBJECT_STORE_bucket_name,
       CopySource: `${process.env.OBJECT_STORE_bucket_name}/${sourceKey}`,
       Key: newKey
-    })
-    .promise();
+    });
 
   if (isPublic) {
-    await s3.putObjectAcl({ Bucket: process.env.OBJECT_STORE_bucket_name, Key: newKey, ACL: 'public-read' }).promise();
+    await s3.putObjectAcl(
+      { Bucket: process.env.OBJECT_STORE_bucket_name, Key: newKey, ACL: 'public-read' }
+    );
   }
 }
 
 async function deleteS3Object(key) {
-  return s3.deleteObject({ Bucket: process.env.OBJECT_STORE_bucket_name, Key: key }).promise();
+  return s3.deleteObject({ Bucket: process.env.OBJECT_STORE_bucket_name, Key: key });
 }
 
 exports.down = function(db) {
