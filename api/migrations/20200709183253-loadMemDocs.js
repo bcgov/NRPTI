@@ -24,39 +24,27 @@ const { S3 } = require('@aws-sdk/client-s3');
 
 const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
 const OBJ_STORE_BUCKET = process.env.OBJECT_STORE_bucket_name || 'test';
-const ep = new URL(OBJ_STORE_URL);
+
 const s3 = new S3({
-  endpoint: ep,
+  endpoint: OBJ_STORE_URL,
 
   credentials: {
     accessKeyId: process.env.OBJECT_STORE_user_account,
     secretAccessKey: process.env.OBJECT_STORE_password,
   },
-
-  // The key signatureVersion is no longer supported in v3, and can be removed.
-  // @deprecated SDK v3 only supports signature v4.
-  signatureVersion: 'v4',
-
-  // The key s3ForcePathStyle is renamed to forcePathStyle.
   forcePathStyle: true,
 });
 
 const MINIO_URL = process.env.MEM_MINIO_endpoint_url || 'minio-mem-prod-mem-mmt-prod.pathfinder.gov.bc.ca';
 const MINIO_BUCKET = process.env.MEM_MINIO_bucket_name;
-const minioEndpoint = new URL(MINIO_URL);
+
 const minio = new S3({
-  endpoint: minioEndpoint,
+  endpoint: MINIO_URL,
 
   credentials: {
     accessKeyId: process.env.MEM_MINIO_user_account,
     secretAccessKey: process.env.MEM_MINIO_password,
   },
-
-  // The key s3ForcePathStyle is renamed to forcePathStyle.
-  forcePathStyle: true,
-
-  // The key signatureVersion is no longer supported in v3, and can be removed.
-  // @deprecated SDK v3 only supports signature v4.
   signatureVersion: "v4",
 });
 
