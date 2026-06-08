@@ -1,14 +1,16 @@
 'use strict';
 
-const AWS = require('aws-sdk');
+const { S3 } = require('@aws-sdk/client-s3');
 const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
-const ep = new AWS.Endpoint(OBJ_STORE_URL);
-const s3 = new AWS.S3({
-  endpoint: ep,
-  accessKeyId: process.env.OBJECT_STORE_user_account,
-  secretAccessKey: process.env.OBJECT_STORE_password,
-  signatureVersion: 'v4',
-  s3ForcePathStyle: true
+
+const s3 = new S3({
+  endpoint: OBJ_STORE_URL,
+
+  credentials: {
+    accessKeyId: process.env.OBJECT_STORE_user_account,
+    secretAccessKey: process.env.OBJECT_STORE_password
+  },
+  forcePathStyle: true
 });
 
 /**
@@ -166,5 +168,5 @@ async function deleteS3Documents(s3Keys) {
     }
   };
 
-  return s3.deleteObjects(params).promise();
+  return s3.deleteObjects(params);
 }

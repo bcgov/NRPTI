@@ -1,19 +1,21 @@
 'use strict';
 
-const AWS = require('aws-sdk');
+const { S3 } = require('@aws-sdk/client-s3');
 
 let mongoose = require('mongoose');
 
 const AWS_BULK_LIMIT = 1000;
 const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
 const OBJECT_STORE_BUCKET = process.env.OBJECT_STORE_bucket_name || 'uploads';
-const ep = new AWS.Endpoint(OBJ_STORE_URL);
-const s3 = new AWS.S3({
-  endpoint: ep,
-  accessKeyId: process.env.OBJECT_STORE_user_account,
-  secretAccessKey: process.env.OBJECT_STORE_password,
-  signatureVersion: 'v4',
-  s3ForcePathStyle: true
+
+const s3 = new S3({
+  endpoint: OBJ_STORE_URL,
+
+  credentials: {
+    accessKeyId: process.env.OBJECT_STORE_user_account,
+    secretAccessKey: process.env.OBJECT_STORE_password
+  },
+  forcePathStyle: true
 });
 
 /**
@@ -26,7 +28,7 @@ async function listS3Objects(marker = null) {
   let contents = [];
 
   try {
-    const result = await s3.listObjects({ Bucket: OBJECT_STORE_BUCKET, Marker: marker }).promise();
+    const result = await s3.listObjects({ Bucket: OBJECT_STORE_BUCKET, Marker: marker });
 
     if (result.Contents && result.Contents.length) {
       contents = contents.concat(result.Contents);
@@ -131,7 +133,7 @@ function deleteS3Objects(objectKeys) {
   const params = { Bucket: OBJECT_STORE_BUCKET, Delete: { Objects: [] } };
   params.Delete.Objects = objectKeys.map(item => ({ Key: item }));
 
-  return s3.deleteObjects(params).promise();
+  return s3.deleteObjects(params);
 }
 
 /**

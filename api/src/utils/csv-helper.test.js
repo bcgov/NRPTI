@@ -1,4 +1,7 @@
 const awsMock = require('aws-sdk-mock');
+
+const { S3 } = require('@aws-sdk/client-s3');
+
 const AWS = require('aws-sdk');
 const moment = require('moment-timezone');
 const fs = require('fs');
@@ -11,7 +14,7 @@ const { readAndParseCsvFile } = require('./csv-helpers');
 
 describe('readAndParseCsvFile', () => {
   it('returns parsed row if csv is valid ', async () => {
-    const stream = new AWS.S3().getObject('getObject').createReadStream();
+    const stream = new S3().getObject('getObject').createReadStream();
     const result = await readAndParseCsvFile(stream, 'nris-flnr-csv', 'Inspection');
     expect(result).toBeDefined();
     expect(result).toHaveLength(1);
