@@ -1,14 +1,14 @@
 'use strict';
-
+const ConfigConsts = require('./constants/config');
 const { S3 } = require('@aws-sdk/client-s3');
 const { readAndParseCsvFile } = require('./csv-helpers');
 const defaultLog = require('../utils/logger')('csv-import');
 
-const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
+const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || ConfigConsts.DEFAULT_OBJECT_STORE_URL;
 
 const s3 = new S3({
   endpoint: OBJ_STORE_URL,
-
+  region: process.env.OBJECT_STORE_region || 'us-east-1',
   credentials: {
     accessKeyId: process.env.OBJECT_STORE_user_account,
     secretAccessKey: process.env.OBJECT_STORE_password

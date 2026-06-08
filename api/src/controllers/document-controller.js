@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
+const ConfigConsts = require('../utils/constants/config');
 
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const { Upload } = require('@aws-sdk/lib-storage');
@@ -13,11 +14,14 @@ const businessLogicManager = require('../utils/business-logic-manager');
 const defaultLog = require('../utils/logger')('record');
 const { userIsOnlyInRole } = require('../utils/auth-utils');
 
-const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
+const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || ConfigConsts.DEFAULT_OBJECT_STORE_URL;
 
 const s3 = new S3({
   endpoint: OBJ_STORE_URL,
-
+  // For custom endpoints, the region must be set to us-east-1,
+  // otherwise the AWS SDK will attempt to validate the endpoint
+  // against known S3 regions and fail.
+  region: process.env.OBJECT_STORE_region || 'us-east-1',
   credentials: {
     accessKeyId: process.env.OBJECT_STORE_user_account,
     secretAccessKey: process.env.OBJECT_STORE_password
