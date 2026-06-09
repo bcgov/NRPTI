@@ -2,6 +2,7 @@
 const ObjectID = require('mongodb').ObjectID;
 const Document = require('../src/models/document');
 const utils = require('../src/utils/constants/misc');
+const ConfigConsts = require('../src/utils/constants/config');
 // master and BCMI flavour types
 const { permitBCMI: PermitBCMI,
   orderBCMI: OrderBCMI,
@@ -22,12 +23,12 @@ const { managementPlan: ManagementPlan,
 const { Upload } = require('@aws-sdk/lib-storage');
 const { S3 } = require('@aws-sdk/client-s3');
 
-const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || 'nrs.objectstore.gov.bc.ca';
+const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || ConfigConsts.DEFAULT_OBJECT_STORE_URL;
 const OBJ_STORE_BUCKET = process.env.OBJECT_STORE_bucket_name || 'test';
 
 const s3 = new S3({
   endpoint: OBJ_STORE_URL,
-
+  region: process.env.OBJECT_STORE_region || 'us-east-1',
   credentials: {
     accessKeyId: process.env.OBJECT_STORE_user_account,
     secretAccessKey: process.env.OBJECT_STORE_password,
@@ -40,7 +41,7 @@ const MINIO_BUCKET = process.env.MEM_MINIO_bucket_name;
 
 const minio = new S3({
   endpoint: MINIO_URL,
-
+  region: process.env.MEM_MINIO_region || 'us-east-1',
   credentials: {
     accessKeyId: process.env.MEM_MINIO_user_account,
     secretAccessKey: process.env.MEM_MINIO_password,

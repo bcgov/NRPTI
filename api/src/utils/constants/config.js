@@ -9,3 +9,5 @@ exports.CONFIG_APPS = {
   NRCED: 'NRCED',
   LNG: 'LNG'
 };
+
+exports.DEFAULT_OBJECT_STORE_URL = 'https://nrs.objectstore.gov.bc.ca';
