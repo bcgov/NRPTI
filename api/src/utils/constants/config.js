@@ -11,12 +11,9 @@ exports.CONFIG_APPS = {
 };
 
 exports.OBJECTS_STORE_URL = () => {
-  // Use env endpoint url, or default to this URL
+  // Use env endpoint url, or default to this URL if empty.
   // S3 client requires a protocol, so if the env variable doesn't have one, add https://
-  let tempURL = new URL(process.env.OBJECT_STORE_endpoint_url || 'https://nrs.objectstore.gov.bc.ca');
-  if (tempURL.protocol) {
-    return tempURL.href;
-  } else {
-    return `https://${tempURL.href}`;
-  }
+  const tempUrl = process.env.OBJECT_STORE_endpoint_url || 'https://nrs.objectstore.gov.bc.ca';
+  const url = tempUrl.startsWith('https://') ? new URL(tempUrl) : new URL(`https://${tempUrl}`);
+  return url.href;
 };
