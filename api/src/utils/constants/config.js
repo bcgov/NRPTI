@@ -17,6 +17,6 @@ exports.OBJECTS_STORE_URL = () => {
   if (tempURL.protocol) {
     return tempURL.href;
   } else {
-    return new URL(`https://${tempURL.href}`);
+    return `https://${tempURL.href}`;
   }
 };
