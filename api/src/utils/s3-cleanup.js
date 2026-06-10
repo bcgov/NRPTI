@@ -5,11 +5,10 @@ const { S3 } = require('@aws-sdk/client-s3');
 let mongoose = require('mongoose');
 
 const AWS_BULK_LIMIT = 1000;
-const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || ConfigConsts.DEFAULT_OBJECT_STORE_URL;
 const OBJECT_STORE_BUCKET = process.env.OBJECT_STORE_bucket_name || 'uploads';
 
 const s3 = new S3({
-  endpoint: OBJ_STORE_URL,
+  endpoint: ConfigConsts.OBJECTS_STORE_URL(),
   region: process.env.OBJECT_STORE_region || 'us-east-1',
   credentials: {
     accessKeyId: process.env.OBJECT_STORE_user_account,

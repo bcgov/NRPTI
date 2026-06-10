@@ -14,10 +14,8 @@ const businessLogicManager = require('../utils/business-logic-manager');
 const defaultLog = require('../utils/logger')('record');
 const { userIsOnlyInRole } = require('../utils/auth-utils');
 
-const OBJ_STORE_URL = process.env.OBJECT_STORE_endpoint_url || ConfigConsts.DEFAULT_OBJECT_STORE_URL;
-
 const s3 = new S3({
-  endpoint: OBJ_STORE_URL,
+  endpoint: ConfigConsts.OBJECTS_STORE_URL(),
   // For custom endpoints, the region must be set to us-east-1,
   // otherwise the AWS SDK will attempt to validate the endpoint
   // against known S3 regions and fail.
