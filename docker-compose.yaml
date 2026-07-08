@@ -71,7 +71,7 @@ services:
   # See this: https://v17.angular.io/guide/deployment
   admin-nrpti:
     container_name: admin-nrpti
-    image: node:18.19.1
+    image: node:22.23.1
     working_dir: /app
     command: sh -c "npm ci --ignore-scripts && npm run library:link && npx ng serve admin-nrpti --configuration development -o --host 0.0.0.0 --port 4200"
     # build:
@@ -99,7 +99,7 @@ services:
 
   public-nrpti:
     container_name: public-nrpti
-    image: node:18.19.1
+    image: node:22.23.1
     working_dir: /app
     command: sh -c "npm ci --ignore-scripts && npm run library:link && npx ng serve public-nrced --configuration development -o --host 0.0.0.0 --port 4400"
     # build:
