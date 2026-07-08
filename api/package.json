@@ -16,7 +16,7 @@
     "lint-fix:2": "prettier ./**/*.js --write --loglevel warn"
   },
   "engines": {
-    "node": ">= 18.7.0",
+    "node": ">= 22.23.1",
     "npm": ">= 9.0.0"
   },
   "jest": {
