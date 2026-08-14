@@ -17,7 +17,7 @@ objects:
           targetPort: 8080
       selector:
         app: ${GROUP_NAME}
-        deploymentconfig: ${NAME}
+        deployment: ${NAME}
       type: ClusterIP
   - kind: Route
     apiVersion: route.openshift.io/v1
