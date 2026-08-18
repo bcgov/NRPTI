@@ -46,60 +46,58 @@ objects:
       tls:
         termination: edge
       wildcardPolicy: None
-  - kind: DeploymentConfig
+  - kind: Deployment
     apiVersion: apps/v1
     metadata:
-      name: ${NAME}-api
       labels:
-        app: ${GROUP_NAME}
+        app: nrpti
+        app.kubernetes.io/part-of: backend
+        app.openshift.io/runtime: nodejs
         role: api
+      name: nrpti-api
+      namespace: f00029-${ENVIRONMENT}
+      annotations:
+        image.openshift.io/triggers: '[{"from": {"kind": "ImageStreamTag", "name":
+          "nrpti-api:latest", "namespace": "f00029-tools"}, "fieldPath":
+          "spec.template.spec.containers[?(@.name==\"nrpti-api\")].image", "paused":
+          false}]'
     spec:
-      strategy:
-        type: Rolling
-      triggers:
-        - type: ImageChange
-          imageChangeParams:
-            automatic: true
-            containerNames:
-              - ${NAME}-api
-            from:
-              kind: ImageStreamTag
-              namespace: ${APP_IMAGE_NAMESPACE}
-              name: ${APP_IMAGE_NAME}:${APP_DEPLOYMENT_TAG}
-        - type: ConfigChange
       replicas: 1
+      revisionHistoryLimit: 10
       selector:
         matchLabels:
-          name: ${NAME}-api
+          name: nrpti-api
+      strategy:
+        type: RollingUpdate
+        rollingUpdate:
+          maxSurge: 25%
+          maxUnavailable: 25%
       template:
         metadata:
-          name: ${NAME}-api
+          creationTimestamp: null
           labels:
-            name: ${NAME}-api
-            app: ${GROUP_NAME}
+            app: nrpti
+            name: nrpti-api
             role: api
+          name: nrpti-api
         spec:
           containers:
-            - name: ${NAME}-api
-              image: image-registry.openshift-image-registry.svc:5000/${APP_IMAGE_NAMESPACE}/${APP_IMAGE_NAME}:${APP_DEPLOYMENT_TAG}
-              ports:
-                - containerPort: 3000
-              env:
+            - env:
                 - name: MONGODB_USERNAME
                   valueFrom:
                     secretKeyRef:
-                      name: ${NAME}-mongodb
                       key: MONGODB_USERNAME
+                      name: ${NAME}-mongodb
                 - name: MONGODB_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: ${NAME}-mongodb
                       key: MONGODB_PASSWORD
+                      name: ${NAME}-mongodb
                 - name: MONGODB_DATABASE
                   valueFrom:
                     secretKeyRef:
-                      name: ${NAME}-mongodb
                       key: MONGODB_DATABASE
+                      name: ${NAME}-mongodb
                 # API envs
                 - name: API_HOSTNAME
                   value: ${APPLICATION_DOMAIN}
@@ -140,6 +138,8 @@ objects:
                   value: 'true'
                 - name: NRIS_EMLI_API_ENDPOINT
                   value: 'https://api.nrs.gov.bc.ca/nrisws-api/v1/emprInspections'
+                - name: NODE_OPTIONS
+                  value: --max-old-space-size=9216
               envFrom:
                 - prefix: NRIS_
                   secretRef:
@@ -150,18 +150,32 @@ objects:
                 - prefix: CORE_
                   secretRef:
                     name: core-api
-              readinessProbe:
-                timeoutSeconds: 3000
-                initialDelaySeconds: 3
-                httpGet:
-                  path: ${READINESS_PROBE_URL}
-                  port: 3000
+              image: image-registry.openshift-image-registry.svc:5000/f00029-tools/nrpti-api@sha256:e5d62c575a333e7b066d4894bada95fcdf1c731bcc934c080d5bf6010edeb541
+              imagePullPolicy: Always
               livenessProbe:
-                timeoutSeconds: 3000
-                initialDelaySeconds: 30
+                failureThreshold: 3
                 httpGet:
                   path: ${READINESS_PROBE_URL}
                   port: 3000
+                  scheme: HTTP
+                initialDelaySeconds: 30
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 3000
+              name: nrpti-api
+              ports:
+                - containerPort: 3000
+                  protocol: TCP
+              readinessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: ${READINESS_PROBE_URL}
+                  port: 3000
+                  scheme: HTTP
+                initialDelaySeconds: 3
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 3000
               resources:
                 limits:
                   cpu: ${API_CPU_LIMITS}
@@ -169,6 +183,13 @@ objects:
                 requests:
                   cpu: ${API_CPU_REQUESTS}
                   memory: ${API_MEMORY_REQUESTS}
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
   - kind: PersistentVolumeClaim
     apiVersion: v1
     metadata:
@@ -194,43 +215,44 @@ objects:
           targetPort: 27017
       selector:
         name: ${NAME}-mongodb
-  - kind: DeploymentConfig
+  - kind: Deployment
     apiVersion: apps/v1
     metadata:
-      name: ${NAME}-mongodb
       labels:
         app: ${GROUP_NAME}
+        app.kubernetes.io/part-of: backend
+        app.openshift.io/runtime: mongodb
         role: database
+      name: ${NAME}-mongodb
+      namespace: f00029-dev
+      annotations:
+        image.openshift.io/triggers: '[{"from": {"kind": "ImageStreamTag", "name":
+          "mongodb:5.0.32", "namespace": "f00029-tools"}, "fieldPath":
+          "spec.template.spec.containers[?(@.name==\"nrpti-mongodb\")].image",
+          "paused": false}]'
     spec:
-      strategy:
-        type: Recreate
-      triggers:
-        - type: ImageChange
-          imageChangeParams:
-            automatic: true
-            containerNames:
-              - ${NAME}-mongodb
-            from:
-              kind: ImageStreamTag
-              namespace: ${APP_IMAGE_NAMESPACE}
-              name: mongodb:${MONGO_VER}
       replicas: 1
+      revisionHistoryLimit: 10
       selector:
         matchLabels:
           name: ${NAME}-mongodb
+      strategy:
+        type: Recreate
       template:
         metadata:
-          name: ${NAME}-mongodb
+          creationTimestamp: null
           labels:
-            name: ${NAME}-mongodb
             app: ${GROUP_NAME}
+            name: ${NAME}-mongodb
             role: database
+          name: ${NAME}-mongodb
         spec:
           containers:
-            - name: ${NAME}-mongodb
-              image: image-registry.openshift-image-registry.svc:5000/${APP_IMAGE_NAMESPACE}/mongodb:${MONGO_VER}
-              ports:
-                - containerPort: 27017
+            - args:
+                - --dbpath=/var/lib/mongodb/data
+                - --bind_ip_all
+              command:
+                - mongod
               env:
                 - name: MONGODB_USER
                   valueFrom:
@@ -252,21 +274,33 @@ objects:
                     secretKeyRef:
                       name: ${NAME}-mongodb
                       key: MONGODB_ADMIN_PASSWORD
-              readinessProbe:
-                timeoutSeconds: 5
-                initialDelaySeconds: 3
-                exec:
-                  command:
-                    - "/bin/sh"
-                    - "-i"
-                    - "-c"
-                    - mongo 127.0.0.1:27017/$MONGODB_DATABASE -u $MONGODB_USER -p $MONGODB_PASSWORD
-                      --eval='quit()'
+              image: docker.io/library/mongo@sha256:b2ace5ddbeb6d2e035aab54c486b8145bef83cff7bc3d518598b8449db74f3aa
+              imagePullPolicy: IfNotPresent
               livenessProbe:
-                timeoutSeconds: 5
+                failureThreshold: 3
                 initialDelaySeconds: 30
+                periodSeconds: 10
+                successThreshold: 1
                 tcpSocket:
                   port: 27017
+                timeoutSeconds: 5
+              name: nrpti-mongodb
+              ports:
+                - containerPort: 27017
+                  protocol: TCP
+              readinessProbe:
+                exec:
+                  command:
+                    - /bin/sh
+                    - -i
+                    - -c
+                    - mongo 127.0.0.1:27017/$MONGODB_DATABASE -u $MONGODB_USER -p
+                      $MONGODB_PASSWORD --eval='quit()'
+                failureThreshold: 3
+                initialDelaySeconds: 3
+                periodSeconds: 10
+                successThreshold: 1
+                timeoutSeconds: 5
               resources:
                 limits:
                   cpu: ${DATABASE_CPU_LIMITS}
@@ -274,9 +308,16 @@ objects:
                 requests:
                   cpu: ${DATABASE_CPU_REQUESTS}
                   memory: ${DATABASE_MEMORY_REQUESTS}
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
               volumeMounts:
-                - name: ${NAME}-mongodb-data
-                  mountPath: /var/lib/mongodb/data
+                - mountPath: /var/lib/mongodb/data
+                  name: ${NAME}-mongodb-data
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
           volumes:
             - name: ${NAME}-mongodb-data
               persistentVolumeClaim:
@@ -375,7 +416,6 @@ parameters:
     displayName: Database Volume Capacity
     description: Volume space available for mongo database, e.g. 512Mi, 2Gi.
     value: 10Gi
-    required: true
     required: true
   - name: APP_IMAGE_NAME
     displayName: Application image name.
