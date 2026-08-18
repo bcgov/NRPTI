@@ -17,7 +17,7 @@ objects:
           targetPort: 8080
       selector:
         app: ${GROUP_NAME}
-        deploymentconfig: ${NAME}
+        deployment: ${NAME}
       type: ClusterIP
   - kind: Route
     apiVersion: route.openshift.io/v1
@@ -37,46 +37,42 @@ objects:
         termination: edge
         insecureEdgeTerminationPolicy: Redirect
       wildcardPolicy: None
-  - kind: DeploymentConfig
-    apiVersion: apps.openshift.io/v1
+  - kind: Deployment
+    apiVersion: apps/v1
     metadata:
-      name: ${NAME}
       labels:
-        app: ${GROUP_NAME}
+        app: ${NAME}
+        app.kubernetes.io/part-of: frontend
+        app.openshift.io/runtime: nodejs
         role: frontend
+      name: nrced
+      namespace: f00029-${ENVIRONMENT}
+      annotations:
+        image.openshift.io/triggers: '[{"from": {"kind": "ImageStreamTag", "name":
+          "public-nrced:latest", "namespace": "f00029-tools"}, "fieldPath":
+          "spec.template.spec.containers[?(@.name==\"nrced\")].image", "paused":
+          false}]'
     spec:
-      strategy:
-        type: Rolling
-      triggers:
-        - type: ImageChange
-          imageChangeParams:
-            automatic: true
-            containerNames:
-              - ${NAME}
-            from:
-              kind: ImageStreamTag
-              namespace: ${RUNTIME_IMAGE_NAMESPACE}
-              name: ${RUNTIME_IMAGE_NAME}:${RUNTIME_IMAGE_TAG}
-        - type: ConfigChange
       replicas: 1
       revisionHistoryLimit: 5
       selector:
-        app: ${GROUP_NAME}
-        deploymentconfig: ${NAME}
+        matchLabels:
+          app: nrpti
+      strategy:
+        type: RollingUpdate
+        rollingUpdate:
+          maxSurge: 25%
+          maxUnavailable: 25%
       template:
         metadata:
+          creationTimestamp: null
           labels:
             app: ${GROUP_NAME}
-            deploymentconfig: ${NAME}
+            deployment: nrced
             role: frontend
         spec:
           containers:
-            - name: ${NAME}
-              image: image-registry.openshift-image-registry.svc:5000/${RUNTIME_IMAGE_NAMESPACE}/${RUNTIME_IMAGE_NAME}:${RUNTIME_IMAGE_TAG}
-              ports:
-                - containerPort: 8080
-                  protocol: TCP
-              env:
+            - env:
                 - name: RealIpFrom
                   value: 10.97.0.0/16
                 - name: AdditionalRealIpFromRules
@@ -86,41 +82,48 @@ objects:
                   value: NRPTI_API_SERVICE_HOST
                 - name: CONFIG_ENDPOINT_PORT
                   value: NRPTI_API_SERVICE_PORT
-              resources:
-                limits:
-                  cpu: 250m
-                  memory: 250Mi
-                requests:
-                  cpu: 10m
-                  memory: 50Mi
+                - name: ENVIRONMENT
+                  value: ${ENVIRONMENT}
+              image: image-registry.openshift-image-registry.svc:5000/${RUNTIME_IMAGE_NAMESPACE}/${NAME}:${RUNTIME_IMAGE_TAG}
+              imagePullPolicy: Always
               livenessProbe:
+                failureThreshold: 3
                 httpGet:
-                  path: "/"
+                  path: /
                   port: 8080
                   scheme: HTTP
                 initialDelaySeconds: 30
-                timeoutSeconds: 60
                 periodSeconds: 10
                 successThreshold: 1
-                failureThreshold: 3
+                timeoutSeconds: 60
+              name: nrced
+              ports:
+                - containerPort: 8080
+                  protocol: TCP
               readinessProbe:
+                failureThreshold: 3
                 httpGet:
-                  path: "/"
+                  path: /
                   port: 8080
                   scheme: HTTP
                 initialDelaySeconds: 10
-                timeoutSeconds: 60
                 periodSeconds: 10
                 successThreshold: 1
-                failureThreshold: 3
+                timeoutSeconds: 60
+              resources:
+                limits:
+                  cpu: 250m
+                  memory: 150Mi
+                requests:
+                  cpu: 10m
+                  memory: 50Mi
               terminationMessagePath: /dev/termination-log
               terminationMessagePolicy: File
-              imagePullPolicy: Always
-          restartPolicy: Always
-          terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst
-          securityContext: {}
+          restartPolicy: Always
           schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
 parameters:
   - description: A name used for all objects
     displayName: Name
@@ -143,3 +146,5 @@ parameters:
     value: latest
   - name: Host
     value: f00029-dev.apps.silver.devops.gov.bc.ca
+  - name: ENVIRONMENT
+    value: dev
