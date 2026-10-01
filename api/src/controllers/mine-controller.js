@@ -69,13 +69,7 @@ exports.protectedPut = async function (args, res, next) {
   delete incomingObj.write;
 
   const MineBCMI = mongoose.model('MineBCMI');
-
   const sanitizedObj = PutUtils.validateObjectAgainstModel(MineBCMI, incomingObj);
-
-  if (!sanitizedObj || Object.keys(sanitizedObj).length === 0) {
-    // skip, as there are no changes to master record
-    return;
-  }
 
   sanitizedObj.dateUpdated = new Date();
   // If there are args it means this is an API request and has a user. If not, this is carried out by the system so
