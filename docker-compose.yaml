@@ -1,7 +1,6 @@
-version: "3.7"
 services:
   mongo:
-    image: mongo:5.0.32
+    image: mongo:6.0.28
     container_name: nrpti-mongo
     tty: true
     restart: always
@@ -13,10 +12,10 @@ services:
     networks:
       - nrpti
     environment:
-      - MONGO_USERNAME=${MONGO_USERNAME}
-      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
     healthcheck:
-      test: echo 'db.runCommand({serverStatus:1}).ok' | mongo nrpti-dev -u ${MONGO_USERNAME:-nrpti-admin} -p ${MONGO_PASSWORD:-nrpti-admin} --quiet | grep 1
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping').ok", "--quiet"]
       interval: 20s
       timeout: 30s
       retries: 5
