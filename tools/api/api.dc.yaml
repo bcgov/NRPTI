@@ -227,7 +227,7 @@ objects:
       namespace: f00029-dev
       annotations:
         image.openshift.io/triggers: '[{"from": {"kind": "ImageStreamTag", "name":
-          "mongodb:5.0.32", "namespace": "f00029-tools"}, "fieldPath":
+          "mongodb:6.0.28", "namespace": "f00029-tools"}, "fieldPath":
           "spec.template.spec.containers[?(@.name==\"nrpti-mongodb\")].image",
           "paused": false}]'
     spec:
