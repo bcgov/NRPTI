@@ -1,6 +1,6 @@
 services:
   mongo:
-    image: mongo:6.0.28
+    image: mongo:7.0.28
     container_name: nrpti-mongo
     tty: true
     restart: always
