@@ -14,8 +14,10 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_USERNAME=${MONGO_USERNAME}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping').ok", "--quiet"]
+      test: ["CMD","mongosh", "--eval", "db.adminCommand('ping').ok", "--quiet"]
       interval: 20s
       timeout: 30s
       retries: 5
@@ -32,6 +34,8 @@ services:
       - ENVIRONMENT=dev
       - MONGODB_SERVICE_HOST=${MONGODB_SERVICE_HOST}
       - MONGO_URI=${MONGO_URI}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
       - MONGO_USERNAME=${MONGO_USERNAME}
       - MONGO_PASSWORD=${MONGO_PASSWORD}
       - MONGODB_DATABASE=${MONGODB_DATABASE}

@@ -42,7 +42,7 @@ let updateTitlesInDB = async actMap => {
     const db = mongoose.connection.db;
     const actsRegulationsCollection = db.collection('acts_regulations_mapping');
     for (let [actCode, actTitle] of Object.entries(actMap)) {
-      await actsRegulationsCollection.update(
+      await actsRegulationsCollection.updateOne(
         { _schemaName: 'ActsRegulationsMapping', actCode: actCode },
         { $set: { actName: actTitle } }
       );

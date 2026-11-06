@@ -222,7 +222,7 @@ exports.protectedDelete = async function (args, res, next) {
     let docResponse = null;
     let s3Response = null;
     try {
-      docResponse = await Document.findOneAndRemove({
+      docResponse = await Document.findOneAndDelete({
         _id: new ObjectId(args.swagger.params.docId.value),
         write: { $in: args.swagger.params.auth_payload.client_roles }
       });
