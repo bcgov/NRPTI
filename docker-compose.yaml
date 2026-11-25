@@ -28,6 +28,7 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
+    command: npm run dev
     networks:
       - nrpti
     environment:
@@ -60,6 +61,9 @@ services:
       - OBJECT_STORE_user_account=${OBJECT_STORE_user_account}
     ports:
       - 3000:3000
+    volumes:
+      - ./api/src:/app/src
+      - ./Temp Test file (1).pdf:/app/Temp Test file (1).pdf:ro
     # healthcheck:
     #   test: curl localhost:${PORT:-3000}/api/health | grep 'API is healthy and ready'
     #   interval: 20s

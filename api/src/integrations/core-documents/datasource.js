@@ -2,17 +2,17 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
 const axios = require('axios');
+const { pipeline } = require('stream/promises');
 
 const defaultLog = require('../../utils/logger')('core-datasource');
 const DocumentController = require('../../controllers/document-controller');
 const PermitUtils = require('./permit-utils');
 const RECORD_TYPE = require('../../utils/constants/record-type-enum');
-const { getIntegrationUrl, getAuthHeader } = require('../integration-utils');
+const { getIntegrationUrl } = require('../integration-utils');
 const CoreUtil = require('../core-util');
 
-const CORE_API_HOST = process.env.CORE_API_HOST || 'https://minesdigitalservices.pathfinder.gov.bc.ca';
-const CORE_DOC_MANAGER_HOST =
-  process.env.CORE_DOC_MANAGER_HOST || 'https://minesdigitalservices.gov.bc.ca/document-manager';
+// Default CORE_API_HOST
+const CORE_API_HOST = process.env.CORE_API_HOST || 'https://mds-test.apps.silver.devops.gov.bc.ca';
 
 class CoreDocumentsDataSource {
   /**
@@ -189,19 +189,23 @@ class CoreDocumentsDataSource {
       // Get a download token.
       const downloadToken = await this.getDownloadToken(documentId);
 
-      const url = `${CORE_DOC_MANAGER_HOST}/documents?token=${downloadToken}`;
+      const url = `${CORE_API_HOST}/document-manager/documents`;
+      const res = await axios.get(url, {
+        params: { token: downloadToken },
+        responseType: 'stream',
+        headers: { Accept: 'application/pdf, application/octet-stream' },
+        maxRedirects: 0
+      });
 
-      await this.coreUtil.checkTokenExpiry();
-      const res = await axios.get(url, getAuthHeader(this.coreUtil.client_token, { responseType: 'stream' }));
+      const contentType =
+        res.headers && res.headers['content-type'] && res.headers['content-type'].split(';')[0].trim().toLowerCase();
+      if (documentName.toLowerCase().endsWith('.pdf') && contentType !== 'application/pdf') {
+        res.data.destroy();
+        throw new Error(`CORE document download returned unexpected content type: ${contentType || 'unknown'}`);
+      }
 
       const tempFilePath = `${uploadDir}/${documentName}`;
-      // Attempt to save locally.
-      await new Promise((resolve, reject) => {
-        res.data
-          .pipe(fs.createWriteStream(tempFilePath))
-          .on('finish', resolve)
-          .on('error', error => reject(error));
-      });
+      await pipeline(res.data, fs.createWriteStream(tempFilePath));
 
       return tempFilePath;
     } catch (error) {
