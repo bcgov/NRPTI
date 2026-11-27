@@ -2,13 +2,17 @@ const DataSource = require('./datasource');
 const integrationUtils = require('../integration-utils');
 const mongoose = require('mongoose');
 const axios = require('axios');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
 const { Readable } = require('stream');
 const DocumentController = require('../../controllers/document-controller');
 const permitUtils = require('./permit-utils');
 const coreUtil = require('../core-util');
-const moment = require('moment-timezone');
 
-jest.mock('../../controllers/document-controller');
+jest.mock('../../controllers/document-controller', () => ({
+  createS3Document: jest.fn()
+}));
 jest.mock('axios');
 jest.mock('./permit-utils', () => ({
   transformRecord: jest.fn(),
@@ -104,8 +108,6 @@ describe('CoreDocumentsDataSource', () => {
   });
 
   describe('getTemporaryDocument', () => {
-    global.CORE_DOC_MANAGER_HOST = 'http://localhost:3000';
-
     it('should throw an error if documentId or documentName is missing', async () => {
       const dataSource = new DataSource();
 
@@ -120,29 +122,62 @@ describe('CoreDocumentsDataSource', () => {
 
     it('should download and save a document to a temporary location with a mocked URL', async () => {
       const documentId = 'documentId';
-      const documentName = 'example.docx';
+      const documentName = 'example.pdf';
       const mockDownloadToken = 'downloadToken';
       const mockResponseStream = new Readable();
-      mockResponseStream.push('file content');
+      mockResponseStream.push('%PDF-1.4\n%%EOF');
       mockResponseStream.push(null);
-      const mockResponse = { data: mockResponseStream, status: 200 };
+      const mockResponse = {
+        data: mockResponseStream,
+        status: 200,
+        headers: { 'content-type': 'application/pdf' }
+      };
 
       axios.get.mockResolvedValue(mockResponse);
 
       const dataSource = new DataSource();
-      dataSource.coreUtil.apiAccessExpiry = new moment(new Date()).add(2, 'w');
-      dataSource.coreUtil.client_token = 'test_token';
-
       dataSource.getDownloadToken = jest.fn().mockResolvedValue(mockDownloadToken);
 
-      await dataSource.getTemporaryDocument(documentId, documentName);
+      const uploadDir = fs.mkdtempSync(path.join(os.tmpdir(), 'core-documents-test-'));
+      const previousUploadDir = process.env.UPLOAD_DIRECTORY;
+      process.env.UPLOAD_DIRECTORY = uploadDir;
 
-      expect(axios.get).toHaveBeenCalledWith(
-        `https://minesdigitalservices.gov.bc.ca/document-manager/documents?token=${mockDownloadToken}`,
-        expect.objectContaining({
-          responseType: 'stream',
-          headers: expect.any(Object)
-        })
+      try {
+        const tempFilePath = await dataSource.getTemporaryDocument(documentId, documentName);
+
+        expect(fs.readFileSync(tempFilePath, 'utf8')).toBe('%PDF-1.4\n%%EOF');
+        expect(axios.get).toHaveBeenCalledWith(
+          `${process.env.CORE_API_HOST || 'https://mds-test.apps.silver.devops.gov.bc.ca'}/document-manager/documents`,
+          {
+            params: { token: mockDownloadToken },
+            responseType: 'stream',
+            headers: { Accept: 'application/pdf, application/octet-stream' },
+            maxRedirects: 0
+          }
+        );
+      } finally {
+        fs.rmSync(uploadDir, { recursive: true, force: true });
+        if (previousUploadDir === undefined) {
+          delete process.env.UPLOAD_DIRECTORY;
+        } else {
+          process.env.UPLOAD_DIRECTORY = previousUploadDir;
+        }
+      }
+    });
+
+    it('rejects HTML responses for PDF documents', async () => {
+      const htmlResponse = Readable.from('<!doctype html><title>CORE</title>');
+      axios.get.mockResolvedValue({
+        data: htmlResponse,
+        status: 200,
+        headers: { 'content-type': 'text/html; charset=utf-8' }
+      });
+
+      const dataSource = new DataSource();
+      dataSource.getDownloadToken = jest.fn().mockResolvedValue('downloadToken');
+
+      await expect(dataSource.getTemporaryDocument('documentId', 'example.pdf')).rejects.toThrow(
+        'CORE document download returned unexpected content type: text/html'
       );
     });
   });

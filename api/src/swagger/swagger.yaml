@@ -1979,7 +1979,7 @@ paths:
         '403':
           description: 'Access Denied'
           schema:
-            $ref: '#/definitions/Error'    
+            $ref: '#/definitions/Error'
   /map-info/{mapInfoId}:
     x-swagger-router-controller: map-info-controller
     options:
